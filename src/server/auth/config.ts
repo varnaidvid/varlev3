@@ -6,6 +6,8 @@ import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "@/lib/zod";
 import Resend from "next-auth/providers/resend";
 import { Role } from "@prisma/client";
+import { z } from "zod";
+import { saltAndHashPassword, verifyPassword } from "@/utils/password";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -33,11 +35,38 @@ declare module "next-auth" {
  *
  * @see https://next-auth.js.org/configuration/options
  */
+
 export const authConfig = {
   adapter: PrismaAdapter(db),
   providers: [
     Resend({
       from: "no-reply@varlev3.hu",
+    }),
+    Credentials({
+      credentials: {
+        email: {},
+        password: {},
+      },
+
+      authorize: async (credentials) => {
+        let user = null;
+
+        const { email, password } = await signInSchema.parseAsync(credentials);
+
+        user = await db.user.findFirst({
+          where: {
+            email,
+          },
+        });
+        if (!user)
+          throw new Error("Nincs felhasználó a megadott email címmel!");
+
+        if (verifyPassword(password, user.salt, user.password)) {
+          return user;
+        }
+
+        return user;
+      },
     }),
   ],
   callbacks: {

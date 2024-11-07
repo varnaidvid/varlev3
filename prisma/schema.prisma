@@ -68,18 +68,13 @@ model User {
     image         String?
     role          Role      @default(USER)
 
+    password String
+    salt     String
+
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
     accounts Account[]
     sessions Session[]
     posts    Post[]
-}
-
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
-
-    @@unique([identifier, token])
 }
