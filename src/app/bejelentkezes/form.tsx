@@ -30,45 +30,41 @@ import Image from "next/image";
 import Link from "next/link";
 // import { Turnstile } from '@marsidev/react-turnstile'
 import { Separator } from "@/components/ui/separator";
-
-const formSchema = z.object({
-  email: z.string().email({ message: "Nem megfelelő email cím" }),
-  password: z.string(),
-});
+import { signInSchema } from "@/lib/zod";
+import { api } from "@/trpc/react";
 
 export default function LoginForm() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   const [pending, setPending] = useState<boolean>(false);
-  const [captchaToken, setCaptchaToken] = useState("");
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    return;
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
+    setPending(true);
+
+    const res = await login(values);
+
+    if (!res.success) {
+      toast.error(res.message);
+      setPending(false);
+
+      return;
+    }
+
+    toast.success(res.message);
+    router.push("/vezerlopult");
+
     // if (!captchaToken) {
     //   toast.error("Captcha ellenőrzés szükséges");
     //   return;
     // }
-
-    // setPending(true);
-    // const res = await login(values.email, values.password, captchaToken);
-    // setPending(false);
-
-    // if (res.error) {
-    //   toast.error(res.message);
-    //   return;
-    // }
-
-    // toast.success(res.message);
-
-    // router.push("/");
   }
 
   return (
@@ -92,14 +88,14 @@ export default function LoginForm() {
             <CardContent className="grid gap-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email cím</FormLabel>
+                    <FormLabel>Felhasználónév:</FormLabel>
                     <FormControl>
                       <Input
-                        type="email"
-                        placeholder="pelda@gmail.com"
+                        type="text"
+                        placeholder="gipszjakab34"
                         {...field}
                       />
                     </FormControl>
