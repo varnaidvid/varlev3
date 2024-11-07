@@ -1,9 +1,8 @@
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { api } from "@/trpc/server";
 import { PageTitle } from "../../components/ui/page-title";
 import { Gauge } from "lucide-react";
 
-export default function Page() {
+export default async function Page() {
   return (
     <>
       <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
