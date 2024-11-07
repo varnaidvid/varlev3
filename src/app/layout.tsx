@@ -13,7 +13,7 @@ import LoadingFallback from "@/components/loading-fallback";
 export const metadata: Metadata = {
   title: "VarleV3",
   description: "2024-es Dusza Árpád Országos Webprogramozói Verseny",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/varlev3_icon.svg" }],
 };
 
 export default function RootLayout({

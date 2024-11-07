@@ -1,12 +1,14 @@
 import Link from "next/link";
 
-import { LatestPost } from "@/components/post";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
+import { Layers3 } from "lucide-react";
+import Logo from "../components/logo";
 
 export default async function Home() {
-  // const hello = await api.post.hello({ text: "asdlksandoiasndio" });
   const session = await auth();
+
+  // const hello = await api.post.hello({ text: "asdlksandoiasndio" });
 
   // if (session?.user) {
   // void api.post.getLatest.prefetch();
@@ -16,9 +18,7 @@ export default async function Home() {
     <HydrateClient>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-indigo-600 to-sky-600 text-white">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="font-mono text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            VarleV3
-          </h1>
+          <Logo />
           <div className="flex flex-col items-center gap-2">
             <div className="flex flex-col items-center justify-center gap-4">
               <p className="text-center text-2xl text-white">
@@ -37,8 +37,6 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-
-          {session?.user && <LatestPost />}
         </div>
       </main>
     </HydrateClient>

@@ -1,13 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "@/lib/zod";
-import Resend from "next-auth/providers/resend";
 import { Role } from "@prisma/client";
 import { z } from "zod";
 import { saltAndHashPassword, verifyPassword } from "@/utils/password";
+import { randomUUID } from "crypto";
+import { GetServerSidePropsContext } from "next";
+import { DefaultSession, NextAuthConfig, Session, User } from "next-auth";
+import { User as NextUser } from "next-auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -15,19 +16,15 @@ import { saltAndHashPassword, verifyPassword } from "@/utils/password";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
+
 declare module "next-auth" {
-  interface Session extends DefaultSession {
+  interface Session {
     user: {
       id: string;
-      // ...other properties
       role: Role;
+      username: string;
     } & DefaultSession["user"];
   }
-
-  // interface User {
-  //   // ...other properties
-  //   role: Role;
-  // }
 }
 
 /**
@@ -38,44 +35,66 @@ declare module "next-auth" {
 
 export const authConfig = {
   adapter: PrismaAdapter(db),
+  pages: {
+    signIn: "/bejelentkezes",
+    signOut: "/kijelentkezes",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.AUTH_SECRET,
   providers: [
-    Resend({
-      from: "no-reply@varlev3.hu",
-    }),
     Credentials({
+      id: "credentials",
+      name: "Felhasználónév és jelszó",
+      type: "credentials",
+
       credentials: {
-        email: {},
+        username: {},
         password: {},
       },
 
       authorize: async (credentials) => {
         let user = null;
 
-        const { email, password } = await signInSchema.parseAsync(credentials);
+        const { username, password } =
+          await signInSchema.parseAsync(credentials);
 
         user = await db.user.findFirst({
           where: {
-            email,
+            username,
           },
         });
         if (!user)
-          throw new Error("Nincs felhasználó a megadott email címmel!");
+          throw new Error("Nem találtuk fiókját az adott felhasználónévvel!");
 
-        if (verifyPassword(password, user.salt, user.password)) {
-          return user;
-        }
-
-        return user;
+        if (verifyPassword(password, user.salt, user.password)) return user;
+        else throw new Error("Hibás jelszó!");
       },
     }),
   ],
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session(sessionArgs: any) {
+      if ("token" in sessionArgs) {
+        let session = sessionArgs.session;
+        if ("user" in sessionArgs.token) {
+          const tokenUser = sessionArgs.token.user as User & Session["user"];
+
+          if (tokenUser.id) {
+            session.user.id = tokenUser.id;
+            session.user.role = tokenUser.role;
+            session.user.username = tokenUser.username;
+
+            return session;
+          }
+        }
+      }
+      return sessionArgs.session;
+    },
+    jwt({ token, user }) {
+      if (user) token.user = user;
+
+      return token;
+    },
   },
 } satisfies NextAuthConfig;

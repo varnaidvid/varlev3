@@ -10,8 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { login } from "./actions";
-import { Loader2, LogIn } from "lucide-react";
+import { Check, Fingerprint, Loader2, Mail } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,46 +22,55 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { startTransition, useState, useTransition } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+
 // import { Turnstile } from '@marsidev/react-turnstile'
-import { Separator } from "@/components/ui/separator";
-import { signInSchema } from "@/lib/zod";
-import { api } from "@/trpc/react";
+import { signup } from "./actions";
+import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { signUpSchema } from "@/lib/zod";
 import Logo from "@/components/logo";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       username: "",
       password: "",
+      password2: "",
+      name: "",
     },
   });
 
-  const [pending, startTransition] = useTransition();
-  async function onSubmit(values: z.infer<typeof signInSchema>) {
-    startTransition(() =>
-      login(values)
-        .then((res) => {
-          if (!res.success) {
-            toast.error(res.message);
-            return;
-          }
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
-          toast.success(res.message);
-          router.push("/vezerlopult");
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error("Hibás felhasználónév vagy jelszó!");
-        }),
-    );
+  const [pending, setPending] = useState<boolean>(false);
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    setPending(true);
+
+    const res = await signup(values);
+
+    if (!res.success) {
+      toast.error(res.message);
+      setPending(false);
+
+      return;
+    }
+
+    toast.success(res.message);
+    router.push("/bejelentkezes");
+
+    // if (!captchaToken) {
+    //   toast.error("Captcha ellenőrzés szükséges");
+    //   return;
+    // }
   }
 
   return (
@@ -75,11 +83,11 @@ export default function LoginForm() {
                 <div className="flex flex-col gap-2">
                   <Logo iconBg="black" size="small" />
 
-                  <span>Bejelentkezés</span>
+                  <span>Fiók létrehozása</span>
                 </div>
               </CardTitle>
               <CardDescription>
-                Jelentkezz be a vezérlőpultod eléréséhez
+                Alábbi űrlap kitöltésével hozhatsz létre fiókot:
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-4">
@@ -88,11 +96,29 @@ export default function LoginForm() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Felhasználónév:</FormLabel>
+                    <FormLabel>Felhasználónév</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
                         placeholder="gipszjakab34"
+                        {...field}
+                        disabled={pending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Teljes neve</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Gipsz Jakab"
                         {...field}
                         disabled={pending}
                       />
@@ -109,7 +135,25 @@ export default function LoginForm() {
                     <FormLabel>Jelszó</FormLabel>
                     <FormControl>
                       <Input
-                        type="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="********"
+                        {...field}
+                        disabled={pending}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Jelszó megerősítése</FormLabel>
+                    <FormControl>
+                      <Input
+                        type={showPassword ? "text" : "password"}
                         placeholder="********"
                         {...field}
                         disabled={pending}
@@ -120,13 +164,22 @@ export default function LoginForm() {
                 )}
               />
 
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="show-password"
+                  checked={showPassword}
+                  onCheckedChange={() => setShowPassword(!showPassword)}
+                />
+                <Label htmlFor="airplane-mode">Jelszó megjelenítése</Label>
+              </div>
+
               {/* <Turnstile
                 options={{
                   theme: 'light',
                   size: 'flexible',
                   language: 'hu'
                 }}
-                className="border"
+                className="border mt-6"
                 siteKey="0x4AAAAAAAxl6rMTte5ycyHD"
                 onSuccess={(token) => setCaptchaToken(token)}
               /> */}
@@ -137,14 +190,14 @@ export default function LoginForm() {
                 {pending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 ) : (
-                  <LogIn className="mr-2 h-4 w-4" />
+                  <Fingerprint className="mr-2 h-4 w-4" />
                 )}{" "}
-                Belépés
+                Létrehozás
               </Button>
               <p className="mt-2 text-center text-sm text-slate-500">
-                Ha még nincs fiókja,{" "}
-                <Link href="/regisztracio" className="text-blue-500 underline">
-                  kattintson ide a regisztrációhoz
+                Ha van már fiókja,{" "}
+                <Link href="/bejelentkezes" className="text-blue-500 underline">
+                  kattintson ide a bejelentkezéshez
                 </Link>
               </p>
             </CardFooter>

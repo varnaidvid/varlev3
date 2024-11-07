@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   Bell,
   ChevronsUpDown,
+  Cog,
   CreditCard,
   LogOut,
   Sparkles,
@@ -26,6 +27,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -42,7 +44,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarFallback className="rounded-lg">
-                  {session?.data?.user.email?.slice(0, 2)}
+                  {session?.data?.user.username?.slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -50,7 +52,7 @@ export function NavUser() {
                   {session.data?.user.name}
                 </span>
                 <span className="truncate text-xs">
-                  {session.data?.user.email}
+                  {session.data?.user.username}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -66,7 +68,7 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarFallback className="rounded-lg">
-                    {session?.data?.user.email?.slice(0, 2)}
+                    {session?.data?.user.username?.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -74,7 +76,7 @@ export function NavUser() {
                     {session.data?.user.name}
                   </span>
                   <span className="truncate text-xs">
-                    {session.data?.user.email}
+                    {session.data?.user.username}
                   </span>
                 </div>
               </div>
@@ -82,29 +84,16 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
+                <Cog />
+                Beállítások
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
+            <DropdownMenuItem asChild>
+              <Link href="/kijelentkezes">
+                <LogOut />
+                Kijelentkezés
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -15,6 +15,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
+import Logo from "../../logo";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -23,12 +24,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarHeader className="border-b">
           <SidebarMenu>
             <SidebarMenuItem>
-              <div className="relative flex items-center justify-between">
-                <h1 className="inline-block bg-gradient-to-r from-neutral-500 via-neutral-600 to-indigo-700 bg-clip-text font-mono text-2xl font-bold text-transparent transition-all duration-200 ease-linear group-data-[collapsible=icon]:invisible group-data-[collapsible=icon]:translate-x-2 group-data-[collapsible=icon]:opacity-0">
-                  VarleV3
-                </h1>
+              <div className="relative flex items-center justify-between gap-2 transition-all group-data-[collapsible=icon]:flex-col">
+                <Logo size="small" onlyIcon iconBg="black" />
 
-                <SidebarTrigger className="transition-all duration-200 ease-linear group-data-[collapsible=icon]:absolute group-data-[collapsible=icon]:left-0 group-data-[collapsible=icon]:top-0" />
+                <SidebarTrigger className="transition-all duration-200 ease-linear" />
               </div>
             </SidebarMenuItem>
           </SidebarMenu>
