@@ -96,6 +96,8 @@ model Team {
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
+
+    technologies Technology[]
 }
 
 model School {
@@ -130,14 +132,15 @@ model Technology {
     name String @unique
 
     competitions Competition[]
+    teams        Team[]
 }
 
 model Competition {
     id String @id @default(cuid())
 
     name        String
-    description String
-    image       String
+    description String   @db.Text
+    image       String   @db.LongText
     maxTeamSize Int
     deadline    DateTime
 

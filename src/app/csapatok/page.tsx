@@ -7,9 +7,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 
 export default async function TeamsPage() {
-  const teams = await api.teams.getTeamsWithDetails();
-
-  console.log(teams);
+  //   const teams = await api.teams.getTeamsWithDetails();
 
   return (
     <>
@@ -29,7 +27,7 @@ export default async function TeamsPage() {
       </header>
 
       <main className="px-4">
-        <DataTable columns={columns} data={teams} />
+        {/* <DataTable columns={columns} data={teams} /> */}
       </main>
     </>
   );

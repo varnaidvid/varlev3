@@ -4,7 +4,7 @@ import { authRouter } from "./routers/auth";
 import { competitionRouter } from "./routers/competition";
 import { schoolRouter } from "./routers/school";
 import { coachRouter } from "./routers/coach";
-import { teamsRouter } from "./routers/teams";
+import { teamsRouter } from "./routers/team";
 
 /**
  * This is the primary router for your server.
@@ -17,7 +17,7 @@ export const appRouter = createTRPCRouter({
   competition: competitionRouter,
   school: schoolRouter,
   coach: coachRouter,
-  teams: teamsRouter,
+  team: teamsRouter,
 });
 
 // export type definition of API
