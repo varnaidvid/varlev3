@@ -1,13 +1,12 @@
 import { PageTitle } from "@/components/ui/page-title";
 import withRole from "@/utils/withRole";
-import { Gauge, UserPlus } from "lucide-react";
-import { redirect } from "next/navigation";
+import { UserPlus } from "lucide-react";
 import RegisterForm from "./form";
 import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 
 export default async function Page() {
-  await withRole("WEBMESTER", "/vezerlopult");
+  await withRole(["WEBMESTER"]);
 
   return (
     <>

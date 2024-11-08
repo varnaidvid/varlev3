@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import ToastCatcher from "@/components/toast-catcher";
 import { Suspense } from "react";
 import LoadingFallback from "@/components/loading-fallback";
+import { HydrateClient } from "@/trpc/server";
 
 export const metadata: Metadata = {
   title: "VarleV3",
@@ -25,7 +26,7 @@ export default function RootLayout({
         <Suspense fallback={<LoadingFallback />}>
           <SessionProvider>
             <TRPCReactProvider>
-              {children}
+              <HydrateClient>{children}</HydrateClient>
 
               <Toaster richColors expand />
               <ToastCatcher />

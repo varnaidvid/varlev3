@@ -1,88 +1,169 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+enum TeamStatus {
+    REGISTERED
+    APPROVED_BY_SCHOOL
+    APPROVED_BY_ORGANIZER
+}
+
+enum AccountType {
+    ORGANIZER
+    SCHOOL
+    TEAM
+}
 
 generator client {
     provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    provider = "mysql"
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
-}
-
-// Necessary for Next auth
-// model Account {
-//     id                       String  @id @default(cuid())
-//     userId                   String
-//     type                     String
-//     provider                 String
-//     providerAccountId        String
-//     refresh_token            String? // @db.Text
-//     access_token             String? // @db.Text
-//     expires_at               Int?
-//     token_type               String?
-//     scope                    String?
-//     id_token                 String? // @db.Text
-//     session_state            String?
-//     user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-//     refresh_token_expires_in Int?
-
-//     @@unique([provider, providerAccountId])
-// }
-
 model Session {
-    id           String   @id @default(cuid())
+    id String @id @default(cuid())
+
     sessionToken String   @unique
-    userId       String
     expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    accountId String
+    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 }
 
-enum Role {
-    WEBMESTER
-    MODERATOR
-    USER
-}
+model Account {
+    id String @id @default(cuid())
 
-model User {
-    id       String  @id @default(cuid())
-    username String  @unique
-    name     String?
-    email    String? @unique
-    role     Role    @default(USER)
-
+    username String @unique
     password String
     salt     String
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    // accounts Account[]
+    type     AccountType
     sessions Session[]
-    posts    Post[]
+
+    team      Team?
+    school    School?
+    organizer Organizer?
+
+    notificationsSent     Notification[] @relation("Sender")
+    notificationsReceived Notification[] @relation("Receiver")
 }
 
-// model VerificationToken {
-//     identifier String
-//     token      String
-//     expires    DateTime
+model Member {
+    id String @id @default(cuid())
 
-//     @@unique([identifier, token])
-//     @@map("verification_tokens")
-// }
+    name String
+    year Int
+
+    email String?
+
+    isPrimary Boolean @default(true)
+    isReserve Boolean @default(false)
+
+    teamId String
+    Team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model Coach {
+    id String @id @default(cuid())
+
+    name String
+
+    teamId String
+    Team   Team   @relation(fields: [teamId], references: [id])
+}
+
+model Team {
+    id String @id @default(cuid())
+
+    name String
+
+    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now())
+
+    schoolName String?
+    school     School? @relation(fields: [schoolName], references: [id])
+
+    accountId String  @unique
+    account   Account @relation(fields: [accountId], references: [id])
+
+    members      Member[]
+    coaches      Coach[]
+    applications Application[]
+}
+
+model School {
+    id String @id @default(cuid())
+
+    name    String
+    address String
+
+    contactName  String
+    contactEmail String
+
+    teams Team[]
+
+    accountId String  @unique
+    account   Account @relation(fields: [accountId], references: [id])
+}
+
+model Organizer {
+    id String @id @default(cuid())
+
+    name  String
+    email String?
+
+    accountId String  @unique
+    account   Account @relation(fields: [accountId], references: [id])
+}
+
+model Technology {
+    id String @id @default(cuid())
+
+    name String @unique
+
+    competitions Competition[]
+}
+
+model Competition {
+    id String @id @default(cuid())
+
+    name        String
+    description String
+    image       String
+
+    deadline DateTime
+
+    technologies Technology[]
+    applications Application[]
+}
+
+model Notification {
+    id String @id @default(cuid())
+
+    title   String
+    message String
+
+    createdAt DateTime @default(now())
+
+    senderAccountId String
+    senderAccount   Account @relation(fields: [senderAccountId], references: [id], name: "Sender")
+
+    receiverAccountId String
+    receiverAccount   Account @relation(fields: [receiverAccountId], references: [id], name: "Receiver")
+}
+
+model Application {
+    id String @id @default(cuid())
+
+    status TeamStatus @default(REGISTERED)
+
+    createdAt DateTime @default(now())
+
+    teamId String
+    Team   Team   @relation(fields: [teamId], references: [id])
+
+    competitionId String
+    Competition   Competition @relation(fields: [competitionId], references: [id])
+}
