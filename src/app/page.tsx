@@ -43,11 +43,11 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+      {await Header()}
 
       <main className="container mx-auto min-h-[calc(100vh-57px-97px)] w-full flex-1">
         
-        <Hero />
+        {await Hero()}
 
         <h1 className="text-3xl font-bold p-4">Aktuális versenyek</h1>
 
