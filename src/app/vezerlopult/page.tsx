@@ -2,6 +2,17 @@ import { PageTitle } from "../../components/ui/page-title";
 import { Gauge } from "lucide-react";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
+import { ClientOnly } from '@/components/client-only';
+import ChartComponent from "@/components/ChartComponent";
+
+const chartData = [
+  { key: "January", value: 186 },
+  { key: "February", value: 305 },
+  { key: "March", value: 237 },
+  { key: "April", value: 73 },
+  { key: "May", value: 209 },
+  { key: "June", value: 214 },
+];
 
 export default async function Page() {
   const session = await auth();
@@ -36,6 +47,9 @@ export default async function Page() {
             <div className="aspect-video rounded-xl bg-muted/85" />
             <div className="aspect-video rounded-xl bg-muted/85" />
             <div className="aspect-video rounded-xl bg-muted/85" />
+            <ClientOnly>
+              <ChartComponent data={chartData}/>
+            </ClientOnly>
           </div>
           <div className="h-full min-h-[100vh] flex-1 rounded-xl bg-muted/85" />
         </div>
