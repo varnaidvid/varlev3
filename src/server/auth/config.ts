@@ -17,21 +17,10 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-
-      name: String;
       username: string;
       type: AccountType;
-
-      school: {
-        address: String;
-
-        contactName: String;
-        contactEmail: String;
-      };
-
-      organizer: {
-        email?: string;
-      };
+      createdAt: Date;
+      updatedAt: Date;
     } & DefaultSession["user"];
   }
 }
@@ -93,9 +82,9 @@ export const authConfig = {
             session.user.id = tokenUser.id;
             session.user.name = tokenUser.name;
             session.user.type = tokenUser.type;
-            session.user.organizer = tokenUser.organizer;
-            session.user.school = tokenUser.school;
             session.user.username = tokenUser.username;
+            session.user.createdAt = tokenUser.createdAt;
+            session.user.updatedAt = tokenUser.updatedAt;
 
             return session;
           }

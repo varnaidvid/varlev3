@@ -28,7 +28,7 @@ export const competitionRouter = createTRPCRouter({
       const {
         account: { username, password },
         members: { members, reserveMember },
-        team: { name, school, coaches },
+        team: { name, school, coaches, technologies },
         competitionId,
       } = input;
 
@@ -59,6 +59,9 @@ export const competitionRouter = createTRPCRouter({
             },
           },
           Competition: { connect: { id: competitionId } },
+          technologies: {
+            connect: technologies.map((tech) => ({ id: tech })),
+          },
           account: {
             create: {
               username,

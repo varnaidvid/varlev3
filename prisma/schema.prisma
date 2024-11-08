@@ -91,13 +91,12 @@ model Team {
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
 
-    members Member[]
-    coaches Coach[]
+    members      Member[]
+    coaches      Coach[]
+    technologies Technology[]
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
-
-    technologies Technology[]
 }
 
 model School {
@@ -160,8 +159,9 @@ model Competition {
 }
 
 model Email {
-    id            String      @id @default(cuid())
-    email         String
+    id    String @id @default(cuid())
+    email String
+
     competitionId String
     competition   Competition @relation(fields: [competitionId], references: [id])
 }

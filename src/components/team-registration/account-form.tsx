@@ -52,7 +52,7 @@ export function AccountForm({
             való jutásra és a feladatok beadására.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
+        <CardContent className="grid gap-6">
           <FormField
             control={form.control}
             name="username"

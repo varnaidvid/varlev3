@@ -55,7 +55,7 @@ export function TeamMembersForm({
             egy póttagból.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
+        <CardContent className="grid gap-6">
           <div>
             <FormLabel>Csapattagok *</FormLabel>
             <FormDescription className="flex justify-between">

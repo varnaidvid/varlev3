@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Competition, School } from "@prisma/client";
+import { Competition, School, Technology } from "@prisma/client";
 import {
   formOneSchema,
   formTwoSchema,
@@ -29,12 +29,13 @@ export type TeamRegistrationData = {
 export default function RegisterForm({
   competition,
   schools,
+  technologies,
 }: {
   competition: Competition;
   schools: School[];
+  technologies: Technology[];
 }) {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const mutation = api.competition.registerTeam.useMutation();
 
@@ -53,6 +54,7 @@ export default function RegisterForm({
       name: "",
       school: "",
       coaches: [""],
+      technologies: [""],
     },
   });
 
@@ -86,6 +88,10 @@ export default function RegisterForm({
     }
   };
 
+  useEffect(() => {
+    console.log("technologies", formTwo.getValues("technologies"));
+  }, [formTwo.watch("technologies")]);
+
   const getAllFormData = () => {
     return {
       account: formOne.getValues(),
@@ -104,7 +110,6 @@ export default function RegisterForm({
 
       await mutation.mutateAsync(formData);
 
-      // router.push("/registration-success");
       toast.success("Sikeres regisztráció!");
     } catch (error) {
       console.error("Registration error:", error);
@@ -127,6 +132,7 @@ export default function RegisterForm({
       {step === 2 && (
         <Card className="mx-auto w-full max-w-md">
           <TeamDetailsForm
+            technologies={technologies}
             form={formTwo}
             schools={schools}
             onSubmit={handleNextStep}
