@@ -44,7 +44,7 @@ const TeamMember = ({
           index === "reserved" ? "reserveMember.year" : `members.${index}.year`
         }
         render={({ field }) => (
-          <FormItem className="w-16">
+          <FormItem className="w-[72px]">
             <FormControl>
               <div className="relative inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-lg border border-input text-sm shadow-sm">
                 <input
@@ -94,12 +94,16 @@ const TeamMember = ({
         )}
       />
 
-      {remove && (
-        <Button type="button" variant="outline" size="icon" onClick={remove}>
-          <Trash2 className="h-4 w-4" />
-          <span className="sr-only">Csapattag törlése</span>
-        </Button>
-      )}
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        disabled={!remove}
+        onClick={remove && remove}
+      >
+        <Trash2 className="h-4 w-4" />
+        <span className="sr-only">Csapattag törlése</span>
+      </Button>
     </div>
   </div>
 );

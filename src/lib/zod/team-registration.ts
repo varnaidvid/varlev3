@@ -13,6 +13,11 @@ export const formOneSchema = z
 export const formTwoSchema = z.object({
   name: z.string().min(3, "Adja meg a csapat nevét!"),
   school: z.string().min(3, "Adja meg az iskola nevét!"),
+  coaches: z
+    .array(z.string().min(3, "Adja meg a tanár teljes nevét!"))
+    .min(1, "Legalább egy felkészítő tanárt meg kell adni!"),
+});
+export const formThreeSchema = z.object({
   members: z
     .array(
       z.object({

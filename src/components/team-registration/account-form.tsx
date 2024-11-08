@@ -1,6 +1,3 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import {
   CardContent,
   CardDescription,
@@ -8,7 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
+  Form,
   FormControl,
   FormField,
   FormItem,
@@ -16,51 +15,50 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { stepOneSchema } from "@/lib/zod/team-registration";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { User, ArrowRight } from "lucide-react";
+import { ExtraIcon } from "@/components/ui/extra-icon";
 import { useState } from "react";
-import { Form, useForm } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
+import { formOneSchema } from "@/lib/zod/team-registration";
 
-export default function FormOne({
+export function AccountForm({
   form,
-  setStep,
+  onSubmit,
 }: {
-  form: ReturnType<typeof useForm<z.infer<typeof stepOneSchema>>>;
-  setStep: (step: number) => void;
+  form: UseFormReturn<z.infer<typeof formOneSchema>>;
+  onSubmit: () => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
-
-  async function onSubmit(values: z.infer<typeof stepOneSchema>) {
-    console.log(values);
-    setStep(2);
-  }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <CardHeader className="border-b">
-          <CardTitle className="text-2xl">
-            <div className="flex flex-col gap-2">
-              <span>Csapatod beregisztrálása</span>
-            </div>
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <ExtraIcon
+              Icon={User}
+              variant="small"
+              fromColor="from-orange-500/20"
+              toColor="to-yellow-400/20"
+            />
+            Csapat beregisztrálása
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="!mt-4 text-justify">
             Először egy közös fiókot kell létrehoznod a csapatodnak. Ezt
-            fogjátok használni a szintén közös
+            fogjátok használni a versenyhez való részvételhez, információkhoz
+            való jutásra és a feladatok beadására.
           </CardDescription>
         </CardHeader>
-
         <CardContent className="grid gap-4">
           <FormField
             control={form.control}
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Felhasználónév</FormLabel>
+                <FormLabel>Csapat felhasználóneve *</FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="gipszjakab34" {...field} />
                 </FormControl>
@@ -68,13 +66,12 @@ export default function FormOne({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Jelszó</FormLabel>
+                <FormLabel>Jelszó *</FormLabel>
                 <FormControl>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -91,7 +88,7 @@ export default function FormOne({
             name="password2"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Jelszó megerősítése</FormLabel>
+                <FormLabel>Jelszó megerősítése *</FormLabel>
                 <FormControl>
                   <Input
                     type={showPassword ? "text" : "password"}
@@ -103,30 +100,17 @@ export default function FormOne({
               </FormItem>
             )}
           />
-
           <div className="flex items-center space-x-2">
             <Switch
               id="show-password"
               checked={showPassword}
               onCheckedChange={() => setShowPassword(!showPassword)}
             />
-            <Label htmlFor="airplane-mode">Jelszó megjelenítése</Label>
+            <Label htmlFor="show-password">Jelszó megjelenítése</Label>
           </div>
-
-          {/* <Turnstile
-                options={{
-                  theme: 'light',
-                  size: 'flexible',
-                  language: 'hu'
-                }}
-                className="border mt-6"
-                siteKey="0x4AAAAAAAxl6rMTte5ycyHD"
-                onSuccess={(token) => setCaptchaToken(token)}
-              /> */}
         </CardContent>
-
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full">
+          <Button className="w-full" type="submit">
             Következő lépés
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
