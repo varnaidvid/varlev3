@@ -27,6 +27,7 @@ export const teamsRouter = createTRPCRouter({
           members: true,
           coaches: true,
           school: true,
+          technologies: true,
         },
       });
     }),

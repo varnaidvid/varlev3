@@ -169,6 +169,9 @@ async function main() {
       school: {
         connect: { id: school1.id },
       },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
       Competition: {
         connect: { id: competition.id },
       },
@@ -200,6 +203,9 @@ async function main() {
       status: "APPROVED_BY_ORGANIZER",
       Competition: {
         connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech3.id }, { id: tech4.id }],
       },
       school: {
         connect: { id: school2.id },
@@ -233,6 +239,9 @@ async function main() {
       status: "REGISTERED",
       Competition: {
         connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech5.id }],
       },
       school: {
         connect: { id: school2.id },
