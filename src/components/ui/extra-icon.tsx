@@ -57,7 +57,7 @@ export function ExtraIcon({
       </p>
       <div
         className={cn(
-          `absolute bottom-0 left-0 right-0 top-0 ${borderGap} ${innerSize} rounded-lg border-2 bg-gradient-to-r opacity-80`,
+          `absolute bottom-0 left-0 right-0 top-0 -z-10 ${borderGap} ${innerSize} rounded-lg border-2 bg-gradient-to-r opacity-80`,
           fromColor,
           toColor,
         )}
