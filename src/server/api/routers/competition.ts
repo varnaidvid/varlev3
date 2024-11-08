@@ -7,7 +7,7 @@ export const competitionRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.competition.findUnique({
         where: { id: input.id },
-        include: { applications: true, technologies: true },
+        include: { technologies: true, categories: true },
       });
     }),
 

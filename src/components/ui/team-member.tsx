@@ -48,16 +48,20 @@ const TeamMember = ({
             <FormControl>
               <div className="relative inline-flex h-9 w-full items-center overflow-hidden whitespace-nowrap rounded-lg border border-input text-sm shadow-sm">
                 <input
-                  type="number"
+                  type="text" // Set the input type to text
                   className="w-full pl-3 pr-8 tabular-nums [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                  min={1}
-                  max={13}
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(
-                      Math.min(13, parseInt(e.target.value, 10) || 1),
-                    )
-                  }
+                  value={`${field.value}.`} // Display value with a period
+                  onChange={(e) => {
+                    // Parse the input to remove period and keep the number within 1 and 13
+                    const parsedValue = Math.min(
+                      13,
+                      Math.max(
+                        1,
+                        parseInt(e.target.value.replace(".", ""), 10) || 1,
+                      ),
+                    );
+                    field.onChange(parsedValue);
+                  }}
                 />
                 <div className="absolute right-0 top-0 flex h-full flex-col">
                   <Button
