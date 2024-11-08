@@ -1,4 +1,4 @@
-enum TeamStatus {
+enum ApplicationStatus {
     REGISTERED
     APPROVED_BY_SCHOOL
     APPROVED_BY_ORGANIZER
@@ -58,7 +58,6 @@ model Member {
 
     email String?
 
-    isPrimary Boolean @default(true)
     isReserve Boolean @default(false)
 
     teamId String
@@ -82,8 +81,8 @@ model Team {
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    schoolName String?
-    school     School? @relation(fields: [schoolName], references: [id])
+    schoolName String
+    school     School @relation(fields: [schoolName], references: [id])
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
@@ -157,7 +156,7 @@ model Notification {
 model Application {
     id String @id @default(cuid())
 
-    status TeamStatus @default(REGISTERED)
+    status ApplicationStatus @default(REGISTERED)
 
     createdAt DateTime @default(now())
 
