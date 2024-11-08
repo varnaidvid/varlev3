@@ -43,11 +43,11 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen">
-      <Header />
+      {await Header()}
 
       <main className="container mx-auto min-h-[calc(100vh-57px-97px)] w-full flex-1">
         
-        <Hero />
+        {await Hero()}
 
         <h1 className="text-3xl font-bold p-4">Aktuális versenyek</h1>
 
@@ -78,26 +78,26 @@ export default async function HomePage() {
           <Accordion type="single" collapsible>
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-xl font-normal">Mikor lesz a következő verseny?</AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="text-base">
                 {/*to-do: fetch data from database*/}
                 A következő verseny időpontja: 2025.01.01
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger className="text-xl font-normal">Mi kell a jelentkezéshez?</AccordionTrigger>
-              <AccordionContent className="">
+              <AccordionContent className="text-base">
                 A jelentkezés nagyon egyszerű folyamat...
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-3">
               <AccordionTrigger className="text-xl font-normal">Hogyan zajlik a folyamat?</AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="text-base">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quo praesentium laborum non totam. Nemo animi officiis doloribus ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste nisi, modi error.
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-4 text-">
+            <AccordionItem value="item-4">
               <AccordionTrigger className="text-xl font-normal">Mi a fődíj?</AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="text-base">
                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quo praesentium laborum non totam. Nemo animi officiis doloribus ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste nisi, modi error.
               </AccordionContent>
             </AccordionItem>
