@@ -2,7 +2,6 @@
 
 import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ChartComponentProps {
   data: { key: string; value: number }[];
