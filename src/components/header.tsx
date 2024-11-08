@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import Logo from "./logo";
 import { cn } from "@/lib/utils";
-import { AlignJustify, XIcon } from "lucide-react";
+import { AlignJustify, XIcon, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const menuLinks = [
@@ -89,10 +89,10 @@ export default function Header() {
       <header
         className={cn(
           "fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-16px)] max-w-7xl rounded-xl border backdrop-blur-md transition-all duration-700 ease-in-out sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]",
-          "animate-fade-in -translate-y-4 opacity-[0.01]",
+          "container flex -translate-y-4 animate-fade-in justify-center opacity-[0.01]",
         )}
       >
-        <div className="container flex h-14 w-full !max-w-screen-lg items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="flex h-14 w-full items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 md:gap-4">
             <Link href="/" className="text-md flex items-center gap-3">
               <Logo size="small" iconBg="black" />
@@ -112,7 +112,11 @@ export default function Header() {
           </div>
 
           <div className="ml-auto hidden h-full items-center gap-2 sm:flex">
-            <Button>Bejelentkezés</Button>
+            <Button asChild>
+              <Link href="/bejelentkezes">
+                Bejelentkezés <ArrowRight className="size-4" />
+              </Link>
+            </Button>
           </div>
 
           <button
@@ -131,7 +135,7 @@ export default function Header() {
           variants={mobilenavbarVariant}
           animate={hamburgerMenuIsOpen ? "animate" : "exit"}
           className={cn(
-            `fixed left-0 top-0 z-50 h-screen w-screen overflow-auto bg-background/70 backdrop-blur-md`,
+            `fixed left-0 top-0 z-50 h-screen w-screen overflow-auto bg-background/70 px-4 backdrop-blur-md`,
             {
               "pointer-events-none": !hamburgerMenuIsOpen,
             },
@@ -162,7 +166,7 @@ export default function Header() {
                 <motion.li
                   key={item.label}
                   variants={mobileLinkVar}
-                  className="border-grey-dark w-full border-b py-0.5 md:border-none"
+                  className="border-grey-dark w-full border-b py-1 md:border-none"
                 >
                   <Link
                     className={`hover:text-grey flex h-[var(--navigation-height)] w-full items-center justify-center text-xl transition-[color,transform] duration-300 md:translate-y-0 md:text-sm md:transition-colors ${
@@ -177,11 +181,15 @@ export default function Header() {
 
               <motion.div
                 className={cn(
-                  "mt-12 flex -translate-y-10 items-end justify-end gap-2 px-4 opacity-[0.01] transition-all delay-200 duration-300 sm:hidden",
+                  "mt-12 flex w-full -translate-y-10 items-end justify-end gap-2 px-4 opacity-[0.01] transition-all delay-200 duration-300 sm:hidden",
                   hamburgerMenuIsOpen ? "translate-y-0 opacity-100" : "",
                 )}
               >
-                <Button>Bejelentkezés</Button>
+                <Button asChild className="w-full">
+                  <Link href="/bejelentkezes">
+                    Bejelentkezés <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
               </motion.div>
             </motion.ul>
           </div>

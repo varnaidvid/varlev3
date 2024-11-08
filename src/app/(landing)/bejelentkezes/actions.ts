@@ -1,8 +1,8 @@
 "use server";
 
-import { signInSchema } from "../../lib/zod";
 import { z } from "zod";
 import { signIn } from "@/server/auth";
+import { signInSchema } from "@/lib/zod/auth";
 
 export async function login(
   values: z.infer<typeof signInSchema>,

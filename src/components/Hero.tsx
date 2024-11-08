@@ -11,7 +11,7 @@ export async function Hero() {
   return (
     <section
       id="hero"
-      className="relative mx-auto flex flex-col items-center gap-6 py-16 pt-[100px] text-black lg:py-32"
+      className="relative mx-auto flex flex-col items-center gap-6 py-16 pt-[160px] text-black lg:py-32"
     >
       <Logo size="large" className="z-10 mb-4" />
 
