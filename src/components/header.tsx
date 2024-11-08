@@ -2,8 +2,11 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import Logo from "./logo";
+import { auth } from "@/server/auth";
 
 export default async function Header() {
+  const session = await auth();
+
   return (
     <header className="sticky top-0 z-[50] w-full border-b border-border/40 bg-background/90 backdrop-blur-md dark:bg-black/[0.6]">
       <div className="container mx-auto flex h-14 w-full items-center">
@@ -19,7 +22,11 @@ export default async function Header() {
           </div>
 
           <div className="ml-auto flex">
-            <Button>Bejelentkezés</Button>
+            <Button>
+              <Link href={session ? "/kijelentkezes" : "/bejelentkezes"}>
+                {session ? "Kijelentkezés" : "Bejelentkezés"}
+              </Link>
+            </Button>
           </div>
         </nav>
       </div>
