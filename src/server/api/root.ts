@@ -1,6 +1,9 @@
 import { postRouter } from "@/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { authRouter } from "./routers/auth";
+import { competitionRouter } from "./routers/competition";
+import { schoolRouter } from "./routers/school";
+import { coachRouter } from "./routers/coach";
 import { teamsRouter } from "./routers/teams";
 
 /**
@@ -11,6 +14,9 @@ import { teamsRouter } from "./routers/teams";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   auth: authRouter,
+  competition: competitionRouter,
+  school: schoolRouter,
+  coach: coachRouter,
   teams: teamsRouter,
 });
 

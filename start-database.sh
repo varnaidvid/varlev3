@@ -42,9 +42,9 @@ fi
 
 docker run -d \
   --name $DB_CONTAINER_NAME \
-  -e MYSQL_ROOT_PASSWORD="$DB_PASSWORD" \
-  -e MYSQL_DATABASE=varlev3 \
+  -e MYSQL_ROOT_PASSWORD="szupertitkosrootjelszo" \
+  -e MYSQL_DATABASE="varlev3" \
   -e MYSQL_USER="mysqluser" \
   -e MYSQL_PASSWORD="$DB_PASSWORD" \
-  -p "$DB_PORT":3306 \
+  -p "3306:3306" \
   mysql:latest && echo "Database container '$DB_CONTAINER_NAME' was successfully created"

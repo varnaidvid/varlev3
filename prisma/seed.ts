@@ -5,7 +5,6 @@ import { saltAndHashPassword } from "@/utils/password";
 const prisma = new PrismaClient();
 async function main() {
   // Create 2 organizer accounts
-
   await prisma.organizer.create({
     data: {
       name: "John Doe",
@@ -66,86 +65,6 @@ async function main() {
     },
   });
 
-  // Create 3 team accounts
-  const team1 = await prisma.team.create({
-    data: {
-      name: "Tech Titans",
-      school: {
-        connect: { id: school1.id },
-      },
-      account: {
-        create: {
-          username: "techtitans",
-          ...saltAndHashPassword("teampassword"),
-          type: "TEAM" as AccountType,
-        },
-      },
-      members: {
-        create: [
-          { name: "Alice Anderson", year: 12 },
-          { name: "Bob Barker", year: 11 },
-          { name: "Charlie Chen", year: 10 },
-        ],
-      },
-      coaches: {
-        create: [{ name: "Coach Doe" }],
-      },
-    },
-  });
-
-  const team2 = await prisma.team.create({
-    data: {
-      name: "Coding Crusaders",
-      school: {
-        connect: { id: school2.id },
-      },
-      account: {
-        create: {
-          username: "codingcrusaders",
-          ...saltAndHashPassword("teampassword2"),
-          type: "TEAM",
-        },
-      },
-      members: {
-        create: [
-          { name: "Dave Davis", year: 12 },
-          { name: "Eve Ericsson", year: 11 },
-          { name: "Fiona Fox", year: 11 },
-          { name: "Frank Fong", year: 10, isReserve: true },
-        ],
-      },
-      coaches: {
-        create: [{ name: "Coach Smith" }],
-      },
-    },
-  });
-
-  const team3 = await prisma.team.create({
-    data: {
-      name: "Byte Breakers",
-      school: {
-        connect: { id: school2.id },
-      },
-      account: {
-        create: {
-          username: "bytebreakers",
-          ...saltAndHashPassword("teampassword3"),
-          type: "TEAM" as AccountType,
-        },
-      },
-      members: {
-        create: [
-          { name: "Gina Garcia", year: 12 },
-          { name: "Hannah Hsu", year: 11 },
-          { name: "Ivan Ivanov", year: 10 },
-        ],
-      },
-      coaches: {
-        create: [{ name: "Coach Johnson" }],
-      },
-    },
-  });
-
   const tech1 = await prisma.technology.create({
     data: {
       name: "Next.js",
@@ -180,6 +99,7 @@ async function main() {
     data: {
       name: "Coding Challenge 2024",
       description: "A competitive coding event for high school students",
+      maxTeamSize: 3,
       image: "https://picsum.photos/200/300",
       deadline: new Date("2024-11-30"),
       technologies: {
@@ -194,39 +114,101 @@ async function main() {
     },
   });
 
-  await prisma.application.create({
+  // Create 3 team accounts
+  await prisma.team.create({
     data: {
-      Team: {
-        connect: { id: team1.id },
-      },
-      Competition: {
-        connect: { id: competition.id },
-      },
-      status: "REGISTERED",
-    },
-  });
-
-  await prisma.application.create({
-    data: {
-      Team: {
-        connect: { id: team2.id },
-      },
-      Competition: {
-        connect: { id: competition.id },
-      },
+      name: "Tech Titans",
       status: "APPROVED_BY_SCHOOL",
-    },
-  });
-
-  await prisma.application.create({
-    data: {
-      Team: {
-        connect: { id: team3.id },
+      school: {
+        connect: { id: school1.id },
       },
       Competition: {
         connect: { id: competition.id },
       },
+      account: {
+        create: {
+          username: "techtitans",
+          ...saltAndHashPassword("teampassword"),
+          type: "TEAM" as AccountType,
+        },
+      },
+      members: {
+        create: [
+          { name: "Alice Anderson", year: 12 },
+          { name: "Bob Barker", year: 11 },
+          { name: "Charlie Chen", year: 10 },
+        ],
+      },
+      coaches: {
+        create: [
+          { name: "Coach Doe", School: { connect: { id: school1.id } } },
+        ],
+      },
+    },
+  });
+
+  await prisma.team.create({
+    data: {
+      name: "Coding Crusaders",
       status: "APPROVED_BY_ORGANIZER",
+      Competition: {
+        connect: { id: competition.id },
+      },
+      school: {
+        connect: { id: school2.id },
+      },
+      account: {
+        create: {
+          username: "codingcrusaders",
+          ...saltAndHashPassword("teampassword2"),
+          type: "TEAM",
+        },
+      },
+      members: {
+        create: [
+          { name: "Dave Davis", year: 12 },
+          { name: "Eve Ericsson", year: 11 },
+          { name: "Fiona Fox", year: 11 },
+          { name: "Frank Fong", year: 10, isReserve: true },
+        ],
+      },
+      coaches: {
+        create: [
+          { name: "Coach Smith", School: { connect: { id: school2.id } } },
+        ],
+      },
+    },
+  });
+
+  await prisma.team.create({
+    data: {
+      name: "Byte Breakers",
+      status: "REGISTERED",
+      Competition: {
+        connect: { id: competition.id },
+      },
+      school: {
+        connect: { id: school2.id },
+      },
+      account: {
+        create: {
+          username: "bytebreakers",
+          ...saltAndHashPassword("teampassword3"),
+          type: "TEAM" as AccountType,
+        },
+      },
+      members: {
+        create: [
+          { name: "Gina Garcia", year: 12 },
+          { name: "Hannah Hsu", year: 11 },
+          { name: "Ivan Ivanov", year: 10 },
+        ],
+      },
+      coaches: {
+        create: [
+          { name: "Coach Johnson", School: { connect: { id: school1.id } } },
+        ],
+      },
     },
   });
 

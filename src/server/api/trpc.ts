@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { Role } from "@prisma/client";
+import { AccountType } from "@prisma/client";
 
 /**
  * 1. CONTEXT
@@ -133,9 +133,9 @@ export const protectedProcedure = t.procedure
     });
   });
 
-export const withRole = (allowedRoles: Role[]) =>
+export const withRole = (allowedTypes: AccountType[]) =>
   protectedProcedure.use(({ ctx, next }) => {
-    if (!ctx.session.user || !allowedRoles.includes(ctx.session.user.role)) {
+    if (!ctx.session.user || !allowedTypes.includes(ctx.session.user.type)) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
         message: "Nincs jogosultságod a művelethez.",

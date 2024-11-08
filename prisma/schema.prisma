@@ -71,12 +71,16 @@ model Coach {
 
     teamId String
     Team   Team   @relation(fields: [teamId], references: [id])
+
+    School     School @relation(fields: [schoolName], references: [id])
+    schoolName String
 }
 
 model Team {
     id String @id @default(cuid())
 
-    name String
+    name   String
+    status ApplicationStatus @default(REGISTERED)
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
@@ -87,21 +91,24 @@ model Team {
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
 
-    members      Member[]
-    coaches      Coach[]
-    applications Application[]
+    members Member[]
+    coaches Coach[]
+
+    competitionId String
+    Competition   Competition @relation(fields: [competitionId], references: [id])
 }
 
 model School {
     id String @id @default(cuid())
 
-    name    String
+    name    String @unique
     address String
 
     contactName  String
     contactEmail String
 
-    teams Team[]
+    teams   Team[]
+    coaches Coach[]
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
@@ -131,11 +138,11 @@ model Competition {
     name        String
     description String
     image       String
-
-    deadline DateTime
+    maxTeamSize Int
+    deadline    DateTime
 
     technologies Technology[]
-    applications Application[]
+    teams        Team[]
 }
 
 model Notification {
@@ -151,18 +158,4 @@ model Notification {
 
     receiverAccountId String
     receiverAccount   Account @relation(fields: [receiverAccountId], references: [id], name: "Receiver")
-}
-
-model Application {
-    id String @id @default(cuid())
-
-    status ApplicationStatus @default(REGISTERED)
-
-    createdAt DateTime @default(now())
-
-    teamId String
-    Team   Team   @relation(fields: [teamId], references: [id])
-
-    competitionId String
-    Competition   Competition @relation(fields: [competitionId], references: [id])
 }

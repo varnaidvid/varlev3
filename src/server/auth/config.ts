@@ -2,13 +2,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
 import { signInSchema } from "@/lib/zod";
-import { Role } from "@prisma/client";
-import { z } from "zod";
-import { saltAndHashPassword, verifyPassword } from "@/utils/password";
-import { randomUUID } from "crypto";
-import { GetServerSidePropsContext } from "next";
+import { verifyPassword } from "@/utils/password";
 import { DefaultSession, NextAuthConfig, Session, User } from "next-auth";
-import { User as NextUser } from "next-auth";
+import { AccountType } from "@prisma/client";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,8 +17,21 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      role: Role;
+
+      name: String;
       username: string;
+      type: AccountType;
+
+      school: {
+        address: String;
+
+        contactName: String;
+        contactEmail: String;
+      };
+
+      organizer: {
+        email?: string;
+      };
     } & DefaultSession["user"];
   }
 }
@@ -82,7 +91,10 @@ export const authConfig = {
 
           if (tokenUser.id) {
             session.user.id = tokenUser.id;
-            session.user.role = tokenUser.role;
+            session.user.name = tokenUser.name;
+            session.user.type = tokenUser.type;
+            session.user.organizer = tokenUser.organizer;
+            session.user.school = tokenUser.school;
             session.user.username = tokenUser.username;
 
             return session;
