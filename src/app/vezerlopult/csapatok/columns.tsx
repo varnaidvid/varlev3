@@ -1,9 +1,9 @@
-// app/teams/columns.tsx
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+
+import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 export type Member = {
   id: string;
@@ -41,6 +41,9 @@ export type Team = {
   updatedAt: Date;
   createdAt: Date;
   schoolName: string; // or you can replace it with abbr. "schoolId" to use it as reference
+  school: {
+    name: string;
+  };
   accountId: string;
   members: Member[];
   coaches: Coach[];
@@ -51,43 +54,57 @@ export const columns: ColumnDef<Team>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Team Name <ArrowUpDown />
-      </Button>
+      <DataTableColumnHeader column={column} title="Csapat neve" />
     ),
+    cell: ({ row }) => row.getValue("name"),
   },
   {
-    accessorKey: "schoolName",
-    header: "School Name",
+    id: "school",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Iskola" />
+    ),
+    cell: ({ row }) => row.original.school.name,
   },
   {
-    id: "memberCount",
-    header: "Members",
-    cell: ({ row }) => row.original.members.length, // Show the count of members
+    id: "members",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Csapattagok" />
+    ),
+    cell: ({ row }) => {
+      const members = row.original.members;
+      return (
+        <div className="space-y-1">
+          {members.map((member: Member) => (
+            <div key={member.id}>{member.name}</div>
+          ))}
+        </div>
+      );
+    },
   },
   {
-    id: "coachCount",
-    header: "Coaches",
-    cell: ({ row }) => row.original.coaches.length, // Show the count of coaches
-  },
-  {
-    id: "competitionsAppliedCount",
-    header: "Competitions Applied For",
-    cell: ({ row }) => row.original.applications.length, // Show the count of applications
+    id: "competitions",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Versenyek" />
+    ),
+    cell: ({ row }) => {
+      const applications = row.original.applications;
+      return (
+        <div className="space-y-1">
+          {applications.map((application: Application) => (
+            <div key={application.id}>{application.Competition.name}</div>
+          ))}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Created At <ArrowUpDown />
-      </Button>
+      <DataTableColumnHeader column={column} title="Létrehozva" />
     ),
-    cell: ({ row }) => new Date(row.getValue("createdAt")).toLocaleString(), // Format createdAt date
+    cell: ({ row }) => {
+      const date: Date = row.getValue("createdAt");
+      return date.toLocaleDateString();
+    },
   },
 ];

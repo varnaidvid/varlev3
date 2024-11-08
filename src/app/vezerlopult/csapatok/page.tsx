@@ -1,7 +1,9 @@
+"use server";
+
 import { PageTitle } from "@/components/ui/page-title";
 import { Users } from "lucide-react";
 import { api } from "@/trpc/server";
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "./data-table";
 import { columns } from "./columns";
 
 export default async function TeamsPage() {

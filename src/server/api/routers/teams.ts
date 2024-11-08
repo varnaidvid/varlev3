@@ -1,3 +1,4 @@
+import { name } from ".eslintrc.cjs";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -16,6 +17,11 @@ export const teamsRouter = createTRPCRouter({
       include: {
         members: true,
         coaches: true,
+        school: {
+          select: {
+            name: true,
+          },
+        },
         applications: {
           include: {
             Competition: true,
