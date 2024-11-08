@@ -11,7 +11,7 @@ export default function ToastCatcher() {
   useEffect(() => {
     if (searchParams.get("toast")) {
       const type = searchParams.get("type") as any;
-      const message = decodeURIComponent(searchParams.get("message") || "");
+      const message = decodeURI(searchParams.get("message") || "");
 
       if (type === "error") toast.error(message);
       else toast.success(message);

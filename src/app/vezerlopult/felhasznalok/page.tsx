@@ -3,7 +3,7 @@ import withRole from "@/utils/withRole";
 import { Users } from "lucide-react";
 
 export default async function Page() {
-  await withRole("WEBMESTER", "/vezerlopult");
+  await withRole(["WEBMESTER"]);
 
   return (
     <>
