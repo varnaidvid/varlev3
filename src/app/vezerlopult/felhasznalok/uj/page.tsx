@@ -1,15 +1,21 @@
 import { PageTitle } from "@/components/ui/page-title";
-import { Gauge, UserPlus } from "lucide-react";
+import withRole from "@/utils/withRole";
+import { UserPlus } from "lucide-react";
+import RegisterForm from "./form";
+import DotPattern from "@/components/ui/dot-pattern";
+import { cn } from "@/lib/utils";
 
-export default function Page() {
+export default async function Page() {
+  await withRole(["WEBMESTER"]);
+
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
+      <header className="mx-auto mt-8 flex w-full max-w-xl flex-col gap-2 transition-[width,height] ease-linear">
         <PageTitle
           Icon={UserPlus}
-          fromColor="from-purple-400"
-          toColor="to-purple-500"
-          title="Új felhasználók"
+          fromColor="from-indigo-400"
+          toColor="to-indigo-500"
+          title="Új felhasználó"
           links={[
             {
               href: "/vezerlopult/felhasznalok",
@@ -23,15 +29,16 @@ export default function Page() {
         />
       </header>
 
-      <main>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div className="aspect-video rounded-xl bg-muted/85" />
-            <div className="aspect-video rounded-xl bg-muted/85" />
-            <div className="aspect-video rounded-xl bg-muted/85" />
-          </div>
-          <div className="h-full min-h-[100vh] flex-1 rounded-xl bg-muted/85" />
+      <main className="relative flex h-full w-full flex-col items-center justify-center rounded-lg bg-background p-2 pb-8 md:shadow-xl">
+        <div className="z-10 mx-auto flex w-full flex-col items-center justify-center">
+          <RegisterForm />
         </div>
+
+        <DotPattern
+          className={cn(
+            "[mask-image:radial-gradient(700px_circle_at_center,white,transparent)]",
+          )}
+        />
       </main>
     </>
   );

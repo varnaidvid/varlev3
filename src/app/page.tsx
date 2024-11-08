@@ -1,44 +1,57 @@
 import Link from "next/link";
 
 import { auth } from "@/server/auth";
-import { api, HydrateClient } from "@/trpc/server";
-import { Layers3 } from "lucide-react";
+import { HydrateClient } from "@/trpc/server";
+import { cn } from "@/lib/utils";
+import DotPattern from "@/components/ui/dot-pattern";
+import Header from "@/components/header";
 import Logo from "../components/logo";
+import { Button } from "@/components/ui/button";
 
-export default async function Home() {
+export default async function HomePage() {
   const session = await auth();
 
-  // const hello = await api.post.hello({ text: "asdlksandoiasndio" });
-
-  // if (session?.user) {
-  // void api.post.getLatest.prefetch();
-  // }
-
   return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-indigo-600 to-sky-600 text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <Logo />
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.email}</span>}
-              </p>
-              {session?.user && (
-                <pre className="text-center text-2xl text-white">
-                  <code>{JSON.stringify(session, null, 2)}</code>
-                </pre>
-              )}
-              <Link
-                href={session ? "/kijelentkezes" : "/bejelentkezes"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-              >
-                {session ? "Sign out" : "Sign in"}
+    <div className="min-h-screen">
+      <Header />
+
+      <main className="container mx-auto min-h-[calc(100vh-57px-97px)] w-full flex-1">
+        <section
+          id="hero"
+          className="relative mx-auto flex flex-col items-center gap-2 py-8 pb-10 md:py-12 md:pb-8 lg:py-24 lg:pb-6"
+        >
+          <Logo size="large" iconBg="black" className="z-10" />
+
+          <span className="max-w-[750px] text-center text-lg font-light italic text-foreground text-gray-600 dark:text-gray-400">
+            This is VarleV3
+          </span>
+          <div className="mt-6 flex gap-2 pb-12">
+            <Button asChild variant={"link"}>
+              <Link href={session ? "/kijelentkezes" : "/bejelentkezes"}>
+                {session ? "Kijelentkezés" : "Bejelentkezés"}
               </Link>
-            </div>
+            </Button>
+
+            {session && (
+              <Button asChild variant={"link"}>
+                <Link href="/vezerlopult">Vezérlőpult</Link>
+              </Button>
+            )}
           </div>
-        </div>
+          <DotPattern
+            width={20}
+            height={20}
+            cx={1}
+            cy={1}
+            cr={1}
+            style={{
+              maskImage:
+                "radial-gradient(circle at top, rgba(255,255,255,1) 100%, transparent, transparent)",
+            }}
+            className={cn("opacity-75 dark:opacity-50")}
+          />
+        </section>
       </main>
-    </HydrateClient>
+    </div>
   );
 }

@@ -1,16 +1,17 @@
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { PageTitle } from "@/components/ui/page-title";
-import { Gauge, Users } from "lucide-react";
+import withRole from "@/utils/withRole";
+import { Users } from "lucide-react";
 
-export default function Page() {
+export default async function Page() {
+  await withRole(["WEBMESTER"]);
+
   return (
     <>
       <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
         <PageTitle
           Icon={Users}
-          fromColor="from-indigo-400"
-          toColor="to-indigo-500"
+          fromColor="from-indigo-300"
+          toColor="to-indigo-400"
           title="Felhasználók"
           links={[
             {

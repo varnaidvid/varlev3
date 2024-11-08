@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   if (!session) return NextResponse.redirect("/bejelentkezes");
 
   await signOut({
-    redirectTo: "/?toast=true&type=success&message=Sikeres kijelentkezes",
+    redirectTo: `/?toast=true&type=success&message=${encodeURI("Sikeres kijelentkezés!")}`,
   });
 
   //   return NextResponse.redirect(redirectTo)

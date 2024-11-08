@@ -11,7 +11,8 @@ export async function login(
     await signIn("credentials", {
       username: values.username,
       password: values.password,
-      redirect: false,
+      redirect: true,
+      redirectTo: `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres bejelentkezés!")}`,
     });
 
     return { success: true, message: "Sikeres bejelentkezés!" };
