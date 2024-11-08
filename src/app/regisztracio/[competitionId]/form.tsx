@@ -16,12 +16,14 @@ import { AccountForm } from "@/components/team-registration/account-form";
 import { TeamDetailsForm } from "@/components/team-registration/details-form";
 import { TeamMembersForm } from "@/components/team-registration/members-form";
 import { SummaryStep } from "@/components/team-registration/summary-form";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 export type TeamRegistrationData = {
   account: z.infer<typeof formOneSchema>;
   team: z.infer<typeof formTwoSchema>;
   members: z.infer<typeof formThreeSchema>;
-  competition: string;
+  competitionId: string;
 };
 
 export default function RegisterForm({
@@ -34,6 +36,7 @@ export default function RegisterForm({
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mutation = api.competition.registerTeam.useMutation();
 
   const formOne = useForm<z.infer<typeof formOneSchema>>({
     resolver: zodResolver(formOneSchema),
@@ -88,7 +91,7 @@ export default function RegisterForm({
       account: formOne.getValues(),
       team: formTwo.getValues(),
       members: formThree.getValues(),
-      competition: competition.id,
+      competitionId: competition.id,
     };
   };
 
@@ -97,31 +100,21 @@ export default function RegisterForm({
       setIsSubmitting(true);
       const formData = getAllFormData();
 
-      const response = await fetch("/api/register-team", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      console.log(formData);
 
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
+      await mutation.mutateAsync(formData);
 
-      // Redirect to success page or show success message
-      router.push("/registration-success");
+      // router.push("/registration-success");
+      toast.success("Sikeres regisztráció!");
     } catch (error) {
       console.error("Registration error:", error);
-      // Handle error (show error message to user)
+      toast.error("Hiba történt a regisztráció során.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleBack = () => {
-    setStep(step - 1);
-  };
+  const handleBack = () => setStep(step - 1);
 
   return (
     <>

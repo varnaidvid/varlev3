@@ -72,8 +72,8 @@ model Coach {
     teamId String
     Team   Team   @relation(fields: [teamId], references: [id])
 
-    School     School @relation(fields: [schoolName], references: [id])
-    schoolName String
+    schoolId String
+    School   School @relation(fields: [schoolId], references: [id])
 }
 
 model Team {
@@ -85,8 +85,8 @@ model Team {
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    schoolName String
-    school     School @relation(fields: [schoolName], references: [id])
+    schoolId String
+    school   School @relation(fields: [schoolId], references: [id])
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
@@ -150,9 +150,17 @@ model Competition {
     maxTeamSize Int
     deadline    DateTime
 
+    emails       Email[]
     technologies Technology[]
     categories   Category[]
     teams        Team[]
+}
+
+model Email {
+    id            String      @id @default(cuid())
+    email         String
+    competitionId String
+    competition   Competition @relation(fields: [competitionId], references: [id])
 }
 
 model Notification {
