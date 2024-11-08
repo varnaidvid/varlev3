@@ -1,10 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
-import { signInSchema } from "@/lib/zod";
 import { verifyPassword } from "@/utils/password";
 import { DefaultSession, NextAuthConfig, Session, User } from "next-auth";
 import { AccountType } from "@prisma/client";
+import { signInSchema } from "@/lib/zod/auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -69,7 +69,7 @@ export const authConfig = {
         const { username, password } =
           await signInSchema.parseAsync(credentials);
 
-        user = await db.user.findFirst({
+        user = await db.account.findFirst({
           where: {
             username,
           },

@@ -80,3 +80,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+:disabled {
+  cursor: not-allowed !important;
+}

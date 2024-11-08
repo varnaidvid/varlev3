@@ -95,6 +95,28 @@ async function main() {
     },
   });
 
+  // create 3 categories
+  const category1 = await prisma.category.create({
+    data: {
+      name: "Web Development",
+      description: "Building websites and web applications",
+    },
+  });
+
+  const category2 = await prisma.category.create({
+    data: {
+      name: "Mobile Development",
+      description: "Building mobile apps for iOS and Android",
+    },
+  });
+
+  const category3 = await prisma.category.create({
+    data: {
+      name: "Game Development",
+      description: "Creating video games for PC and consoles",
+    },
+  });
+
   const competition = await prisma.competition.create({
     data: {
       name: "Országos Középiskolai Web Programozó Verseny 2024",
@@ -132,6 +154,9 @@ async function main() {
           { id: tech4.id },
           { id: tech5.id },
         ],
+      },
+      categories: {
+        connect: [{ id: category1.id }, { id: category2.id }],
       },
     },
   });
