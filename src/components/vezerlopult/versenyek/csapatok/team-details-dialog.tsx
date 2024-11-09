@@ -183,11 +183,13 @@ export function TeamDetailDialog({
                     Technológiák
                   </h2>
                   <div className="mt-2 flex flex-wrap gap-2">
-                    {team?.technologies.map((tech) => (
-                      <Badge key={tech.id} variant="secondary">
-                        {tech.name}
-                      </Badge>
-                    ))}
+                    <div className="flex flex-wrap gap-2">
+                      {team?.technologies.map((tech) => (
+                        <Badge key={tech.id} variant="secondary">
+                          {tech.name}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
 

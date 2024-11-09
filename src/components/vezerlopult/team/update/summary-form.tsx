@@ -111,11 +111,13 @@ export function SummaryStep({
             <Cpu className="size-6 rounded-full border p-[3px]" />
             Technológiák
           </h2>
-          {technologies?.map((tech) => (
-            <Badge key={tech.id} variant="secondary">
-              {tech.name}
-            </Badge>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {technologies?.map((tech) => (
+              <Badge key={tech.id} variant="secondary">
+                {tech.name}
+              </Badge>
+            ))}
+          </div>
         </div>
 
         <div>

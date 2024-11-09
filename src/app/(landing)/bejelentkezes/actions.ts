@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 
 export async function login(
   values: z.infer<typeof signInSchema>,
+  firstTime?: boolean,
 ): Promise<void> {
   try {
     await signIn("credentials", {
@@ -20,8 +21,13 @@ export async function login(
   } finally {
     revalidatePath("/vezerlopult", "layout");
 
-    redirect(
-      `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres bejelentkezés!")}`,
-    );
+    if (firstTime) {
+      return redirect(
+        `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres regisztráció!")}`,
+      );
+    } else
+      redirect(
+        `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres bejelentkezés!")}`,
+      );
   }
 }

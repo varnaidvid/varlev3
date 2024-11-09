@@ -24,10 +24,13 @@ export const formTwoSchema = z.object({
       }),
     )
     .optional(),
-  subCategory: z.object({
-    name: z.string({ required_error: "Adja meg a kategóriát!" }),
-    id: z.string({ required_error: "Adja meg a kategóriát!" }),
-  }),
+  subCategory: z.object(
+    {
+      name: z.string({ required_error: "Adja meg a kategóriát!" }),
+      id: z.string({ required_error: "Adja meg a kategóriát!" }),
+    },
+    { required_error: "Adja meg a kategóriát!" },
+  ),
 });
 export const formThreeSchema = z.object({
   members: z

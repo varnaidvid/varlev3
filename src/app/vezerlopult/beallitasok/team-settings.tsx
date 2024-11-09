@@ -15,7 +15,6 @@ export default async function TeamSettings() {
   if (!teamWithDetails) return;
 
   const notification = await api.notification.getDenialNotification();
-
   const schools = await api.school.getAll();
 
   return (
@@ -42,8 +41,8 @@ export default async function TeamSettings() {
       {teamWithDetails.status === "REJECTED_BY_ORGANIZER" && (
         <>
           <Alert variant="destructive">
-            <AlertTitle>{notification.subject}</AlertTitle>
-            <AlertDescription>{notification.message}</AlertDescription>
+            <AlertTitle>{notification?.subject}</AlertTitle>
+            <AlertDescription>{notification?.message}</AlertDescription>
           </Alert>
 
           <EditForm schools={schools} initialData={teamWithDetails} />

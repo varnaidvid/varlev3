@@ -1,5 +1,5 @@
 import { PageTitle } from "@/components/ui/page-title";
-import NotificationCenter from "@/components/vezerlopult/notification-center";
+import NotificationCenter from "@/components/vezerlopult/notification-center/notification-center";
 import { auth } from "@/server/auth";
 import { Cog } from "lucide-react";
 import DotPattern from "@/components/ui/dot-pattern";
