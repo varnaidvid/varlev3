@@ -116,8 +116,6 @@ export const notificationRouter = createTRPCRouter({
       },
     });
 
-    if (!notification) throw new TRPCError({ code: "NOT_FOUND" });
-
     return notification;
   }),
 
