@@ -1,11 +1,13 @@
 import React from "react";
 import { api } from "@/trpc/server";
 import CompetitionCard from "@/components/vezerlopult/versenyek/competition-card";
+import Link from "next/link";
 
 export default async function Page() {
   
   const competitions = await api.competition.getAllWithDetails();
-  
+
+  const categories = await api.category.getAll();
 
   return (
     <>
@@ -14,8 +16,14 @@ export default async function Page() {
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold">Versenyek</h1>
             <p className="mb-8">{competitions.length} verseny található</p>
-            <ul className="flex snap-x snap-mandatory overflow-auto items-center space-x-2 lg:space-x-2.5 pb-2">
-              {}
+            <ul className="flex items-center space-x-2 lg:space-x-2.5 mb-12">
+              {categories.map((category) => (
+                <li key={category.name} className="px-4 py-2 bg-gray-100 rounded-md text-sm font-medium border">
+                  <Link href={`/category/${category.id}`}>
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

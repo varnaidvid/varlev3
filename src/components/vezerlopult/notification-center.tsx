@@ -11,15 +11,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { api } from "@/trpc/react";
 import { NotificationItem } from "./notification-item";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
   const lastFetchedPageRef = useRef<string | null>(null);
-  // Track which notifications have been marked as read during this session
-  const [sessionReadIds, setSessionReadIds] = useState(new Set<string>());
+  const [markedNotifications, setMarkedNotifications] = useState<Set<string>>(
+    new Set(),
+  );
 
-  const { data: unreadCount = 0, refetch: refetchUnreadCount } =
-    api.notification.getUnreadCount.useQuery();
+  const {
+    data: unreadCount = 0,
+    refetch: refetchUnreadCount,
+    isFetching,
+  } = api.notification.getUnreadCount.useQuery();
 
   const {
     data: notificationsData,
@@ -36,15 +41,13 @@ export default function NotificationCenter() {
   );
 
   const markAsReadMutation = api.notification.markAsRead.useMutation();
-  const markAllAsReadMutation = api.notification.markAllAsRead.useMutation();
 
   const notifications =
     notificationsData?.pages.flatMap((page) => page.items) ?? [];
 
-  // Process notifications to maintain client-side unread state
   const processedNotifications = notifications.map((notification) => ({
     ...notification,
-    clientStatus: sessionReadIds.has(notification.id)
+    clientStatus: markedNotifications.has(notification.id)
       ? "READ"
       : notification.status,
   }));
@@ -67,36 +70,20 @@ export default function NotificationCenter() {
 
       if (currentCursor && lastFetchedPageRef.current !== currentCursor) {
         lastFetchedPageRef.current = currentCursor;
-
-        const unreadNotifications = notifications.filter(
-          (n) => n.status === "UNREAD" && !sessionReadIds.has(n.id),
-        );
-
-        if (unreadNotifications.length > 0) {
-          await markAsReadMutation.mutateAsync();
-          setSessionReadIds((prev) => {
-            const newSet = new Set(prev);
-            unreadNotifications.forEach((n) => newSet.add(n.id));
-            return newSet;
-          });
-          refetchUnreadCount();
-        }
       }
 
       await fetchNextPage();
     }
   };
 
-  const handleMarkAllAsRead = async () => {
-    await markAllAsReadMutation.mutateAsync();
-    // Update session read IDs with all current notification IDs
-    setSessionReadIds((prev) => {
+  const handleMarkAsRead = async (notificationId: string) => {
+    await markAsReadMutation.mutateAsync({ notificationId });
+    setMarkedNotifications((prev) => {
       const newSet = new Set(prev);
-      notifications.forEach((n) => newSet.add(n.id));
+      newSet.add(notificationId);
       return newSet;
     });
     refetchUnreadCount();
-    refetchNotifications();
   };
 
   return (
@@ -149,10 +136,11 @@ export default function NotificationCenter() {
               </div>
             ) : (
               <>
-                {processedNotifications.map((notification) => (
+                {processedNotifications.map((notification: any) => (
                   <NotificationItem
                     key={notification.id}
                     notification={notification}
+                    onMarkAsRead={handleMarkAsRead}
                   />
                 ))}
                 {isFetchingNextPage && (
@@ -168,6 +156,14 @@ export default function NotificationCenter() {
                     Nincs további értesítésed.
                   </div>
                 )}
+              </>
+            )}
+
+            {isFetching && (
+              <>
+                <Skeleton className="h-[100px] w-full" />
+                <Skeleton className="h-[100px] w-full" />
+                <Skeleton className="h-[100px] w-full" />
               </>
             )}
           </div>

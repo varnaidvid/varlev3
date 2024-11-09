@@ -14,6 +14,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { AccountType } from "@prisma/client";
+import { Stringifier } from "postcss";
 
 /**
  * 1. CONTEXT
@@ -144,3 +145,63 @@ export const withRole = (allowedTypes: AccountType[]) =>
 
     return next();
   });
+
+export const withOwner = async (
+  ctx: any,
+  accountIdToBeModified: string,
+  teamId?: string,
+  organizerId?: string,
+  schoolId?: string,
+) => {
+  let accountToBeModified = accountIdToBeModified;
+
+  if (teamId) {
+    const team = await ctx.db.team.findFirst({
+      where: {
+        id: teamId,
+      },
+    });
+    if (!team) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "A csapat nem található.",
+      });
+    }
+    accountToBeModified = team.accountId;
+  } else if (organizerId) {
+    const organizer = await ctx.db.organizer.findFirst({
+      where: {
+        id: organizerId,
+      },
+    });
+    if (!organizer) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "A szervező nem található.",
+      });
+    }
+    accountToBeModified = organizer.accountId;
+  } else if (schoolId) {
+    const school = await ctx.db.school.findFirst({
+      where: {
+        id: schoolId,
+      },
+    });
+    if (!school) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Az iskola nem található.",
+      });
+    }
+    accountToBeModified = school.accountId;
+  }
+
+  if (ctx.session.user.id !== accountToBeModified) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "Nincs jogosultságod a művelethez.",
+    });
+  }
+
+  return;
+};

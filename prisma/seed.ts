@@ -8,9 +8,13 @@ async function main() {
   const organizer1 = await prisma.organizer.create({
     data: {
       name: "Nagy János",
-      email: "pengetesz@gmail.com",
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "nagyjanos",
           ...saltAndHashPassword("password123"),
           type: "ORGANIZER",
@@ -24,6 +28,11 @@ async function main() {
       name: "Kis Éva",
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "kiseva",
           ...saltAndHashPassword("password456"),
           type: "ORGANIZER",
@@ -38,9 +47,13 @@ async function main() {
       name: "Neumann János Gimnázium",
       address: "1144 Budapest, Kerepesi út 124.",
       contactName: "Dr. Kovács István",
-      contactEmail: "igazgato@neumann-bp.hu",
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "neumanngimi",
           ...saltAndHashPassword("schoolpassword"),
           type: "SCHOOL",
@@ -54,9 +67,13 @@ async function main() {
       name: "Jedlik Ányos Gimnázium",
       address: "9021 Győr, Szent István út 7.",
       contactName: "Dr. Szabó Mária",
-      contactEmail: "igazgato@jedlik.hu",
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "jedlik",
           ...saltAndHashPassword("schoolpassword2"),
           type: "SCHOOL",
@@ -163,10 +180,10 @@ async function main() {
   });
 
   // Create 3 team accounts
-  await prisma.team.create({
+  const team1 = await prisma.team.create({
     data: {
       name: "Kódvadászok",
-      status: "APPROVED_BY_SCHOOL",
+      status: "REJECTED_BY_ORGANIZER",
       school: {
         connect: { id: school1.id },
       },
@@ -178,6 +195,11 @@ async function main() {
       },
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "kodvadaszok",
           ...saltAndHashPassword("teampassword"),
           type: "TEAM" as AccountType,
@@ -201,7 +223,7 @@ async function main() {
   await prisma.team.create({
     data: {
       name: "BitMesterek",
-      status: "APPROVED_BY_ORGANIZER",
+      status: "APPROVED_BY_SCHOOL",
       Competition: {
         connect: { id: competition.id },
       },
@@ -213,6 +235,11 @@ async function main() {
       },
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "bitmesterek",
           ...saltAndHashPassword("teampassword2"),
           type: "TEAM",
@@ -249,6 +276,11 @@ async function main() {
       },
       account: {
         create: {
+          emails: {
+            create: {
+              email: "thevarlev3@gmail.com",
+            },
+          },
           username: "webvirtuozok",
           ...saltAndHashPassword("teampassword3"),
           type: "TEAM" as AccountType,
@@ -282,14 +314,14 @@ async function main() {
         senderAccountId: school2.accountId,
       },
       {
-        subject: "Csapat hiánypótlás szükséges",
-        message: "A Kódvadászok csapat jóváhagyásra került.",
-        topic: "TEAM_APPROVED_BY_SCHOOL",
+        subject: "Kódvadászok csapatnak hiánypótlás szükséges",
+        message: "Kérjük módosítsák a felhasznált tecnológiákat.",
+        topic: "TEAM_REJECTED_BY_ORGANIZER",
         type: "ERROR",
 
         status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school2.accountId,
+        receiverAccountId: team1.accountId,
+        senderAccountId: organizer1.accountId,
       },
       {
         subject: "Csapat teljesítette a hiánypótlást",

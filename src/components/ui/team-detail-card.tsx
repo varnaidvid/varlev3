@@ -19,9 +19,11 @@ import {
   BrainCircuit,
   Cpu,
   Blocks,
+  ExternalLink,
 } from "lucide-react";
 import { ApplicationStatus, Team } from "@prisma/client";
 import { RouterOutputs } from "@/trpc/react";
+import Link from "next/link";
 
 export default function TeamDetailCard({
   data,
@@ -34,27 +36,27 @@ export default function TeamDetailCard({
         return (
           <Badge
             variant="outline"
-            className="border-green-600 bg-green-200 text-green-600"
+            className="border-green-200 bg-green-50 text-green-500"
           >
             <CheckCircle className="mr-1 h-4 w-4" />
             Elfogadva iskola által
           </Badge>
         );
-      case "APPROVED_BY_ORGANIZER":
+      case "REGISTERED":
         return (
           <Badge
             variant="outline"
-            className="border-green-600 bg-green-200 text-green-600"
+            className="border-green-200 bg-green-50 text-green-500"
           >
             <CheckCircle className="mr-1 h-4 w-4" />
-            Elfogadva szervező által
+            Regisztrálva a versenyre
           </Badge>
         );
-      case "DENIED_BY_ORGANIZER":
+      case "REJECTED_BY_ORGANIZER":
         return (
           <Badge
             variant="outline"
-            className="border-red-600 bg-red-200 text-red-600"
+            className="border-red-200 bg-red-50 text-red-500"
           >
             <XCircle className="mr-1 h-4 w-4" />
             Elutasítva szervező által
@@ -63,7 +65,7 @@ export default function TeamDetailCard({
       default:
         return (
           <Badge
-            className="border-blue-600 bg-blue-200 text-blue-600"
+            className="border-blue-200 bg-blue-50 text-blue-500"
             variant="outline"
           >
             Jóváhagyásra vár
@@ -95,7 +97,13 @@ export default function TeamDetailCard({
             <Trophy className="size-6 rounded-full border p-[3px]" />
             Verseny
           </h2>
-          <p className="text-sm text-gray-600">{data?.Competition.name}</p>
+          <Link
+            href={`/versenyek/${data?.Competition.id}`}
+            className="flex items-start gap-1 text-sm text-gray-600 hover:underline"
+          >
+            {data?.Competition.name}
+            <ExternalLink className="size-3" />
+          </Link>
         </div>
 
         <div>
@@ -160,12 +168,12 @@ export default function TeamDetailCard({
             Email címek
           </h2>
           <ul className="list-disc pl-5 text-gray-600">
-            {data?.emails.map((email) => (
+            {data?.account.emails.map((email) => (
               <li key={email.id} className="flex items-center gap-1 text-sm">
-                <Mail className="h-4 w-4 text-gray-500" /> {email.email}
+                {email.email}
               </li>
             ))}
-            {data?.emails.length === 0 && (
+            {data?.account.emails.length === 0 && (
               <li className="text-sm text-gray-500">
                 Nem adtatok meg még értesítendő email címet
               </li>
@@ -173,23 +181,6 @@ export default function TeamDetailCard({
           </ul>
         </div>
       </CardContent>
-
-      <CardFooter className="grid w-full grid-cols-1 gap-2 p-4 sm:grid-cols-3">
-        <Button variant="outline" className="w-full">
-          <Trophy className="mr-2 h-4 w-4" />
-          Verseny részletei
-        </Button>
-
-        <Button variant="outline" className="w-full">
-          <MailPlus className="mr-2 h-4 w-4" />
-          Email cím hozzáadás
-        </Button>
-
-        <Button variant="outline" className="w-full">
-          <Cog className="mr-2 h-4 w-4" />
-          Beállítások
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

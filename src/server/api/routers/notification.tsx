@@ -1,6 +1,7 @@
 import {
   createTRPCRouter,
   protectedProcedure,
+  withOwner,
   withRole,
 } from "@/server/api/trpc";
 import { z } from "zod";
@@ -62,30 +63,10 @@ async function createNotification({
   });
   if (!receiver) throw new Error("A fogadó felhasználó nem található");
 
-  let emails: { email: string }[] = [];
-  if (receiver.type === "TEAM") {
-    const teamEmails = await db.email.findMany({
-      where: { teamId: receiver.id },
-      select: { email: true },
-    });
-    emails = emails.concat(teamEmails);
-  } else if (receiver.type === "SCHOOL") {
-    const school = await db.school.findUnique({
-      where: { accountId: receiver.id },
-      select: { contactEmail: true },
-    });
-    if (!school) throw new Error("Az fogadó fiókja nem található");
-
-    if (school.contactEmail) emails.push({ email: school.contactEmail });
-  } else {
-    const organizer = await db.organizer.findUnique({
-      where: { accountId: receiver.id },
-      select: { email: true },
-    });
-    if (!organizer) throw new Error("A fogadó fiókja nem található");
-
-    if (organizer.email) emails.push({ email: organizer.email });
-  }
+  const emails = await db.email.findMany({
+    where: { accountId: senderAccountId },
+    select: { email: true },
+  });
 
   if (emails.length > 0) {
     await resend.emails.send({
@@ -179,17 +160,20 @@ export const notificationRouter = createTRPCRouter({
       };
     }),
 
-  markAsRead: protectedProcedure.mutation(async ({ ctx }) => {
-    await ctx.db.notification.updateMany({
-      where: {
-        receiverAccountId: ctx.session.user.id,
-        status: "UNREAD",
-      },
-      data: {
-        status: "READ",
-      },
-    });
-  }),
+  markAsRead: protectedProcedure
+    .input(z.object({ notificationId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.notification.updateMany({
+        where: {
+          receiverAccountId: ctx.session.user.id,
+          status: "UNREAD",
+          id: input.notificationId,
+        },
+        data: {
+          status: "READ",
+        },
+      });
+    }),
 
   markAllAsRead: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.notification.updateMany({
@@ -262,7 +246,7 @@ export const notificationRouter = createTRPCRouter({
 
       const competition = await ctx.db.competition.findUnique({
         where: { id: input.competitionId },
-        select: { name: true },
+        select: { name: true, organizers: true },
       });
       if (!competition) throw new Error("A verseny nem található");
 
@@ -284,24 +268,26 @@ export const notificationRouter = createTRPCRouter({
         db: ctx.db,
       });
 
-      // for organizer
-      await createNotification({
-        topic: NotificationTopic.TEAM_APPROVED_BY_SCHOOL,
-        type: NotificationType.SUCCESS,
-        message: `${team.name} csapat jelentkezését jóváhagyta az iskolája a ${competition.name} versenyre!`,
-        react: (
-          <TeamApprovedBySchoolForOrganizerEmail
-            redirectTo="http://localhost:3000"
-            teamName={team.name}
-            competitionName={competition.name}
-          />
-        ),
-        subject: `${team.name} csapat jelentkezése várja jóváhagyásod`,
-        senderAccountId: input.schoolId,
-        receiverAccountId: input.teamId,
-        redirectTo: input.redirectForOrganizer,
-        db: ctx.db,
-      });
+      // for organizers
+      for (const organizer of competition.organizers) {
+        await createNotification({
+          topic: NotificationTopic.TEAM_APPROVED_BY_SCHOOL,
+          type: NotificationType.SUCCESS,
+          message: `${team.name} csapat jelentkezését jóváhagyta az iskolája a ${competition.name} versenyre!`,
+          react: (
+            <TeamApprovedBySchoolForOrganizerEmail
+              redirectTo="http://localhost:3000"
+              teamName={team.name}
+              competitionName={competition.name}
+            />
+          ),
+          subject: `${team.name} csapat jelentkezése várja jóváhagyásod`,
+          senderAccountId: input.schoolId,
+          receiverAccountId: organizer.id,
+          redirectTo: input.redirectForOrganizer,
+          db: ctx.db,
+        });
+      }
     }),
 
   teamApprovedByOrganizer: withRole(["ORGANIZER"])
@@ -394,6 +380,8 @@ export const notificationRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await withOwner(ctx, input.teamId);
+
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
         select: { name: true },
@@ -402,27 +390,29 @@ export const notificationRouter = createTRPCRouter({
 
       const competition = await ctx.db.competition.findUnique({
         where: { id: input.competitionId },
-        select: { name: true },
+        select: { name: true, organizers: true },
       });
       if (!competition) throw new Error("A verseny nem található");
 
       // send notification to organizer that team updated data
-      await createNotification({
-        topic: NotificationTopic.TEAM_UPDATE,
-        type: NotificationType.SUCCESS,
-        message: `${team.name} csapat elvégezte a kérvényezett hiánypótlást!`,
-        react: (
-          <TeamUpdatedDataEmail
-            teamName={team.name}
-            redirectUrl="http://localhost:3000"
-          />
-        ),
-        subject: `${team.name} csapat hiánypótlása elkészült`,
-        senderAccountId: input.teamId,
-        receiverAccountId: input.competitionId,
-        redirectTo: input.redirectTo,
-        db: ctx.db,
-      });
+      for (const organizer of competition.organizers) {
+        await createNotification({
+          topic: NotificationTopic.TEAM_UPDATE,
+          type: NotificationType.INFO,
+          message: `${team.name} csapat frissítette adatait!`,
+          react: (
+            <TeamUpdatedDataEmail
+              teamName={team.name}
+              redirectUrl="http://localhost:3000"
+            />
+          ),
+          subject: `${team.name} csapat frissítette adatait`,
+          senderAccountId: input.teamId,
+          receiverAccountId: organizer.id,
+          redirectTo: input.redirectTo,
+          db: ctx.db,
+        });
+      }
     }),
 
   competitionAnnouncement: withRole(["ORGANIZER"])

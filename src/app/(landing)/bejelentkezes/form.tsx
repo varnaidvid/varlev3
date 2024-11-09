@@ -45,7 +45,9 @@ export default function LoginForm() {
 
   const [pending, startTransition] = useTransition();
   async function onSubmit(values: z.infer<typeof signInSchema>) {
-    await login(values);
+    startTransition(async () => {
+      await login(values);
+    });
   }
 
   return (
