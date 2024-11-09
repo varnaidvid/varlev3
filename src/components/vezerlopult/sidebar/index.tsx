@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import { NavUser } from "@/components/vezerlopult/sidebar/nav-user";
 import {
@@ -16,8 +14,14 @@ import {
 } from "@/components/ui/sidebar";
 import { NavMain } from "./nav-main";
 import Logo from "../../logo";
+import { auth } from "@/server/auth";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const session = await auth();
+  if (!session) return null;
+
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" {...props}>
@@ -33,10 +37,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain />
+          <NavMain type={session.user.type} />
         </SidebarContent>
         <SidebarFooter>
-          <NavUser />
+          <NavUser session={session} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

@@ -45,22 +45,7 @@ export default function LoginForm() {
 
   const [pending, startTransition] = useTransition();
   async function onSubmit(values: z.infer<typeof signInSchema>) {
-    startTransition(() =>
-      login(values)
-        .then((res) => {
-          if (!res.success) {
-            toast.error(res.message);
-            return;
-          }
-
-          toast.success(res.message);
-          router.push("/vezerlopult");
-        })
-        .catch((error) => {
-          console.error(error);
-          toast.error("Hibás felhasználónév vagy jelszó!");
-        }),
-    );
+    await login(values);
   }
 
   return (

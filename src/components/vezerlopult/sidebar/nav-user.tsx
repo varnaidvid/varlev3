@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  Cog,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, Cog, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -26,12 +18,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { Session } from "next-auth";
 
-export function NavUser() {
+export function NavUser({ session }: { session: Session }) {
   const { isMobile } = useSidebar();
-  const session = useSession();
 
   return (
     <SidebarMenu>
@@ -44,15 +35,15 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarFallback className="rounded-lg">
-                  {session?.data?.user.username?.slice(0, 2)}
+                  {session?.user.username?.slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {session.data?.user.name}
+                  {session?.user.name}
                 </span>
                 <span className="truncate text-xs">
-                  {session.data?.user.username}
+                  {session?.user.username}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -68,15 +59,15 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarFallback className="rounded-lg">
-                    {session?.data?.user.username?.slice(0, 2)}
+                    {session?.user.username?.slice(0, 2)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">
-                    {session.data?.user.name}
+                    {session?.user.name}
                   </span>
                   <span className="truncate text-xs">
-                    {session.data?.user.username}
+                    {session?.user.username}
                   </span>
                 </div>
               </div>
