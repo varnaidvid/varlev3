@@ -1,7 +1,11 @@
 enum ApplicationStatus {
     REGISTERED
+
     APPROVED_BY_SCHOOL
+    DENIED_BY_SCHOOL
+
     APPROVED_BY_ORGANIZER
+    DENIED_BY_ORGANIZER
 }
 
 enum AccountType {
@@ -169,8 +173,8 @@ model Email {
 model Notification {
     id String @id @default(cuid())
 
-    title   String
-    message String
+    message    String
+    redirectTo String?
 
     createdAt DateTime @default(now())
 
