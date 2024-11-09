@@ -10,12 +10,10 @@ import { hu } from "date-fns/locale";
 import { TeamWithDetails } from "@/server/api/routers/team";
 import { Technology } from "@prisma/client";
 
-// Define the application statuses with their colors
 const statusColors = {
   REGISTERED: "bg-yellow-100 text-yellow-800",
   APPROVED_BY_SCHOOL: "bg-blue-100 text-blue-800",
   APPROVED_BY_ORGANIZER: "bg-green-100 text-green-800",
-  DENIED_BY_SCHOOL: "bg-orange-100 text-orange-800",
   DENIED_BY_ORGANIZER: "bg-red-100 text-red-800",
 };
 
@@ -51,7 +49,6 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
           {status === "REGISTERED" && "Regisztrált"}
           {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
           {status === "APPROVED_BY_ORGANIZER" && "Szervező által jóváhagyott"}
-          {status === "DENIED_BY_SCHOOL" && "Iskola által elutasított"}
           {status === "DENIED_BY_ORGANIZER" && "Szervező által elutasított"}
         </Badge>
       );

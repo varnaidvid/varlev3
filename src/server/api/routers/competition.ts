@@ -7,6 +7,8 @@ import {
   TeamRegistrationType,
 } from "@/lib/zod/team-registration";
 import { saltAndHashPassword } from "@/utils/password";
+import withRole from "@/utils/withRole";
+import { id } from "date-fns/locale";
 
 export const competitionRouter = createTRPCRouter({
   getById: publicProcedure
@@ -87,6 +89,69 @@ export const competitionRouter = createTRPCRouter({
       include: { teams: true, technologies: true, categories: true },
     });
   }),
+
+  create: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        image: z.string(),
+        maxTeamSize: z.number(),
+        deadline: z.date(),
+        technologies: z.array(z.string()),
+        categories: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { technologies, categories, ...competitionData } = input;
+
+      const competition = await ctx.db.competition.create({
+        data: {
+          ...competitionData,
+          technologies: {
+            connect: technologies.map((techId) => ({ id: techId })),
+          },
+          categories: {
+            connect: categories.map((categoryId) => ({ id: categoryId })),
+          },
+        },
+      });
+
+      return competition;
+    }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        image: z.string(),
+        maxTeamSize: z.number(),
+        deadline: z.date(),
+        technologies: z.array(z.string()),
+        categories: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { technologies, categories, ...competitionData } = input;
+
+      const competition = await ctx.db.competition.update({
+        where: { id: input.id },
+        data: {
+          ...competitionData,
+          technologies: {
+            set: technologies.map((techId) => ({ id: techId })),
+          },
+          categories: {
+            set: categories.map((categoryId) => ({ id: categoryId })),
+          },
+        },
+      });
+
+      return competition;
+    }),
 });
 
 export type CompetitionRouter = inferRouterOutputs<typeof competitionRouter>;
