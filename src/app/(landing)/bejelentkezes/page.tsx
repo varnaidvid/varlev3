@@ -1,8 +1,6 @@
 import DotPattern from "@/components/ui/dot-pattern";
 import LoginForm from "./form";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
 import { ClientOnly } from "@/components/client-only";
 import { redirect } from "next/navigation";
 import { auth } from "@/server/auth";

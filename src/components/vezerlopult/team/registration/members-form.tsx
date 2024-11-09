@@ -18,7 +18,7 @@ import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formThreeSchema } from "@/lib/zod/team-registration";
 import { Competition } from "@prisma/client";
-import TeamMember from "../ui/team-member";
+import TeamMember from "../../../ui/team-member";
 
 export function TeamMembersForm({
   form,
@@ -52,7 +52,7 @@ export function TeamMembersForm({
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
             A csapatodnak {competition.maxTeamSize} főből kell állnia, illetve
-            egy póttagból.
+            egy lehetséges póttagból.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
@@ -104,7 +104,7 @@ export function TeamMembersForm({
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
           <Button className="w-full" type="submit">
-            Véglegesítés
+            Következő lépés
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <Button

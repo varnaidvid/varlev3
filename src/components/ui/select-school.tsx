@@ -23,13 +23,17 @@ import { useEffect, useState } from "react";
 export default function SelectSchool({
   schools,
   onSelect,
+  initialSchool,
 }: {
   schools: School[];
   onSelect: (schoolId: string) => void;
+  initialSchool?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<string | null>(
+    initialSchool || null,
+  );
 
   useEffect(() => {
     console.log(selectedName);

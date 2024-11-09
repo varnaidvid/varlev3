@@ -33,10 +33,8 @@ export default async function CompetitionsPage() {
       </header>
 
       <main className="px-4">
-        {/* <DataTable columns={columns} data={teams} /> */}
-        <div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2">
           {competitions.map((competition) => (
-            // <div key={competition.id}>{competition.name}</div>
             <CompetitionCard key={competition.id} competition={competition} />
           ))}
         </div>

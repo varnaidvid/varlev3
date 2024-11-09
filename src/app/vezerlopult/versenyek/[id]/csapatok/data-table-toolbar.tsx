@@ -5,23 +5,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 import { DataTableFacetedFilter } from "@/components/ui/data-table-faceted-filter";
-import { School } from "@prisma/client";
 
 export function DataTableToolbar<TData>({
   table,
-  //   schools,
+  schools,
 }: {
   table: Table<TData>;
-  //   schools: School[];
+  schools: string[];
 }) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const statuses = [
-    { label: "Regisztrált", value: "REGISTERED" },
+    { label: "Iskolai jóváhagyásra vár", value: "WAITING_FOR_SCHOOL_APPROVAL" },
     { label: "Iskola által jóváhagyott", value: "APPROVED_BY_SCHOOL" },
-    { label: "Szervező álta jóváhagyott", value: "APPROVED_BY_ORGANIZER" },
-    { label: "Iskola által elutasított", value: "DENIED_BY_SCHOOL" },
-    { label: "Szervező által elutasított", value: "DENIED_BY_ORGANIZER" },
+    {
+      label: "Szervezői jóváhagyásra vár",
+      value: "WAITING_FOR_ORGANIZER_APPROVAL",
+    },
+    { label: "Szervező által elutasított", value: "REJECTED_BY_ORGANIZER" },
+    { label: "Regisztrált", value: "REGISTERED" },
   ];
 
   return (
@@ -42,18 +44,19 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-        {/* { // TODO: i isnt working for some reason
-          table.getColumn("school") && (
+        {
+          // TODO: i isnt working for some reason
+          table.getColumn("schoolName") && (
             <DataTableFacetedFilter
-              column={table.getColumn("school")}
+              column={table.getColumn("schoolName")}
               title="Iskola"
               options={schools.map((school) => ({
-                label: school.name,
-                value: school.name,
+                label: school,
+                value: school,
               }))}
             />
           )
-        } */}
+        }
         {isFiltered && (
           <Button
             variant="ghost"

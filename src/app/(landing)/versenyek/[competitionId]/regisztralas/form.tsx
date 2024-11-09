@@ -11,11 +11,10 @@ import {
   formThreeSchema,
 } from "@/lib/zod/team-registration";
 import { Card } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
-import { AccountForm } from "@/components/team-registration/account-form";
-import { TeamDetailsForm } from "@/components/team-registration/details-form";
-import { TeamMembersForm } from "@/components/team-registration/members-form";
-import { SummaryStep } from "@/components/team-registration/summary-form";
+import { AccountForm } from "@/components/vezerlopult/team/registration/account-form";
+import { TeamDetailsForm } from "@/components/vezerlopult/team/registration/details-form";
+import { TeamMembersForm } from "@/components/vezerlopult/team/registration/members-form";
+import { SummaryStep } from "@/components/vezerlopult/team/registration/summary-form";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
@@ -132,13 +131,13 @@ export default function RegisterForm({
   return (
     <>
       {step === 1 && (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-lg">
           <AccountForm form={formOne} onSubmit={handleNextStep} />
         </Card>
       )}
 
       {step === 2 && (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-lg">
           <TeamDetailsForm
             technologies={technologies}
             form={formTwo}
@@ -150,7 +149,7 @@ export default function RegisterForm({
       )}
 
       {step === 3 && (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-lg">
           <TeamMembersForm
             form={formThree}
             competition={competition}

@@ -7,7 +7,9 @@ import {
 import {
   AlertCircle,
   AlertTriangle,
+  ArrowRight,
   CalendarDays,
+  Check,
   CheckCircle2,
   Crown,
   Info,
@@ -68,28 +70,46 @@ const getTopicDisplayText = (topic: NotificationTopic) => {
 
 export function NotificationItem({
   notification,
+  onMarkAsRead,
 }: {
   notification: Notification & {
     senderName: string;
     senderType: AccountType;
     clientStatus?: string;
   };
+  onMarkAsRead: (id: string) => void;
 }) {
   const typeProps = getNotificationTypeProps(notification.type);
   const Icon = typeProps.icon;
+  const isUnread =
+    (notification.clientStatus || notification.status) === "UNREAD";
 
   return (
-    <div className="border-b p-4 last:border-b-0 hover:bg-gray-50">
+    <div className="relative border-b p-4 last:border-b-0 hover:bg-gray-50">
+      {isUnread && (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute right-2 top-2 h-8 w-8 rounded-full p-0 hover:bg-gray-200"
+          onClick={() => onMarkAsRead(notification.id)}
+        >
+          <Check className="h-4 w-4" />
+          <span className="sr-only">Megjelölés olvasottként</span>
+        </Button>
+      )}
+
       <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <Badge
+            variant="default"
+            className={`rounded-full p-[2px] ${typeProps.color}`}
+          >
+            <Icon className="size-4" />
+          </Badge>
+        </div>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="default"
-              className={`rounded-full p-[2px] ${typeProps.color}`}
-            >
-              <Icon className="size-4" />
-            </Badge>
-            <h3 className="break-words pr-2 font-semibold">
+          <div className="flex items-start gap-2">
+            <h3 className="max-w-[calc(100%-50px)] break-words pr-2 font-semibold">
               {notification.subject}
             </h3>
           </div>
@@ -97,24 +117,26 @@ export function NotificationItem({
           {notification.redirectTo && (
             <Button
               variant="link"
-              className="mt-2 inline-block text-sm"
+              className="mt-4 flex justify-start gap-1 p-0 text-sm"
               asChild
             >
-              <Link href={notification.redirectTo}>További részletek</Link>
+              <Link href={notification.redirectTo}>
+                További részletek <ArrowRight className="size-4" />
+              </Link>
             </Button>
           )}
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            {(notification.clientStatus || notification.status) ===
-              "UNREAD" && (
-              <Badge
-                variant="outline"
-                className="w-max text-xs text-neutral-600"
-              >
-                <Sparkles className="mr-2 size-3" />
-                Új
-              </Badge>
-            )}
+            <Badge variant="outline" className="text-xs text-neutral-600">
+              <CalendarDays className="mr-2 size-3" />
+              {new Date(notification.createdAt).toLocaleString("hu-HU", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </Badge>
             <Badge variant="outline" className="w-max text-xs text-neutral-600">
               {getTopicDisplayText(notification.topic)}
             </Badge>
@@ -131,16 +153,16 @@ export function NotificationItem({
 
               {notification.senderName}
             </Badge>
-            <Badge variant="outline" className="text-xs text-neutral-600">
-              <CalendarDays className="mr-2 size-3" />
-              {new Date(notification.createdAt).toLocaleString("hu-HU", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </Badge>
+            {(notification.clientStatus || notification.status) ===
+              "UNREAD" && (
+              <Badge
+                variant="outline"
+                className="w-max text-xs text-neutral-600"
+              >
+                <Sparkles className="mr-2 size-3" />
+                Új
+              </Badge>
+            )}
           </div>
         </div>
       </div>

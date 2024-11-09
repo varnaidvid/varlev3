@@ -45,12 +45,14 @@ export default function LoginForm() {
 
   const [pending, startTransition] = useTransition();
   async function onSubmit(values: z.infer<typeof signInSchema>) {
-    await login(values);
+    startTransition(async () => {
+      await login(values);
+    });
   }
 
   return (
     <>
-      <Card className="mx-auto w-full max-w-md">
+      <Card className="mx-auto w-full max-w-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CardHeader className="border-b">

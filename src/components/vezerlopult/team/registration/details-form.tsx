@@ -23,9 +23,9 @@ import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
 import { School, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
-import SelectSchool from "../ui/select-school";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
+import SelectSchool from "../../../ui/select-school";
+import { Checkbox } from "../../../ui/checkbox";
+import { Label } from "../../../ui/label";
 
 export function TeamDetailsForm({
   technologies,

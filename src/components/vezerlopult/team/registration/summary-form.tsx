@@ -9,14 +9,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
+import {
+  CheckCircle2,
+  ArrowLeft,
+  Loader2,
+  BrainCircuit,
+  Users,
+  School,
+} from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
 import { teamRegistrationSchema } from "@/lib/zod/team-registration";
 
 const SuccessCard = () => {
   return (
-    <Card className="mx-auto mt-4 w-full max-w-md">
+    <Card className="mx-auto mt-4 w-full max-w-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -61,6 +68,13 @@ export function SummaryStep({
   onSubmit: () => void;
   isSubmitting: boolean;
 }) {
+  const {
+    account: { password, password2, username },
+    members: { members, reserveMember },
+    team: { coaches, name, school },
+    competitionId,
+  } = formData;
+
   const [showSuccess, setShowSuccess] = useState(false);
   const submitButtonRef = React.useRef(null);
 
@@ -72,7 +86,7 @@ export function SummaryStep({
   if (showSuccess) return <SuccessCard />;
 
   return (
-    <Card className="mx-auto w-full max-w-md">
+    <Card className="mx-auto w-full max-w-lg">
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -88,43 +102,49 @@ export function SummaryStep({
         </CardDescription>
       </CardHeader>
       <CardContent className="mt-4 space-y-4">
-        <p className="font-mono text-sm uppercase text-muted-foreground">
-          Megadott adatok:
-        </p>
+        <h1 className="text-2xl font-semibold">{name}:</h1>
 
-        <ul>
-          <li>
-            <ul>
+        <div>
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <School className="size-6 rounded-full border p-[3px]" />
+            Iskola
+          </h2>
+          <p className="text-gray-700">{school}</p>
+        </div>
+
+        <div>
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <Users className="size-6 rounded-full border p-[3px]" />
+            Csapattagok
+          </h2>
+          <ul className="list-disc pl-5 text-gray-600">
+            {members.map((member) => (
+              <li key={member.name} className="text-sm">
+                <b>{member.name}</b> -- Évfolyam: <b>{member.year}</b>{" "}
+              </li>
+            ))}
+            {reserveMember?.name && (
               <li>
-                <span className="font-semibold">Név:</span> {formData.team.name}
+                <b>{reserveMember.name}</b> -- Évfolyam:{" "}
+                <b>{reserveMember.year}</b> (Póttag)
               </li>
-              <li>
-                <span className="font-semibold">Iskola:</span>{" "}
-                {formData.team.school}
+            )}
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <BrainCircuit className="size-6 rounded-full border p-[3px]" />
+            Felkészítő tanárok
+          </h2>
+          <ul className="list-disc pl-5 text-gray-600">
+            {coaches.map((coach) => (
+              <li key={coach} className="text-sm">
+                <b>{coach}</b>
               </li>
-              <li className="mt-2">
-                <span className="font-semibold">Felkészítő tanárok:</span>
-                <p>{formData.team.coaches.join(", ")}</p>
-              </li>
-            </ul>
-          </li>
-          <li className="mt-2">
-            <p className="font-semibold">Csapat tagjai:</p>
-            <ul>
-              {formData.members.members.map((member, index) => (
-                <li key={index}>
-                  <span className="font-semibold">{index + 1}:</span>{" "}
-                  {member.name} - {member.year}.
-                </li>
-              ))}
-              <li>
-                <span className="font-semibold">Pót tag:</span>{" "}
-                {formData.members.reserveMember.name} -{" "}
-                {formData.members.reserveMember.year}.
-              </li>
-            </ul>
-          </li>
-        </ul>
+            ))}
+          </ul>
+        </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 border-t pt-6">
         <Button

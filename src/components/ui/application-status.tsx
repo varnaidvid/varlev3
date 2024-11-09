@@ -7,9 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Loader2,
   CheckCircle2,
-  XCircle,
   AlertCircle,
   Clock,
+  ExternalLink,
+  MousePointerClickIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { ApplicationStatus, Competition, Team } from "@prisma/client";
@@ -17,6 +18,42 @@ import { api } from "@/trpc/react";
 import { Countdown } from "../countdown";
 import { cn } from "@/lib/utils";
 import DotPattern from "./dot-pattern";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, XCircle } from "lucide-react";
+
+const statusColors = {
+  WAITING_FOR_SCHOOL_APPROVAL: "bg-yellow-100 text-yellow-800",
+  APPROVED_BY_SCHOOL: "bg-blue-100 text-blue-800",
+  WAITING_FOR_ORGANIZER_APPROVAL: "bg-yellow-100 text-yellow-800",
+  REJECTED_BY_ORGANIZER: "bg-red-100 text-red-800",
+  REGISTERED: "bg-green-100 text-green-800",
+};
+
+const statusIcons = {
+  REGISTERED: <CheckCircle className="mr-1 h-4 w-4" />,
+  APPROVED_BY_SCHOOL: <CheckCircle className="mr-1 h-4 w-4" />,
+  REJECTED_BY_ORGANIZER: <XCircle className="mr-1 h-4 w-4" />,
+  WAITING_FOR_SCHOOL_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+  WAITING_FOR_ORGANIZER_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+};
+
+export function ApplicationStatusBadge({
+  status,
+}: {
+  status: ApplicationStatus;
+}) {
+  return (
+    <Badge className={`${statusColors[status]}`}>
+      {statusIcons[status]}
+      {status === "REGISTERED" && "Regisztrált"}
+      {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
+      {status === "WAITING_FOR_ORGANIZER_APPROVAL" &&
+        "Szervezői jóváhagyásra vár"}
+      {status === "REJECTED_BY_ORGANIZER" && "Szervező által elutasított"}
+      {status === "WAITING_FOR_SCHOOL_APPROVAL" && "Iskolai jóváhagyásra vár"}
+    </Badge>
+  );
+}
 
 type StatusConfigType = {
   [key in ApplicationStatus]: {
@@ -33,8 +70,9 @@ type StatusConfigType = {
 
 const statusConfig: StatusConfigType = {
   REGISTERED: {
-    title: "Jelentkezés folyamatban",
-    description: "Regisztrációtok az iskolátok jóváhagyására vár",
+    title: "Regisztráció sikeres",
+    description:
+      "Csapatod sikeresen beregisztrálva a versenyre. Sikeres felkészülést kívánunk!",
     icon: Loader2,
     color: "text-blue-500",
     bgColor: "bg-blue-50",
@@ -42,8 +80,30 @@ const statusConfig: StatusConfigType = {
     timerColor: "text-neutral-600",
     dotColor: "fill-blue-400/30",
   },
+  WAITING_FOR_ORGANIZER_APPROVAL: {
+    title: "Várakozás szervezői jóváhagyásra",
+    description:
+      "Csapatod jelentkezését a szervezők még nem fogadták el. Kérlek várj türelemmel.",
+    icon: Loader2,
+    color: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+    timerColor: "text-neutral-600",
+    dotColor: "fill-yellow-400/30",
+  },
+  WAITING_FOR_SCHOOL_APPROVAL: {
+    title: "Várakozás iskolai jóváhagyásra",
+    description:
+      "Csapatod jelentkezését az iskola még nem fogadta el. Kérlek várj türelemmel.",
+    icon: Loader2,
+    color: "text-yellow-500",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
+    timerColor: "text-neutral-600",
+    dotColor: "fill-yellow-400/30",
+  },
   APPROVED_BY_SCHOOL: {
-    title: "Elfogadva",
+    title: "Elfogadva az iskolád által",
     description: "Az iskola elfogadta a jelentkezéseteket",
     icon: CheckCircle2,
     color: "text-green-500",
@@ -52,18 +112,8 @@ const statusConfig: StatusConfigType = {
     timerColor: "text-neutral-600",
     dotColor: "fill-green-400/30",
   },
-  APPROVED_BY_ORGANIZER: {
-    title: "Elfogadva a szervezők által",
-    description: "Az iskola elfogadta a jelentkezéseteket",
-    icon: CheckCircle2,
-    color: "text-green-500",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200",
-    timerColor: "text-neutral-600",
-    dotColor: "fill-green-400/30",
-  },
-  DENIED_BY_ORGANIZER: {
-    title: "Elutasítva",
+  REJECTED_BY_ORGANIZER: {
+    title: "Elutasítva, hiánypótlás szükséges",
     description: "A szervezők elutasították a jelentkezéseteket",
     icon: AlertCircle,
     color: "text-red-500",
@@ -77,16 +127,18 @@ const statusConfig: StatusConfigType = {
 export default function ApplicationStatusCard({
   competition,
   team,
+  message,
 }: {
   competition: Competition;
   team: Team;
+  message?: string;
 }) {
   const config = statusConfig[team.status];
   const StatusIcon = config.icon;
 
   const { data: notification } =
     api.notification.getDenialNotification.useQuery(undefined, {
-      enabled: team.status === "DENIED_BY_ORGANIZER",
+      enabled: team.status === "REJECTED_BY_ORGANIZER",
     });
 
   return (
@@ -112,53 +164,104 @@ export default function ApplicationStatusCard({
       <CardContent className="relative z-10 p-6">
         <div className="flex items-start space-x-4">
           <StatusIcon
-            className={`h-6 w-6 ${config.color} ${team.status === "REGISTERED" ? "animate-spin" : ""}`}
+            className={`h-6 w-6 ${config.color} ${["WAITING_FOR_ORGANIZER_APPROVAL", "WAITING_FOR_SCHOOL_APPROVAL"].includes(team.status) && "animate-spin"}`}
           />
           <div className="flex-1">
             <h2 className={`text-xl font-semibold ${config.color}`}>
               {config.title}
             </h2>
             <p className="mt-1 text-gray-600">{config.description}</p>
-            {team.status === "DENIED_BY_ORGANIZER" && (
+            {team.status === "REJECTED_BY_ORGANIZER" && (
               <p className="mt-2 text-gray-600">
-                Szervező(k) üzenete: {notification?.message}
+                Szervező(k) üzenete:{" "}
+                {notification?.message ?? "Tekintsd meg értesítés központodban"}
               </p>
             )}
+            {message && (
+              <Alert className="mt-2">
+                <AlertTitle>
+                  {message.split("\n\n").map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      <br className="mt-1" />
+                    </React.Fragment>
+                  ))}
+                </AlertTitle>
+                <AlertDescription>
+                  Ha bármilyen kérdésed van, kérlek vedd fel a kapcsolatot a
+                  szervezőkkel.
+                </AlertDescription>
+              </Alert>
+            )}
 
-            <div className="mt-4 text-sm text-gray-500">
-              <p>Csapat: {team.name}</p>
-              <p>Verseny: {competition.name}</p>
-              <p>
-                Határidő:{" "}
-                {new Date(competition.deadline).toLocaleDateString("hu-HU")}
-              </p>
-            </div>
+            {message ? (
+              <div className="mt-6 text-sm text-gray-500">
+                <p>
+                  <b>Csapat:</b> {team.name}
+                </p>
+                <p className="flex items-center gap-1">
+                  <b>Verseny:</b>
+                  <Link
+                    href={`/versenyek/${competition.id}`}
+                    className="flex items-start gap-1 text-sm hover:underline"
+                  >
+                    {competition.name}
+                    <ExternalLink className="size-3" />
+                  </Link>
+                </p>
+                <p>
+                  <b>Határidő:</b>{" "}
+                  {new Date(competition.deadline).toLocaleDateString("hu-HU")}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {team.status === "REJECTED_BY_ORGANIZER" && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className={`${config.color}`}
+                    >
+                      <Link href={`/vezerlopult/beallitasok`}>
+                        Hiánypótlás
+                        <MousePointerClickIcon className="size-2" />
+                      </Link>
+                    </Button>
+                  )}
 
-            <div className="mt-6 flex items-center justify-between">
-              <Link href={`/versenyek/${competition.id}`}>
-                <Button
-                  variant="outline"
-                  className={`${config.color} hover:bg-white/30`}
-                >
-                  Verseny részletei
-                </Button>
-              </Link>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className={`${config.color}`}
+                  >
+                    <Link href={`/versenyek/${competition.id}`}>
+                      Verseny részletei
+                      <ExternalLink className="size-2" />
+                    </Link>
+                  </Button>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Verseny kezdetéig</span>
-                <Clock className={`h-4 w-4 ${config.color}`} />
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    Verseny kezdetéig
+                  </span>
+                  <Clock className={`h-4 w-4 ${config.color}`} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {!message && (
+          <div className="mt-8">
+            <div className="relative z-10 flex justify-end">
+              <div className={`text-2xl font-medium ${config.color}`}>
+                <Countdown targetDate={competition.deadline.toISOString()} />
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="mt-8">
-          <div className="relative z-10 flex justify-end">
-            <div className={`text-2xl font-medium ${config.color}`}>
-              <Countdown targetDate={competition.deadline.toISOString()} />
-            </div>
-          </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

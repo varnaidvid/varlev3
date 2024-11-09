@@ -1,22 +1,23 @@
 "use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Pencil, Users } from "lucide-react";
-import Image from "next/image";
-import { CompetitionWithDetails } from "@/server/api/routers/competition";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Link from "next/link";
+import { Calendar, Pencil, Users } from "lucide-react";
+import { CompetitionWithDetails } from "@/server/api/routers/competition";
 
 export default function CompetitionCard({
   competition,
@@ -24,56 +25,50 @@ export default function CompetitionCard({
   competition: CompetitionWithDetails;
 }) {
   const truncateDescription = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    return text.substr(0, maxLength) + "...";
-  };
-
-  const onEdit = () => {
-    console.log("Edit competition");
-  };
-
-  const onViewTeams = () => {
-    console.log("View teams");
+    return text.length > maxLength ? text.substr(0, maxLength) + "..." : text;
   };
 
   return (
-    <Card className="mx-auto max-w-sm overflow-hidden">
+    <Card className="flex h-full flex-col overflow-hidden">
       <CardHeader className="p-0">
-        <div className="relative w-full" style={{ paddingTop: "66.67%" }}>
-          <Image
-            src={competition.image}
-            alt={competition.name}
-            layout="fill"
-            objectFit="cover"
-          />
-        </div>
+        <Link href={`versenyek/${competition.id}/csapatok`}>
+          <div className="relative aspect-video w-full">
+            <Image
+              src={competition.image}
+              alt={competition.name}
+              layout="fill"
+              objectFit="cover"
+              className="transition-transform duration-300 ease-in-out hover:scale-105"
+            />
+          </div>
+        </Link>
       </CardHeader>
-      <CardContent className="p-6">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-gray-800">
-            {competition.name}
-          </h2>
+      <CardContent className="flex flex-grow flex-col gap-4 p-6">
+        <div className="flex items-center justify-between">
+          <Link href={`versenyek/${competition.id}/csapatok`}>
+            <h2 className="line-clamp-2 text-2xl font-bold text-primary hover:underline">
+              {competition.name}
+            </h2>
+          </Link>
         </div>
-        <p className="mb-4 text-[15px] text-gray-600">
-          {truncateDescription(
-            competition.description.replace(/<\/?[^>]+(>|$)/g, ""),
-            100,
-          )}
-        </p>
-        <div className="mb-4 flex flex-wrap gap-2">
-          {competition.technologies.map((tech) => (
-            <Badge key={tech.id} variant="secondary">
-              {tech.name}
-            </Badge>
-          ))}
-        </div>
-        <div className="flex items-center justify-start gap-2 text-sm text-gray-500">
+        <div className="flex items-center justify-start gap-2 text-sm text-muted-foreground">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Badge variant="outline" className="cursor-help">
+                <Badge variant="secondary" className="text-xs">
+                  <Users className="mr-1 h-3 w-3" />
+                  Max {competition.maxTeamSize}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Max csapat létszám</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary" className="text-xs">
                   <Calendar className="mr-1 h-3 w-3" />
-                  {competition.deadline.toLocaleDateString()}
+                  Határidő: {competition.deadline.toLocaleDateString()}
                 </Badge>
               </TooltipTrigger>
               <TooltipContent>
@@ -81,37 +76,39 @@ export default function CompetitionCard({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant="outline" className="cursor-help">
-                  <Users className="mr-1 h-3 w-3" />
-                  {competition.maxTeamSize}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Max csapat létszám</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+        </div>
+        <p className="line-clamp-3 text-sm text-muted-foreground">
+          {truncateDescription(
+            competition.description.replace(/<\/?[^>]+(>|$)/g, ""),
+            150,
+          )}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {competition.categories.map((category) => (
+            <Badge key={category.id} variant="outline">
+              {category.name}
+            </Badge>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {competition.technologies.map((tech) => (
+            <Badge key={tech.id} variant="secondary" className="text-xs">
+              {tech.name}
+            </Badge>
+          ))}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between p-4">
-        <Button variant="outline" className="w-full" asChild>
+      <CardFooter className="flex gap-2 p-6">
+        <Button variant="default" className="flex-grow" asChild>
           <Link href={`versenyek/${competition.id}/csapatok`}>
             <Users className="mr-2 h-4 w-4" />
-            Jelentkezett csapatok ({competition.teams.length})
+            Csapatok ({competition.teams.length})
           </Link>
         </Button>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="ml-2 aspect-square"
-                asChild
-              >
+              <Button variant="outline" size="icon" asChild>
                 <Link href={`versenyek/${competition.id}`}>
                   <Pencil className="h-4 w-4" />
                 </Link>

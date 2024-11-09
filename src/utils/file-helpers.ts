@@ -97,3 +97,28 @@ export function createFileInfo(name: string, source: string): FileInfo {
     source,
   };
 }
+
+export function downloadFile(
+  url: string,
+  fileName: string = url.split("/").pop() || "default-filename",
+) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.blob();
+    })
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName; // Set the filename
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl); // Free up memory
+    })
+    .catch((error) => {
+      console.error("Download failed:", error);
+    });
+}
