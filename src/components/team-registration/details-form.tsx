@@ -1,3 +1,5 @@
+"use client";
+
 import { Box, Plus, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
 import {
   CardContent,
@@ -19,16 +21,21 @@ import { Input } from "@/components/ui/input";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
-import { School } from "@prisma/client";
+import { School, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
 import SelectSchool from "../ui/select-school";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { useEffect, useState } from "react";
 
 export function TeamDetailsForm({
+  technologies,
   form,
   onSubmit,
   onBack,
   schools,
 }: {
+  technologies: Technology[];
   form: UseFormReturn<z.infer<typeof formTwoSchema>>;
   onSubmit: () => void;
   onBack: () => void;
@@ -65,7 +72,7 @@ export function TeamDetailsForm({
             szükséges megadni.
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-4">
+        <CardContent className="grid gap-6">
           <FormField
             control={form.control}
             name="name"
@@ -137,6 +144,58 @@ export function TeamDetailsForm({
               <Plus className="mr-2 h-4 w-4" /> Új tanár hozzáadása
             </Button>
           </div>
+
+          <FormField
+            control={form.control}
+            name="technologies"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Felhasznált Technológiák *</FormLabel>
+                <div className="grid grid-cols-2 gap-2">
+                  {technologies?.map((technology) => (
+                    <label
+                      key={technology.id}
+                      className="relative flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
+                    >
+                      <Checkbox
+                        id={technology.id}
+                        className="order-1 after:absolute"
+                        checked={form
+                          .getValues("technologies")
+                          .includes(technology.id)}
+                        onCheckedChange={(checked) => {
+                          const currentValues =
+                            form.getValues("technologies") || [];
+
+                          if (checked) {
+                            form.setValue("technologies", [
+                              ...currentValues,
+                              technology.id,
+                            ]);
+                          } else {
+                            form.setValue(
+                              "technologies",
+                              currentValues.filter(
+                                (id: string) => id !== technology.id,
+                              ),
+                            );
+                          }
+                        }}
+                      />
+
+                      <Label
+                        className="text-sm tracking-tight"
+                        htmlFor={technology.id}
+                      >
+                        {technology.name}
+                      </Label>
+                    </label>
+                  ))}
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
           <Button className="w-full" type="submit">

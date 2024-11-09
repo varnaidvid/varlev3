@@ -1,4 +1,6 @@
-import { CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,43 +9,67 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { CheckCircle2, ArrowLeft, Loader2 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
-import { TeamRegistrationData } from "@/app/regisztracio/[competitionId]/form";
+import { z } from "zod";
+import { teamRegistrationSchema } from "@/lib/zod/team-registration";
 
-interface SummaryStepProps {
-  formData: TeamRegistrationData;
-  onBack: () => void;
-  onSubmit: () => Promise<void>;
-  isSubmitting: boolean;
-}
+const SuccessCard = () => {
+  return (
+    <Card className="mx-auto mt-4 w-full max-w-md">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-2xl">
+          <ExtraIcon
+            Icon={CheckCircle2}
+            variant="small"
+            fromColor="from-green-500/20"
+            toColor="to-emerald-400/20"
+          />
+          Sikeres regisztráció
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-2">
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <CheckCircle2 className="size-4 text-green-700" />
+            <span>Értesítés küldve iskolának a jóváhagyásért</span>
+          </div>
+          <div className="mt-4 flex items-center gap-1 text-sm">
+            <CheckCircle2 className="size-4 text-green-700" />
+            <span>Jelentkezési státuszotok megfigyelhető a vezérlőpultban</span>
+          </div>
+        </div>
+
+        <Button asChild variant={"link"} className="mt-4">
+          <Link href="/bejelentkezes">
+            Jelentkezz be most a vezérlőpultodba
+          </Link>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
 
 export function SummaryStep({
   formData,
   onBack,
   onSubmit,
   isSubmitting,
-}: SummaryStepProps) {
-  const formatDataForDisplay = (data: TeamRegistrationData) => {
-    const { account, team, members } = data;
-    return {
-      account: {
-        username: account.username,
-        password: account.password,
-        password2: account.password2,
-      },
-      team: {
-        name: team.name,
-        school: team.school,
-        coaches: team.coaches,
-      },
-      members: {
-        teamMembers: members.members,
-        reserveMember: members.reserveMember,
-      },
-      competition: data.competition,
-    };
+}: {
+  formData: z.infer<typeof teamRegistrationSchema>;
+  onBack: () => void;
+  onSubmit: () => void;
+  isSubmitting: boolean;
+}) {
+  const [showSuccess, setShowSuccess] = useState(false);
+  const submitButtonRef = React.useRef(null);
+
+  const handleSubmit = async () => {
+    await onSubmit();
+    setShowSuccess(true);
   };
+
+  if (showSuccess) return <SuccessCard />;
 
   return (
     <Card className="mx-auto w-full max-w-md">
@@ -62,17 +88,51 @@ export function SummaryStep({
         </CardDescription>
       </CardHeader>
       <CardContent className="mt-4 space-y-4">
-        <div className="rounded-lg border bg-card">
-          <div className="border-b p-4 font-medium">Csapat adatok</div>
-          <pre className="overflow-auto rounded-b-lg bg-muted/50 p-4">
-            <code>
-              {JSON.stringify(formatDataForDisplay(formData), null, 2)}
-            </code>
-          </pre>
-        </div>
+        <p className="font-mono text-sm uppercase text-muted-foreground">
+          Megadott adatok:
+        </p>
+
+        <ul>
+          <li>
+            <ul>
+              <li>
+                <span className="font-semibold">Név:</span> {formData.team.name}
+              </li>
+              <li>
+                <span className="font-semibold">Iskola:</span>{" "}
+                {formData.team.school}
+              </li>
+              <li className="mt-2">
+                <span className="font-semibold">Felkészítő tanárok:</span>
+                <p>{formData.team.coaches.join(", ")}</p>
+              </li>
+            </ul>
+          </li>
+          <li className="mt-2">
+            <p className="font-semibold">Csapat tagjai:</p>
+            <ul>
+              {formData.members.members.map((member, index) => (
+                <li key={index}>
+                  <span className="font-semibold">{index + 1}:</span>{" "}
+                  {member.name} - {member.year}.
+                </li>
+              ))}
+              <li>
+                <span className="font-semibold">Pót tag:</span>{" "}
+                {formData.members.reserveMember.name} -{" "}
+                {formData.members.reserveMember.year}.
+              </li>
+            </ul>
+          </li>
+        </ul>
       </CardContent>
       <CardFooter className="flex-col gap-2 border-t pt-6">
-        <Button className="w-full" onClick={onSubmit} disabled={isSubmitting}>
+        <Button
+          className="w-full"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          ref={submitButtonRef}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -99,3 +159,5 @@ export function SummaryStep({
     </Card>
   );
 }
+
+export default SummaryStep;

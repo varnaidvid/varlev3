@@ -1,10 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/server/db";
 import Credentials from "next-auth/providers/credentials";
-import { signInSchema } from "@/lib/zod";
 import { verifyPassword } from "@/utils/password";
 import { DefaultSession, NextAuthConfig, Session, User } from "next-auth";
 import { AccountType } from "@prisma/client";
+import { signInSchema } from "@/lib/zod/auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -17,21 +17,10 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-
-      name: String;
       username: string;
       type: AccountType;
-
-      school: {
-        address: String;
-
-        contactName: String;
-        contactEmail: String;
-      };
-
-      organizer: {
-        email?: string;
-      };
+      createdAt: Date;
+      updatedAt: Date;
     } & DefaultSession["user"];
   }
 }
@@ -69,7 +58,7 @@ export const authConfig = {
         const { username, password } =
           await signInSchema.parseAsync(credentials);
 
-        user = await db.user.findFirst({
+        user = await db.account.findFirst({
           where: {
             username,
           },
@@ -93,9 +82,9 @@ export const authConfig = {
             session.user.id = tokenUser.id;
             session.user.name = tokenUser.name;
             session.user.type = tokenUser.type;
-            session.user.organizer = tokenUser.organizer;
-            session.user.school = tokenUser.school;
             session.user.username = tokenUser.username;
+            session.user.createdAt = tokenUser.createdAt;
+            session.user.updatedAt = tokenUser.updatedAt;
 
             return session;
           }

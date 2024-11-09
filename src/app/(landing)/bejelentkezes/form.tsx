@@ -23,15 +23,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { startTransition, useState, useTransition } from "react";
+import { useTransition } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
 // import { Turnstile } from '@marsidev/react-turnstile'
 import { Separator } from "@/components/ui/separator";
-import { signInSchema } from "@/lib/zod";
 import { api } from "@/trpc/react";
+import { signInSchema } from "@/lib/zod/auth";
 import Logo from "@/components/logo";
 
 export default function LoginForm() {
@@ -82,7 +80,7 @@ export default function LoginForm() {
                 Jelentkezz be a vezérlőpultod eléréséhez
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4">
+            <CardContent className="grid gap-6">
               <FormField
                 control={form.control}
                 name="username"
@@ -141,12 +139,6 @@ export default function LoginForm() {
                 )}{" "}
                 Belépés
               </Button>
-              <p className="mt-2 text-center text-sm text-slate-500">
-                Ha még nincs fiókja,{" "}
-                <Link href="/regisztracio" className="text-blue-500 underline">
-                  kattintson ide a regisztrációhoz
-                </Link>
-              </p>
             </CardFooter>
           </form>
         </Form>

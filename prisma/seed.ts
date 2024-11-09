@@ -7,11 +7,11 @@ async function main() {
   // Create 2 organizer accounts
   await prisma.organizer.create({
     data: {
-      name: "John Doe",
+      name: "Nagy János",
       email: "pengetesz@gmail.com",
       account: {
         create: {
-          username: "johndoe",
+          username: "nagyjanos",
           ...saltAndHashPassword("password123"),
           type: "ORGANIZER",
         },
@@ -21,10 +21,10 @@ async function main() {
 
   await prisma.organizer.create({
     data: {
-      name: "Jane Smith",
+      name: "Kis Éva",
       account: {
         create: {
-          username: "janesmith",
+          username: "kiseva",
           ...saltAndHashPassword("password456"),
           type: "ORGANIZER",
         },
@@ -35,13 +35,13 @@ async function main() {
   // Create 2 school accounts
   const school1 = await prisma.school.create({
     data: {
-      name: "Acme High School",
-      address: "123 Main St, Anytown USA",
-      contactName: "Principal Johnson",
-      contactEmail: "principal@acmehigh.edu",
+      name: "Neumann János Gimnázium",
+      address: "1144 Budapest, Kerepesi út 124.",
+      contactName: "Dr. Kovács István",
+      contactEmail: "igazgato@neumann-bp.hu",
       account: {
         create: {
-          username: "acmehigh",
+          username: "neumanngimi",
           ...saltAndHashPassword("schoolpassword"),
           type: "SCHOOL",
         },
@@ -51,13 +51,13 @@ async function main() {
 
   const school2 = await prisma.school.create({
     data: {
-      name: "Globex University",
-      address: "456 Park Ave, Bigcity NY",
-      contactName: "Dean Richards",
-      contactEmail: "dean@globexu.edu",
+      name: "Jedlik Ányos Gimnázium",
+      address: "9021 Győr, Szent István út 7.",
+      contactName: "Dr. Szabó Mária",
+      contactEmail: "igazgato@jedlik.hu",
       account: {
         create: {
-          username: "globexu",
+          username: "jedlik",
           ...saltAndHashPassword("schoolpassword2"),
           type: "SCHOOL",
         },
@@ -119,8 +119,30 @@ async function main() {
 
   const competition = await prisma.competition.create({
     data: {
-      name: "Coding Challenge 2024",
-      description: "A competitive coding event for high school students",
+      name: "Országos Középiskolai Web Programozó Verseny 2024",
+      description: `
+    <h2>Országos Középiskolai Web Programozó Verseny 2024</h2>
+    
+    <h3>A versenyről</h3>
+    <p>Az idei versenyen a középiskolás diákok modern webes technológiák használatával mérhetik össze tudásukat. A résztvevők valós, ipari környezetben használt eszközökkel dolgozhatnak, a Next.js-től a Laravel-ig.</p>
+    
+    <h3>Amit kínálunk</h3>
+    <ul>
+        <li>Szakmai zsűri értékelése</li>
+        <li>Értékes nyeremények</li>
+        <li>Kapcsolatépítési lehetőség IT cégekkel</li>
+        <li>Mentor program a döntőbe jutott csapatoknak</li>
+    </ul>
+    
+    <h3>Követelmények</h3>
+    <ul>
+        <li>3 fős csapatok</li>
+        <li>Középiskolai tanulói jogviszony</li>
+        <li>Alapszintű programozási ismeretek</li>
+    </ul>
+    
+    <p>A verseny során a csapatok egy komplex webalkalmazást fejlesztenek, ahol nem csak a technikai tudás, hanem a kreativitás és a csapatmunka is értékelésre kerül.</p>
+`,
       maxTeamSize: 3,
       image: "https://picsum.photos/200/300",
       deadline: new Date("2024-11-30"),
@@ -142,31 +164,34 @@ async function main() {
   // Create 3 team accounts
   await prisma.team.create({
     data: {
-      name: "Tech Titans",
+      name: "Kódvadászok",
       status: "APPROVED_BY_SCHOOL",
       school: {
         connect: { id: school1.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
       },
       Competition: {
         connect: { id: competition.id },
       },
       account: {
         create: {
-          username: "techtitans",
+          username: "kodvadaszok",
           ...saltAndHashPassword("teampassword"),
           type: "TEAM" as AccountType,
         },
       },
       members: {
         create: [
-          { name: "Alice Anderson", year: 12 },
-          { name: "Bob Barker", year: 11 },
-          { name: "Charlie Chen", year: 10 },
+          { name: "Horváth Anna", year: 12 },
+          { name: "Török Bence", year: 11 },
+          { name: "Németh Csaba", year: 10 },
         ],
       },
       coaches: {
         create: [
-          { name: "Coach Doe", School: { connect: { id: school1.id } } },
+          { name: "Molnár Gábor", School: { connect: { id: school1.id } } },
         ],
       },
     },
@@ -174,32 +199,35 @@ async function main() {
 
   await prisma.team.create({
     data: {
-      name: "Coding Crusaders",
+      name: "BitMesterek",
       status: "APPROVED_BY_ORGANIZER",
       Competition: {
         connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech3.id }, { id: tech4.id }],
       },
       school: {
         connect: { id: school2.id },
       },
       account: {
         create: {
-          username: "codingcrusaders",
+          username: "bitmesterek",
           ...saltAndHashPassword("teampassword2"),
           type: "TEAM",
         },
       },
       members: {
         create: [
-          { name: "Dave Davis", year: 12 },
-          { name: "Eve Ericsson", year: 11 },
-          { name: "Fiona Fox", year: 11 },
-          { name: "Frank Fong", year: 10, isReserve: true },
+          { name: "Varga Dániel", year: 12 },
+          { name: "Szilágyi Eszter", year: 11 },
+          { name: "Fekete Ferenc", year: 11 },
+          { name: "Papp Petra", year: 10, isReserve: true },
         ],
       },
       coaches: {
         create: [
-          { name: "Coach Smith", School: { connect: { id: school2.id } } },
+          { name: "Takács Zoltán", School: { connect: { id: school2.id } } },
         ],
       },
     },
@@ -207,31 +235,34 @@ async function main() {
 
   await prisma.team.create({
     data: {
-      name: "Byte Breakers",
+      name: "WebVirtuózok",
       status: "REGISTERED",
       Competition: {
         connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech5.id }],
       },
       school: {
         connect: { id: school2.id },
       },
       account: {
         create: {
-          username: "bytebreakers",
+          username: "webvirtuozok",
           ...saltAndHashPassword("teampassword3"),
           type: "TEAM" as AccountType,
         },
       },
       members: {
         create: [
-          { name: "Gina Garcia", year: 12 },
-          { name: "Hannah Hsu", year: 11 },
-          { name: "Ivan Ivanov", year: 10 },
+          { name: "Kiss Gergő", year: 12 },
+          { name: "Tóth Hanna", year: 11 },
+          { name: "Nagy István", year: 10 },
         ],
       },
       coaches: {
         create: [
-          { name: "Coach Johnson", School: { connect: { id: school1.id } } },
+          { name: "Szabó János", School: { connect: { id: school1.id } } },
         ],
       },
     },

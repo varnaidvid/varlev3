@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Competition, School } from "@prisma/client";
+import { Competition, School, Technology } from "@prisma/client";
 import {
   formOneSchema,
   formTwoSchema,
@@ -16,24 +16,28 @@ import { AccountForm } from "@/components/team-registration/account-form";
 import { TeamDetailsForm } from "@/components/team-registration/details-form";
 import { TeamMembersForm } from "@/components/team-registration/members-form";
 import { SummaryStep } from "@/components/team-registration/summary-form";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 export type TeamRegistrationData = {
   account: z.infer<typeof formOneSchema>;
   team: z.infer<typeof formTwoSchema>;
   members: z.infer<typeof formThreeSchema>;
-  competition: string;
+  competitionId: string;
 };
 
 export default function RegisterForm({
   competition,
   schools,
+  technologies,
 }: {
   competition: Competition;
   schools: School[];
+  technologies: Technology[];
 }) {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const mutation = api.competition.registerTeam.useMutation();
 
   const formOne = useForm<z.infer<typeof formOneSchema>>({
     resolver: zodResolver(formOneSchema),
@@ -50,6 +54,7 @@ export default function RegisterForm({
       name: "",
       school: "",
       coaches: [""],
+      technologies: [""],
     },
   });
 
@@ -83,12 +88,16 @@ export default function RegisterForm({
     }
   };
 
+  useEffect(() => {
+    console.log("technologies", formTwo.getValues("technologies"));
+  }, [formTwo.watch("technologies")]);
+
   const getAllFormData = () => {
     return {
       account: formOne.getValues(),
       team: formTwo.getValues(),
       members: formThree.getValues(),
-      competition: competition.id,
+      competitionId: competition.id,
     };
   };
 
@@ -97,31 +106,20 @@ export default function RegisterForm({
       setIsSubmitting(true);
       const formData = getAllFormData();
 
-      const response = await fetch("/api/register-team", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      console.log(formData);
 
-      if (!response.ok) {
-        throw new Error("Registration failed");
-      }
+      await mutation.mutateAsync(formData);
 
-      // Redirect to success page or show success message
-      router.push("/registration-success");
+      toast.success("Sikeres regisztráció!");
     } catch (error) {
       console.error("Registration error:", error);
-      // Handle error (show error message to user)
+      toast.error("Hiba történt a regisztráció során.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleBack = () => {
-    setStep(step - 1);
-  };
+  const handleBack = () => setStep(step - 1);
 
   return (
     <>
@@ -134,6 +132,7 @@ export default function RegisterForm({
       {step === 2 && (
         <Card className="mx-auto w-full max-w-md">
           <TeamDetailsForm
+            technologies={technologies}
             form={formTwo}
             schools={schools}
             onSubmit={handleNextStep}

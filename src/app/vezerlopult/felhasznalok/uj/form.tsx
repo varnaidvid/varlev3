@@ -90,7 +90,7 @@ export default function RegisterForm() {
                 Alábbi űrlap kitöltésével beregisztrálhat egy új fiókot.
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4">
+            <CardContent className="grid gap-6">
               <FormField
                 control={form.control}
                 name="username"

@@ -1,5 +1,12 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
+import type { inferRouterOutputs } from "@trpc/server";
+import { Competition } from "@prisma/client";
+import {
+  teamRegistrationSchema,
+  TeamRegistrationType,
+} from "@/lib/zod/team-registration";
+import { saltAndHashPassword } from "@/utils/password";
 
 export const competitionRouter = createTRPCRouter({
   getById: publicProcedure
@@ -14,4 +21,75 @@ export const competitionRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.competition.findMany();
   }),
+
+  registerTeam: publicProcedure
+    .input(teamRegistrationSchema)
+    .mutation(async ({ ctx, input }) => {
+      const {
+        account: { username, password },
+        members: { members, reserveMember },
+        team: { name, school, coaches, technologies },
+        competitionId,
+      } = input;
+
+      const competition = await ctx.db.competition.findUnique({
+        where: { id: competitionId },
+      });
+      if (!competition) throw new Error("Nincs ilyen verseny!");
+
+      console.log("school we're tryna find NAME:", school);
+
+      const _school = await ctx.db.school.findUnique({
+        where: { name: school },
+      });
+      if (!_school) throw new Error("Nincs ilyen iskola!");
+
+      console.log("school exists", _school);
+
+      const team = await ctx.db.team.create({
+        data: {
+          name,
+          school: { connect: { id: _school.id } },
+          coaches: {
+            createMany: {
+              data: coaches.map((coach) => ({
+                name: coach,
+                schoolId: _school.id,
+              })),
+            },
+          },
+          Competition: { connect: { id: competitionId } },
+          technologies: {
+            connect: technologies.map((tech) => ({ id: tech })),
+          },
+          account: {
+            create: {
+              username,
+              type: "TEAM",
+              ...saltAndHashPassword(password),
+            },
+          },
+        },
+      });
+
+      await ctx.db.member.createMany({
+        data: members.map((member) => ({ ...member, teamId: team.id })),
+      });
+      await ctx.db.member.create({
+        data: { ...reserveMember, teamId: team.id, isReserve: true },
+      });
+
+      return team;
+    }),
+
+  getAllWithDetails: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.competition.findMany({
+      include: { teams: true, technologies: true },
+    });
+  }),
 });
+
+export type CompetitionRouter = inferRouterOutputs<typeof competitionRouter>;
+
+export type CompetitionWithDetails = Competition &
+  CompetitionRouter["getAllWithDetails"][0];
