@@ -18,10 +18,12 @@ export const TeamRejectedByOrganizerEmail = ({
   teamName,
   competitionName,
   redirectUrl,
+  message,
 }: {
   teamName: string;
   competitionName: string;
   redirectUrl: string;
+  message: string;
 }) => (
   <Html>
     <Head />
@@ -36,6 +38,7 @@ export const TeamRejectedByOrganizerEmail = ({
           A versenyre való felkészüléshez kérjük, hogy a csapatod adatait
           ellenőrizd.
         </Text>
+        <Text style={text}>`{message}`</Text>
         <Button style={{ ...btn, padding: "12px 20px" }} href={redirectUrl}>
           Ellenőrzés
         </Button>

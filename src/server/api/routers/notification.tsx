@@ -337,6 +337,7 @@ export const notificationRouter = createTRPCRouter({
         organizerId: z.string(),
         competitionId: z.string(),
         redirectTo: z.string(),
+        message: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -355,12 +356,13 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         topic: NotificationTopic.TEAM_REJECTED_BY_ORGANIZER,
         type: NotificationType.ERROR,
-        message: `${team.name} csapatodat elutasította a ${competition.name} verseny szervezője!`,
+        message: input.message,
         react: (
           <TeamRejectedByOrganizerEmail
             redirectUrl="http://localhost:3000"
             teamName={team.name}
             competitionName={competition.name}
+            message={input.message}
           />
         ),
         subject: "Csapatod elutasítva a szervező által",
