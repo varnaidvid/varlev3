@@ -2,6 +2,10 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 
 export const technologyRouter = createTRPCRouter({
+  getAll: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.technology.findMany();
+  }),
+
   getCompetitionTechnologies: publicProcedure
     .input(z.object({ competitionId: z.string() }))
     .query(async ({ ctx, input }) => {
