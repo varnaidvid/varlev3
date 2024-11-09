@@ -2,8 +2,9 @@ import { PageTitle } from "../../components/ui/page-title";
 import { Gauge } from "lucide-react";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
-import { ClientOnly } from '@/components/client-only';
+import { ClientOnly } from "@/components/client-only";
 import ChartComponent from "@/components/ChartComponent";
+import NotificationCenter from "@/components/vezerlopult/notification-center";
 
 const chartData = [
   { key: "January", value: 186 },
@@ -19,13 +20,15 @@ export default async function Page() {
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-4 p-4 transition-[width,height] ease-linear">
+      <header className="flex items-center justify-between gap-4 p-4 transition-[width,height] ease-linear">
         <PageTitle
           Icon={Gauge}
           fromColor="from-sky-400"
           toColor="to-blue-500"
           title="Vezérlőpult"
         />
+
+        <NotificationCenter />
       </header>
 
       <div className="m-4 rounded-md bg-muted/85 p-4 text-left text-2xl">
@@ -48,7 +51,7 @@ export default async function Page() {
             <div className="aspect-video rounded-xl bg-muted/85" />
             <div className="aspect-video rounded-xl bg-muted/85" />
             <ClientOnly>
-              <ChartComponent data={chartData}/>
+              <ChartComponent data={chartData} />
             </ClientOnly>
           </div>
           <div className="h-full min-h-[100vh] flex-1 rounded-xl bg-muted/85" />

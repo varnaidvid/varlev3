@@ -6,6 +6,7 @@ import { schoolRouter } from "./routers/school";
 import { coachRouter } from "./routers/coach";
 import { teamsRouter } from "./routers/team";
 import { technologyRouter } from "./routers/technology";
+import { notificationRouter } from "./routers/notification";
 import { categoryRouter } from "./routers/category";
 
 /**
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   coach: coachRouter,
   team: teamsRouter,
   technology: technologyRouter,
+  notification: notificationRouter,
   category: categoryRouter,
 });
 

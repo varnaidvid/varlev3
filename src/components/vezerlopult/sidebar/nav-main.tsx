@@ -1,23 +1,17 @@
 "use client";
 
-import { ChevronRight, Gauge, type LucideIcon } from "lucide-react";
+import { Gauge } from "lucide-react";
 
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { organizerNav, schoolNav, teamNav } from "./data";
 
-export function NavMain() {
-  const session = useSession();
-
-  if (!session?.data?.user) return null;
-
+export function NavMain({ type }: { type: "ORGANIZER" | "SCHOOL" | "TEAM" }) {
   return (
     <SidebarGroup className="space-y-2">
       <SidebarMenu>
@@ -31,10 +25,10 @@ export function NavMain() {
         </SidebarMenuItem>
       </SidebarMenu>
 
-      {["ORGANIZER", "SCHOOL", "TEAM"].includes(session?.data.user.type) &&
-        (session?.data.user.type === "ORGANIZER"
+      {["ORGANIZER", "SCHOOL", "TEAM"].includes(type) &&
+        (type === "ORGANIZER"
           ? organizerNav
-          : session?.data.user.type === "SCHOOL"
+          : type === "SCHOOL"
             ? schoolNav
             : teamNav
         ).map((item, index) => (

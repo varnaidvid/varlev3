@@ -3,24 +3,25 @@
 import { z } from "zod";
 import { signIn } from "@/server/auth";
 import { signInSchema } from "@/lib/zod/auth";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export async function login(
   values: z.infer<typeof signInSchema>,
-): Promise<{ success: boolean; message: string }> {
+): Promise<void> {
   try {
     await signIn("credentials", {
       username: values.username,
       password: values.password,
-      redirect: true,
-      redirectTo: `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres bejelentkezés!")}`,
+      redirect: false,
     });
-
-    return { success: true, message: "Sikeres bejelentkezés!" };
   } catch (error) {
     console.error(error);
+  } finally {
+    revalidatePath("/vezerlopult", "layout");
 
-    return { success: false, message: "Hibás felhasználónév vagy jelszó!" };
+    redirect(
+      `/vezerlopult?toast=true&type=success&message=${encodeURI("Sikeres bejelentkezés!")}`,
+    );
   }
-
-  // return await api.auth.login(values);
 }

@@ -5,7 +5,7 @@ import { saltAndHashPassword } from "@/utils/password";
 const prisma = new PrismaClient();
 async function main() {
   // Create 2 organizer accounts
-  await prisma.organizer.create({
+  const organizer1 = await prisma.organizer.create({
     data: {
       name: "Nagy János",
       email: "pengetesz@gmail.com",
@@ -266,6 +266,82 @@ async function main() {
         ],
       },
     },
+  });
+
+  // seed notifications
+  await prisma.notification.createMany({
+    data: [
+      {
+        subject: "Új csapat regisztrált",
+        message: "A WebVirtuózok csapat regisztrált a versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school2.accountId,
+      },
+      {
+        subject: "Csapat hiánypótlás szükséges",
+        message: "A Kódvadászok csapat jóváhagyásra került.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "ERROR",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school2.accountId,
+      },
+      {
+        subject: "Csapat teljesítette a hiánypótlást",
+        message: "A Kódvadászok csapat jóváhagyásra került.",
+        topic: "TEAM_UPDATE",
+        type: "SUCCESS",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school2.accountId,
+      },
+      {
+        subject: "Új csapat regisztrált",
+        message: "A NemtOMKi csapat regisztrált a versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school1.accountId,
+      },
+      {
+        subject: "Csapat jóváhagyva",
+        message: "A NemtOMKi csapat jóváhagyásra került.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "INFO",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school1.accountId,
+      },
+      {
+        subject: "Csapat elutasítva",
+        message:
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec, auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school1.accountId,
+      },
+      {
+        subject: "Csapat jóváhagyva",
+        message: "A NemtOMKi csapat jóváhagyásra került.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "INFO",
+
+        status: "UNREAD",
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school1.accountId,
+      },
+    ],
   });
 
   console.log("Seed data created successfully!");
