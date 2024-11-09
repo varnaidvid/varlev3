@@ -14,7 +14,7 @@ export default async function Page({
 
   return (
     <>
-      <div className="md:px-20 p-6">
+      <div className="mt-28 mx-auto w-[calc(100%-16px)] max-w-7xl sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
         <div className="border rounded-lg p-12 shadow-xl">
           <div className="flex flex-col lg:flex-row space-y-12 lg:space-y-0 space-x-0 lg:space-x-12">
             <img className="w-full md:w-1/5 rounded-lg shadow-xl" src={competition?.image} alt="" />
@@ -47,7 +47,7 @@ export default async function Page({
                     ))}
                   </div>
                 </div>
-                <p className="py-2 font-bold mt-8">Leírás</p>
+                <p className="py-2 font-bold mt-4">Leírás</p>
                 <Separator />
                 <p className="py-2">{competition?.description}</p>
               </div>
