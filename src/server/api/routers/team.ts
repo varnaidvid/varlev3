@@ -213,6 +213,24 @@ export const teamsRouter = createTRPCRouter({
         },
       });
     }),
+
+  updateTeamStatus: publicProcedure
+    .input(
+      z.object({
+        teamId: z.string().cuid(),
+        status: z.nativeEnum(ApplicationStatus),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.team.update({
+        where: {
+          id: input.teamId,
+        },
+        data: {
+          status: input.status,
+        },
+      });
+    }),
 });
 
 type TeamsRouter = inferRouterOutputs<typeof teamsRouter>;

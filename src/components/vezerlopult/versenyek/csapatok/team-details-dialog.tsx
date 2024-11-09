@@ -31,10 +31,11 @@ import { ApplicationStatus } from "@prisma/client";
 import { ApplicationStatusBadge } from "@/components/ui/application-status";
 import { ImagePreviewOverlay } from "./image-preview-overlay";
 import { downloadFile } from "@/utils/file-helpers";
+import { toast } from "sonner";
 
 interface ApplicationDetailDialogProps {
   teamId: string;
-  onApprove: () => void;
+  onApprove: (id: string) => void;
   onReject: (reason: string) => void;
 }
 
@@ -47,6 +48,7 @@ export function TeamDetailDialog({
   const [rejectionReason, setRejectionReason] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+  const [isApproveLoading, setIsApproveLoading] = useState(false);
 
   const {
     data: team,
@@ -60,6 +62,16 @@ export function TeamDetailDialog({
     onReject(rejectionReason);
     setIsRejectDialogOpen(false);
     setRejectionReason("");
+  };
+
+  const handleApprove = async () => {
+    if (team) {
+      setIsApproveLoading(true);
+      toast.loading("Jóváhagyás folyamatban...");
+      await onApprove(team.id);
+      setIsApproveLoading(false);
+      toast.dismiss();
+    }
   };
 
   const handleImagePreviewOpen = () => {
@@ -258,8 +270,18 @@ export function TeamDetailDialog({
             )}
           </div>
           <DialogFooter className="space-x-2 sm:justify-start">
-            <Button onClick={onApprove} variant="outline" className="flex-1">
-              <CheckCircle className="mr-2 h-4 w-4" /> Jóváhagyás
+            <Button
+              onClick={handleApprove}
+              variant="outline"
+              className="flex-1"
+              disabled={isApproveLoading}
+            >
+              {isApproveLoading ? (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle className="mr-2 h-4 w-4" />
+              )}
+              Jóváhagyás
             </Button>
 
             <Dialog
