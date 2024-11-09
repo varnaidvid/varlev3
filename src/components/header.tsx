@@ -7,6 +7,7 @@ import Logo from "./logo";
 import { cn } from "@/lib/utils";
 import { AlignJustify, XIcon, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Session } from "next-auth";
 
 const menuLinks = [
   {
@@ -19,7 +20,7 @@ const menuLinks = [
   },
 ];
 
-export default function Header() {
+export default function Header({ session }: { session: Session | null }) {
   const mobilenavbarVariant = {
     initial: {
       opacity: 0,
@@ -112,11 +113,21 @@ export default function Header() {
           </div>
 
           <div className="ml-auto hidden h-full items-center gap-2 sm:flex">
-            <Button asChild>
-              <Link href="/bejelentkezes">
-                Bejelentkezés <ArrowRight className="size-4" />
-              </Link>
-            </Button>
+            {!session && (
+              <Button asChild>
+                <Link href="/bejelentkezes">
+                  Bejelentkezés <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            )}
+
+            {session && (
+              <Button asChild>
+                <Link href="/vezerlopult">
+                  Vezérlőpult <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            )}
           </div>
 
           <button
@@ -185,11 +196,21 @@ export default function Header() {
                   hamburgerMenuIsOpen ? "translate-y-0 opacity-100" : "",
                 )}
               >
-                <Button asChild className="w-full">
-                  <Link href="/bejelentkezes">
-                    Bejelentkezés <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
+                {!session && (
+                  <Button asChild>
+                    <Link href="/bejelentkezes">
+                      Bejelentkezés <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                )}
+
+                {session && (
+                  <Button asChild>
+                    <Link href="/vezerlopult">
+                      Vezérlőpult <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                )}
               </motion.div>
             </motion.ul>
           </div>

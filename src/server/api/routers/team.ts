@@ -28,6 +28,12 @@ export const teamsRouter = createTRPCRouter({
           coaches: true,
           school: true,
           technologies: true,
+          emails: true,
+          Competition: {
+            include: {
+              categories: true,
+            },
+          },
         },
       });
     }),
