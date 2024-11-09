@@ -53,24 +53,6 @@ export default function CompetitionCard({
           <h2 className="text-xl font-bold text-gray-800">
             {competition.name}
           </h2>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="aspect-square"
-                  onClick={onEdit}
-                >
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Verseny szerkesztése</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </div>
         <p className="mb-4 text-[15px] text-gray-600">
           {truncateDescription(
@@ -114,13 +96,32 @@ export default function CompetitionCard({
           </TooltipProvider>
         </div>
       </CardContent>
-      <CardFooter className="p-4">
+      <CardFooter className="flex justify-between p-4">
         <Button variant="outline" className="w-full" asChild>
           <Link href={`versenyek/${competition.id}/csapatok`}>
             <Users className="mr-2 h-4 w-4" />
             Jelentkezett csapatok ({competition.teams.length})
           </Link>
         </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="ml-2 aspect-square"
+                asChild
+              >
+                <Link href={`versenyek/${competition.id}`}>
+                  <Pencil className="h-4 w-4" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Verseny szerkesztése</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </CardFooter>
     </Card>
   );

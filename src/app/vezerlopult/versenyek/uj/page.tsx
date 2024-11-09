@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
-import { CreateCompetitionForm } from "@/components/vezerlopult/versenyek/uj/create-competition-form";
+import { CreateCompetitionForm } from "@/components/vezerlopult/versenyek/create-competition-form";
 import { api } from "@/trpc/server";
 import { Save, Trophy } from "lucide-react";
 

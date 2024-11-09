@@ -86,7 +86,7 @@ export const competitionRouter = createTRPCRouter({
 
   getAllWithDetails: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.competition.findMany({
-      include: { teams: true, technologies: true },
+      include: { teams: true, technologies: true, categories: true },
     });
   }),
 
@@ -114,6 +114,38 @@ export const competitionRouter = createTRPCRouter({
           },
           categories: {
             connect: categories.map((categoryId) => ({ id: categoryId })),
+          },
+        },
+      });
+
+      return competition;
+    }),
+
+  update: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        image: z.string(),
+        maxTeamSize: z.number(),
+        deadline: z.date(),
+        technologies: z.array(z.string()),
+        categories: z.array(z.string()),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { technologies, categories, ...competitionData } = input;
+
+      const competition = await ctx.db.competition.update({
+        where: { id: input.id },
+        data: {
+          ...competitionData,
+          technologies: {
+            set: technologies.map((techId) => ({ id: techId })),
+          },
+          categories: {
+            set: categories.map((categoryId) => ({ id: categoryId })),
           },
         },
       });

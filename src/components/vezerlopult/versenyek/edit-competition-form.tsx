@@ -1,16 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Box,
-  Plus,
-  Trash2,
-  ArrowRight,
-  ArrowLeft,
-  Image,
-  Save,
-  Loader,
-} from "lucide-react";
+import { Box, ArrowRight, Loader } from "lucide-react";
 import {
   CardContent,
   CardDescription,
@@ -35,24 +26,22 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompetitionSchema } from "@/lib/zod/competition";
 import { Technology, Category } from "@prisma/client";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { DatePickerField } from "@/components/ui/date-picker-field";
-import { ContentEditor } from "./content-editor";
 import NumericInput from "@/components/ui/numeric-input";
 import { ImageUpload } from "./image-upload";
 import MultiSelect from "./multi-select";
-import { createFileInfo } from "@/utils/file-helpers";
-import { createId } from "@paralleldrive/cuid2";
-import { uploadFile } from "@/utils/upload-file";
-import { createCompetition } from "./actions";
+import { updateCompetition } from "@/app/vezerlopult/versenyek/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ContentEditor } from "./content-editor";
+import { DatePickerField } from "@/components/ui/date-picker-field";
+import { CompetitionWithDetails } from "@/server/api/routers/competition";
 
-export function CreateCompetitionForm({
+export function EditCompetitionForm({
+  competition,
   technologies,
   categories,
 }: {
+  competition: CompetitionWithDetails;
   technologies: Technology[];
   categories: Category[];
 }) {
@@ -61,15 +50,13 @@ export function CreateCompetitionForm({
   const form = useForm<z.infer<typeof createCompetitionSchema>>({
     resolver: zodResolver(createCompetitionSchema),
     defaultValues: {
-      name: "",
-      image: "",
-      description: `
-      Itt leírhatja a verseny célját, részleteit, szabályait, stb.
-      `,
-      maxTeamSize: 3,
-      deadline: undefined,
-      technologies: [],
-      categories: [],
+      name: competition.name,
+      description: competition.description,
+      image: competition.image,
+      maxTeamSize: competition.maxTeamSize,
+      deadline: new Date(competition.deadline),
+      technologies: competition.technologies.map((tech) => tech.id),
+      categories: competition.categories.map((cat) => cat.id),
     },
   });
 
@@ -80,26 +67,11 @@ export function CreateCompetitionForm({
   ) => {
     setIsSubmitting(true);
     try {
-      const competitionId = createId();
-      const imageInfo = createFileInfo(competitionId, data.image);
-      const uploadedImage = await uploadFile(
-        imageInfo.source,
-        imageInfo.fileName,
-      );
-      data.image = uploadedImage.url;
-
-      const competitionData = {
-        id: competitionId,
-        ...data,
-      };
-
-      console.log("competitionData", competitionData);
-
-      await createCompetition(competitionData);
-      toast.success("Verseny sikeresen létrehozva!");
+      await updateCompetition({ ...data, id: competition.id });
+      toast.success("Verseny sikeresen frissítve!");
     } catch (error) {
-      console.error("Error creating competition:", error);
-      toast.error("Hiba történt a verseny létrehozása során.");
+      console.error("Error updating competition:", error);
+      toast.error("Hiba történt a verseny frissítése során.");
     } finally {
       setIsSubmitting(false);
       router.push("/vezerlopult/versenyek");
@@ -117,10 +89,10 @@ export function CreateCompetitionForm({
               fromColor="from-indigo-500/20"
               toColor="to-sky-400/20"
             />
-            Új verseny részletei
+            Verseny szerkesztése
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
-            Kérjük, töltsd ki az új verseny adatait.
+            Kérjük, módosítsa a verseny adatait.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
@@ -255,7 +227,7 @@ export function CreateCompetitionForm({
               <Loader className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <>
-                Verseny Publikálása
+                Verseny Frissítése
                 <ArrowRight className="ml-2 h-4 w-4" />
               </>
             )}

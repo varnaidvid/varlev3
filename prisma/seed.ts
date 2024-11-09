@@ -144,7 +144,8 @@ async function main() {
     <p>A verseny során a csapatok egy komplex webalkalmazást fejlesztenek, ahol nem csak a technikai tudás, hanem a kreativitás és a csapatmunka is értékelésre kerül.</p>
 `,
       maxTeamSize: 3,
-      image: "https://picsum.photos/200/300",
+      image:
+        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png?updatedAt=1731169073642",
       deadline: new Date("2024-11-30"),
       technologies: {
         connect: [

@@ -1,6 +1,8 @@
 import { PageTitle } from "@/components/ui/page-title";
 import { api } from "@/trpc/server";
 import { Trophy } from "lucide-react";
+import { EditCompetitionForm } from "@/components/vezerlopult/versenyek/edit-competition-form";
+import { CompetitionWithDetails } from "@/server/api/routers/competition";
 
 export default async function CompetitionPage({
   params,
@@ -11,6 +13,9 @@ export default async function CompetitionPage({
   const competition = await api.competition.getById({
     id: competitionId,
   });
+
+  const technologies = await api.technology.getAll();
+  const categories = await api.category.getAll();
 
   return (
     <>
@@ -30,7 +35,12 @@ export default async function CompetitionPage({
         />
       </header>
       <main className="px-4">
-        {/* <DataTable columns={columns} data={teams} /> */}
+        <EditCompetitionForm
+          // @ts-ignore
+          competition={competition}
+          technologies={technologies}
+          categories={categories}
+        />
       </main>
     </>
   );
