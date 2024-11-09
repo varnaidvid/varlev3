@@ -33,7 +33,7 @@ export default async function Page({
                   <Separator orientation="vertical" />
                   <div className="flex space-x-2 h-6 mt-2">
                     {competition?.technologies.map((tech) => (
-                      <Badge>{tech.name}</Badge>
+                      <Badge key={tech.name}>{tech.name}</Badge>
                     ))}
                   </div>
                 </div>
@@ -43,7 +43,7 @@ export default async function Page({
                   <Separator orientation="vertical" />
                   <div className="flex space-x-2 h-6 mt-2">
                     {competition?.categories.map((cat) => (
-                      <Badge>{cat.name}</Badge>
+                      <Badge key={cat.name}>{cat.name}</Badge>
                     ))}
                   </div>
                 </div>
