@@ -14,6 +14,22 @@ enum AccountType {
     TEAM
 }
 
+enum NotificationType {
+    TEAM_REGISTERED
+
+    TEAM_APPROVED_BY_SCHOOL
+    TEAM_APPROVED_BY_ORGANIZER
+    TEAM_REJECTED_BY_ORGANIZER
+    TEAM_UPDATE
+
+    COMPETITION_ANNOUNCEMENT
+}
+
+enum NotificonStatus {
+    UNREAD
+    READ
+}
+
 generator client {
     provider = "prisma-client-js"
 }
@@ -98,6 +114,7 @@ model Team {
     members      Member[]
     coaches      Coach[]
     technologies Technology[]
+    emails       Email[]
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
@@ -156,7 +173,6 @@ model Competition {
     maxTeamSize Int
     deadline    DateTime
 
-    emails       Email[]
     technologies Technology[]
     categories   Category[]
     teams        Team[]
@@ -166,15 +182,17 @@ model Email {
     id    String @id @default(cuid())
     email String
 
-    competitionId String
-    competition   Competition @relation(fields: [competitionId], references: [id])
+    teamId String
+    Team   Team   @relation(fields: [teamId], references: [id])
 }
 
 model Notification {
     id String @id @default(cuid())
 
     message    String
+    type       NotificationType
     redirectTo String?
+    status     NotificonStatus  @default(UNREAD)
 
     createdAt DateTime @default(now())
 
