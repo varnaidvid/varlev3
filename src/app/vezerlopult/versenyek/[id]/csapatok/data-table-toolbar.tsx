@@ -20,8 +20,7 @@ export function DataTableToolbar<TData>({
     { label: "Regisztrált", value: "REGISTERED" },
     { label: "Iskola által jóváhagyott", value: "APPROVED_BY_SCHOOL" },
     { label: "Szervező álta jóváhagyott", value: "APPROVED_BY_ORGANIZER" },
-    { label: "Iskola által elutasított", value: "DENIED_BY_SCHOOL" },
-    { label: "Szervező által elutasított", value: "REJECTED_BY_ORGANIZER" },
+    { label: "Szervező által elutasított", value: "DENIED_BY_ORGANIZER" },
   ];
 
   return (

@@ -53,12 +53,9 @@ export function DataTableRowActions<TData>({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          size={"icon"}
-          className="flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200"
-        >
+        <Button size={"sm"} className="flex items-center gap-2">
           <Eye />
-          {/* <span>Részletek</span> */}
+          <span>Részletek</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
