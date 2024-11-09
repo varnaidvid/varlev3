@@ -130,6 +130,8 @@ export const teamsRouter = createTRPCRouter({
           ? "WAITING_FOR_ORGANIZER_APPROVAL"
           : team?.status;
 
+      console.log("STASTUS TO UPDATE", status);
+
       await ctx.db.team.update({
         where: {
           id: teamId,

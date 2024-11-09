@@ -115,22 +115,29 @@ async function main() {
   // create 3 categories
   const category1 = await prisma.category.create({
     data: {
-      name: "Web Development",
+      name: "Programozás",
       description: "Building websites and web applications",
     },
   });
 
   const category2 = await prisma.category.create({
     data: {
-      name: "Mobile Development",
+      name: "Filozófia",
       description: "Building mobile apps for iOS and Android",
     },
   });
 
   const category3 = await prisma.category.create({
     data: {
-      name: "Game Development",
-      description: "Creating video games for PC and consoles",
+      name: "Metafizika",
+      description: "Building mobile apps for iOS and Android",
+    },
+  });
+
+  const category4 = await prisma.category.create({
+    data: {
+      name: "Kvantumelmélet Kvízek",
+      description: "Building mobile apps for iOS and Android",
     },
   });
 
@@ -179,6 +186,32 @@ async function main() {
     },
   });
 
+  // create 2 subCategories for competition1
+  const subCategory1 = await prisma.subCategory.create({
+    data: {
+      name: "Webfejlesztés",
+      Competition: {
+        connect: { id: competition.id },
+      },
+    },
+  });
+  const subCategory2 = await prisma.subCategory.create({
+    data: {
+      name: "Mobilfejlesztés",
+      Competition: {
+        connect: { id: competition.id },
+      },
+    },
+  });
+  const subCategory3 = await prisma.subCategory.create({
+    data: {
+      name: "Nagypapa Parodoxon",
+      Competition: {
+        connect: { id: competition.id },
+      },
+    },
+  });
+
   // Create 3 team accounts
   const team1 = await prisma.team.create({
     data: {
@@ -204,6 +237,9 @@ async function main() {
           ...saltAndHashPassword("teampassword"),
           type: "TEAM" as AccountType,
         },
+      },
+      subCategories: {
+        connect: [{ id: subCategory3.id }],
       },
       members: {
         create: [
@@ -253,6 +289,9 @@ async function main() {
           { name: "Papp Petra", year: 10, isReserve: true },
         ],
       },
+      subCategories: {
+        connect: [{ id: subCategory2.id }],
+      },
       coaches: {
         create: [
           { name: "Takács Zoltán", School: { connect: { id: school2.id } } },
@@ -285,6 +324,9 @@ async function main() {
           ...saltAndHashPassword("teampassword3"),
           type: "TEAM" as AccountType,
         },
+      },
+      subCategories: {
+        connect: [{ id: subCategory2.id }],
       },
       members: {
         create: [

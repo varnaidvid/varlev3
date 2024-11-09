@@ -118,9 +118,10 @@ model Team {
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
 
-    members      Member[]
-    coaches      Coach[]
-    technologies Technology[]
+    members       Member[]
+    coaches       Coach[]
+    technologies  Technology[]
+    subCategories SubCategory[]
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
@@ -161,6 +162,7 @@ model Technology {
     teams        Team[]
 }
 
+// WILL BE LIKE "Programozás" || "Biológia"
 model Category {
     id String @id @default(cuid())
 
@@ -168,6 +170,17 @@ model Category {
     description String
 
     competitions Competition[]
+}
+
+// WILL BE LIKE "Webfejlesztés" || "Mobilprogramozás"
+model SubCategory {
+    id   String @id @default(cuid())
+    name String
+
+    Team Team[]
+
+    competitionId String
+    Competition   Competition @relation(fields: [competitionId], references: [id])
 }
 
 model Competition {
@@ -184,6 +197,7 @@ model Competition {
     technologies  Technology[]
     categories    Category[]
     teams         Team[]
+    subCategories SubCategory[]
     notifications Notification[]
 }
 
