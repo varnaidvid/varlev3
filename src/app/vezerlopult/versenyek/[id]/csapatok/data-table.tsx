@@ -32,13 +32,13 @@ import { DataTableRowActions } from "./data-table-row-actions";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  //   schools: School[];
+  schools: string[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  //   schools,
+  schools,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} /*schools={schools}*/ />
+      <DataTableToolbar table={table} schools={schools} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

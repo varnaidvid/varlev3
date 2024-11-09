@@ -9,12 +9,28 @@ import { format } from "date-fns";
 import { hu } from "date-fns/locale";
 import { TeamWithDetails } from "@/server/api/routers/team";
 import { Technology } from "@prisma/client";
+//   enum ApplicationStatus {
+//     WAITING_FOR_SCHOOL_APPROVAL
+//     APPROVED_BY_SCHOOL
+
+//     WAITING_FOR_ORGANIZER_APPROVAL
+//     REJECTED_BY_ORGANIZER
+
+//     REGISTERED
+// }
+// const statusColors = {
+//   REGISTERED: "bg-yellow-100 text-yellow-800",
+//   APPROVED_BY_SCHOOL: "bg-blue-100 text-blue-800",
+//   APPROVED_BY_ORGANIZER: "bg-green-100 text-green-800",
+//   DENIED_BY_ORGANIZER: "bg-red-100 text-red-800",
+// };
 
 const statusColors = {
-  REGISTERED: "bg-yellow-100 text-yellow-800",
+  WAITING_FOR_SCHOOL_APPROVAL: "bg-yellow-100 text-yellow-800",
   APPROVED_BY_SCHOOL: "bg-blue-100 text-blue-800",
-  APPROVED_BY_ORGANIZER: "bg-green-100 text-green-800",
-  DENIED_BY_ORGANIZER: "bg-red-100 text-red-800",
+  WAITING_FOR_ORGANIZER_APPROVAL: "bg-yellow-100 text-yellow-800",
+  REJECTED_BY_ORGANIZER: "bg-red-100 text-red-800",
+  REGISTERED: "bg-green-100 text-green-800",
 };
 
 export const columns: ColumnDef<TeamWithDetails>[] = [
@@ -28,13 +44,13 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
     ),
   },
   {
-    accessorKey: "school",
+    accessorKey: "schoolName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Iskola" />
     ),
     cell: ({ row }) => {
-      const school = row.getValue("school") as TeamWithDetails["school"];
-      return <div>{school.name}</div>;
+      const school = row.getValue("schoolName") as string;
+      return <div>{school}</div>;
     },
   },
   {
@@ -48,8 +64,11 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
         <Badge className={`${statusColors[status]}`}>
           {status === "REGISTERED" && "Regisztrált"}
           {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
-          {status === "APPROVED_BY_ORGANIZER" && "Szervező által jóváhagyott"}
-          {status === "DENIED_BY_ORGANIZER" && "Szervező által elutasított"}
+          {status === "WAITING_FOR_ORGANIZER_APPROVAL" &&
+            "Szervezői jóváhagyásra vár"}
+          {status === "REJECTED_BY_ORGANIZER" && "Szervező által elutasított"}
+          {status === "WAITING_FOR_SCHOOL_APPROVAL" &&
+            "Iskolai jóváhagyásra vár"}
         </Badge>
       );
     },
