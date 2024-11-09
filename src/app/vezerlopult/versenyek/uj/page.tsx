@@ -12,30 +12,25 @@ export default async function NewCompetition() {
   return (
     <>
       <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <div className="flex items-center justify-between">
-          <PageTitle
-            Icon={Trophy}
-            fromColor="from-indigo-300"
-            toColor="to-indigo-400"
-            title="Verseny Létrehozása"
-            links={[
-              {
-                href: "/vezerlopult/versenyek",
-                label: "Versenyek",
-              },
-              {
-                href: "/vezerlopult/versenyek/uj",
-                label: "Új verseny",
-              },
-            ]}
-          />
-          <Button>
-            <Save /> Mentés
-          </Button>
-        </div>
+        <PageTitle
+          Icon={Trophy}
+          fromColor="from-indigo-300"
+          toColor="to-indigo-400"
+          title="Verseny Létrehozása"
+          links={[
+            {
+              href: "/vezerlopult/versenyek",
+              label: "Versenyek",
+            },
+            {
+              href: "/vezerlopult/versenyek/uj",
+              label: "Új verseny",
+            },
+          ]}
+        />
       </header>
 
-      <main className="px-4">
+      <main className="px-4 pb-16">
         {/* <DataTable columns={columns} data={teams} /> */}
         {/* <div>
         {competitions.map((competition) => (
@@ -43,7 +38,7 @@ export default async function NewCompetition() {
           <CompetitionCard key={competition.id} competition={competition} />
         ))}
       </div> */}
-        <Card className="mx-auto w-full max-w-xl">
+        <Card className="mx-auto w-full max-w-3xl">
           <CreateCompetitionForm
             categories={categories}
             technologies={technologies}

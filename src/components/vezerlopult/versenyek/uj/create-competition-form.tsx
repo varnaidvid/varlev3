@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Box,
   Plus,
@@ -8,6 +9,7 @@ import {
   ArrowLeft,
   Image,
   Save,
+  Loader,
 } from "lucide-react";
 import {
   CardContent,
@@ -20,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,6 +38,16 @@ import { Technology, Category } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { DatePickerField } from "@/components/ui/date-picker-field";
+import { ContentEditor } from "./content-editor";
+import NumericInput from "@/components/ui/numeric-input";
+import { ImageUpload } from "./image-upload";
+import MultiSelect from "./multi-select";
+import { createFileInfo } from "@/utils/file-helpers";
+import { createId } from "@paralleldrive/cuid2";
+import { uploadFile } from "@/utils/upload-file";
+import { createCompetition } from "./actions";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function CreateCompetitionForm({
   technologies,
@@ -43,17 +56,54 @@ export function CreateCompetitionForm({
   technologies: Technology[];
   categories: Category[];
 }) {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof createCompetitionSchema>>({
     resolver: zodResolver(createCompetitionSchema),
+    defaultValues: {
+      name: "",
+      image: "",
+      description: `
+      Itt leírhatja a verseny célját, részleteit, szabályait, stb.
+      `,
+      maxTeamSize: 3,
+      deadline: undefined,
+      technologies: [],
+      categories: [],
+    },
   });
 
-  const handleSubmit = (data: z.infer<typeof createCompetitionSchema>) => {
-    console.log("Submit");
-    console.log(data);
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onBack = () => {
-    console.log("Back");
+  const handleSubmit = async (
+    data: z.infer<typeof createCompetitionSchema>,
+  ) => {
+    setIsSubmitting(true);
+    try {
+      const competitionId = createId();
+      const imageInfo = createFileInfo(competitionId, data.image);
+      const uploadedImage = await uploadFile(
+        imageInfo.source,
+        imageInfo.fileName,
+      );
+      data.image = uploadedImage.url;
+
+      const competitionData = {
+        id: competitionId,
+        ...data,
+      };
+
+      console.log("competitionData", competitionData);
+
+      await createCompetition(competitionData);
+      toast.success("Verseny sikeresen létrehozva!");
+    } catch (error) {
+      console.error("Error creating competition:", error);
+      toast.error("Hiba történt a verseny létrehozása során.");
+    } finally {
+      setIsSubmitting(false);
+      router.push("/vezerlopult/versenyek");
+    }
   };
 
   return (
@@ -67,7 +117,7 @@ export function CreateCompetitionForm({
               fromColor="from-indigo-500/20"
               toColor="to-sky-400/20"
             />
-            Új verseny létrehozása
+            Új verseny részletei
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
             Kérjük, töltsd ki az új verseny adatait.
@@ -90,12 +140,12 @@ export function CreateCompetitionForm({
 
           <FormField
             control={form.control}
-            name="description"
+            name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Verseny leírása *</FormLabel>
+                <FormLabel>Verseny képe *</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="Verseny leírása" {...field} />
+                  <ImageUpload field={field} form={form} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -104,13 +154,19 @@ export function CreateCompetitionForm({
 
           <FormField
             control={form.control}
-            name="image"
+            name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Verseny képe *</FormLabel>
+                <FormLabel>Verseny leírása *</FormLabel>
                 <FormControl>
-                  <Input type="file" accept="image/*" {...field} />
+                  <ContentEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 </FormControl>
+                <FormDescription>
+                  Markdown szintaxissal is formázhatja a szöveget.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,13 +176,14 @@ export function CreateCompetitionForm({
             control={form.control}
             name="maxTeamSize"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="max-w-xs">
                 <FormLabel>Maximális csapatméret *</FormLabel>
                 <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Maximális csapatméret"
-                    {...field}
+                  <NumericInput
+                    value={field.value}
+                    onChange={field.onChange}
+                    minValue={1}
+                    maxValue={10}
                   />
                 </FormControl>
                 <FormMessage />
@@ -146,114 +203,62 @@ export function CreateCompetitionForm({
             )}
           />
 
-          {/* <FormField
+          <FormField
             control={form.control}
             name="technologies"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Felhasznált Technológiák *</FormLabel>
-                <div className="grid grid-cols-2 gap-2">
-                  {technologies?.map((technology) => (
-                    <label
-                      key={technology.id}
-                      className="relative flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
-                    >
-                      <Checkbox
-                        id={technology.id}
-                        className="order-1 after:absolute"
-                        checked={(
-                          form.getValues("technologies") || []
-                        ).includes(technology.id)}
-                        onCheckedChange={(checked) => {
-                          const currentValues =
-                            form.getValues("technologies") || [];
-
-                          if (checked) {
-                            form.setValue("technologies", [
-                              ...currentValues,
-                              technology.id,
-                            ]);
-                          } else {
-                            form.setValue(
-                              "technologies",
-                              currentValues.filter(
-                                (id: string) => id !== technology.id,
-                              ),
-                            );
-                          }
-                        }}
-                      />
-
-                      <Label
-                        className="text-sm tracking-tight"
-                        htmlFor={technology.id}
-                      >
-                        {technology.name}
-                      </Label>
-                    </label>
-                  ))}
-                </div>
+                <FormLabel>Felhasználható Technológiák *</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    form={form}
+                    name="technologies"
+                    items={technologies}
+                    placeholder="Válasszon technológiákat..."
+                    noItemsText="Nincs találat."
+                  />
+                </FormControl>
+                <FormDescription>
+                  Válassza ki a versenyen használható technológiákat.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
 
-          {/* <FormField
+          <FormField
             control={form.control}
             name="categories"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Kategóriák *</FormLabel>
-                <div className="grid grid-cols-2 gap-2">
-                  {categories?.map((category) => (
-                    <label
-                      key={category.id}
-                      className="relative flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-input p-2 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
-                    >
-                      <Checkbox
-                        id={category.id}
-                        className="order-1 after:absolute"
-                        checked={(form.getValues("categories") || []).includes(
-                          category.id,
-                        )}
-                        onCheckedChange={(checked) => {
-                          const currentValues =
-                            form.getValues("categories") || [];
-
-                          if (checked) {
-                            form.setValue("categories", [
-                              ...currentValues,
-                              category.id,
-                            ]);
-                          } else {
-                            form.setValue(
-                              "categories",
-                              currentValues.filter(
-                                (id: string) => id !== category.id,
-                              ),
-                            );
-                          }
-                        }}
-                      />
-
-                      <Label
-                        className="text-sm tracking-tight"
-                        htmlFor={category.id}
-                      >
-                        {category.name}
-                      </Label>
-                    </label>
-                  ))}
-                </div>
+                <FormControl>
+                  <MultiSelect
+                    form={form}
+                    name="categories"
+                    items={categories}
+                    placeholder="Válasszon kategóriákat..."
+                    noItemsText="Nincs találat."
+                  />
+                </FormControl>
+                <FormDescription>
+                  Válassza ki melyik kategóriákba tartozzon a verseny.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit">
-            Verseny Publikálása
-            <ArrowRight className="ml-2 h-4 w-4" />
+          <Button className="w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <Loader className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Verseny Publikálása
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </>
+            )}
           </Button>
         </CardFooter>
       </form>
