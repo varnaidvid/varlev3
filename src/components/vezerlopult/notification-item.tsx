@@ -98,7 +98,10 @@ export function NotificationItem({
           <div className="mt-4 flex flex-wrap items-center gap-2">
             {(notification.clientStatus || notification.status) ===
               "UNREAD" && (
-              <Badge variant="secondary" className="text-xs">
+              <Badge
+                variant="outline"
+                className="w-max text-xs text-neutral-600"
+              >
                 <Sparkles className="mr-2 size-3" />
                 Új
               </Badge>
@@ -109,7 +112,7 @@ export function NotificationItem({
             <Badge variant="outline" className="w-max text-xs text-neutral-600">
               {notification.senderName}
             </Badge>
-            <Badge variant="secondary" className="text-xs text-neutral-600">
+            <Badge variant="outline" className="text-xs text-neutral-600">
               <CalendarDays className="mr-2 size-3" />
               {new Date(notification.createdAt).toLocaleString("hu-HU", {
                 year: "numeric",
