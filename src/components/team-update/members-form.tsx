@@ -91,7 +91,7 @@ export function TeamMembersForm({
           </div>
 
           <div>
-            <FormLabel>Pót csapattag *</FormLabel>
+            <FormLabel>Pót csapattag</FormLabel>
             <FormDescription>
               Adja meg a pót csapattag nevét és évfolyamát
             </FormDescription>

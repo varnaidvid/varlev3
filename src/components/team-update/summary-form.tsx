@@ -13,13 +13,19 @@ import {
   CheckCircle2,
   ArrowLeft,
   Loader2,
-  BrainCircuit,
-  Users,
   School,
+  Trophy,
+  Users,
+  BrainCircuit,
+  RefreshCw,
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
-import { teamRegistrationSchema } from "@/lib/zod/team-registration";
+import {
+  teamRegistrationSchema,
+  updateTeamSchema,
+} from "@/lib/zod/team-registration";
+import { Separator } from "../ui/separator";
 
 const SuccessCard = () => {
   return (
@@ -63,16 +69,15 @@ export function SummaryStep({
   onSubmit,
   isSubmitting,
 }: {
-  formData: z.infer<typeof teamRegistrationSchema>;
+  formData: z.infer<typeof updateTeamSchema>;
   onBack: () => void;
   onSubmit: () => void;
   isSubmitting: boolean;
 }) {
   const {
-    account: { password, password2, username },
-    members: { members, reserveMember },
-    team: { coaches, name, school },
-    competitionId,
+    formOne: { coaches, name, school, technologies },
+    formTwo: { members, reserveMember },
+    teamId,
   } = formData;
 
   const [showSuccess, setShowSuccess] = useState(false);
@@ -101,7 +106,7 @@ export function SummaryStep({
           Kérjük, ellenőrizd a megadott adatokat a véglegesítés előtt.
         </CardDescription>
       </CardHeader>
-      <CardContent className="mt-4 space-y-4">
+      <CardContent className="mt-4 space-y-6">
         <h1 className="text-2xl font-semibold">{name}:</h1>
 
         <div>
@@ -156,12 +161,12 @@ export function SummaryStep({
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Regisztráció folyamatban...
+              Frissítés folyamatban...
             </>
           ) : (
             <>
-              Regisztráció véglegesítése
-              <CheckCircle2 className="ml-2 h-4 w-4" />
+              Csapatom frissítése
+              <RefreshCw className="ml-2 h-4 w-4" />
             </>
           )}
         </Button>

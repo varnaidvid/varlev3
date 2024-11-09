@@ -15,6 +15,7 @@ import {
 import { NavMain } from "./nav-main";
 import Logo from "../../logo";
 import { auth } from "@/server/auth";
+import Link from "next/link";
 
 export async function AppSidebar({
   ...props
@@ -29,7 +30,9 @@ export async function AppSidebar({
           <SidebarMenu>
             <SidebarMenuItem>
               <div className="relative flex items-center justify-between gap-2 transition-all group-data-[collapsible=icon]:flex-col">
-                <Logo size="small" onlyIcon iconBg="black" />
+                <Link href="/vezerlopult">
+                  <Logo size="small" onlyIcon iconBg="black" />
+                </Link>
 
                 <SidebarTrigger className="transition-all duration-200 ease-linear" />
               </div>

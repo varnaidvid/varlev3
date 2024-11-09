@@ -7,7 +7,14 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["ik.imagekit.io"],
+    remotePatterns: [
+      {
+        hostname: "picsum.photos",
+      },
+      {
+        hostname: "ik.imagekit.io",
+      },
+    ],
   },
 };
 

@@ -1,10 +1,11 @@
 enum ApplicationStatus {
-    REGISTERED
-
+    WAITING_FOR_SCHOOL_APPROVAL
     APPROVED_BY_SCHOOL
 
-    APPROVED_BY_ORGANIZER
-    DENIED_BY_ORGANIZER
+    WAITING_FOR_ORGANIZER_APPROVAL
+    REJECTED_BY_ORGANIZER
+
+    REGISTERED
 }
 
 enum AccountType {
@@ -68,6 +69,8 @@ model Account {
     type     AccountType
     sessions Session[]
 
+    emails Email[]
+
     team      Team?
     school    School?
     organizer Organizer?
@@ -81,8 +84,6 @@ model Member {
 
     name String
     year Int
-
-    email String?
 
     isReserve Boolean @default(false)
 
@@ -98,21 +99,21 @@ model Coach {
     teamId String
     Team   Team   @relation(fields: [teamId], references: [id])
 
-    schoolId String
-    School   School @relation(fields: [schoolId], references: [id])
+    schoolName String
+    School     School @relation(fields: [schoolName], references: [id])
 }
 
 model Team {
     id String @id @default(cuid())
 
     name   String
-    status ApplicationStatus @default(REGISTERED)
+    status ApplicationStatus @default(WAITING_FOR_SCHOOL_APPROVAL)
 
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
-    schoolId String
-    school   School @relation(fields: [schoolId], references: [id])
+    schoolName String
+    school     School @relation(fields: [schoolName], references: [id])
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
@@ -120,7 +121,6 @@ model Team {
     members      Member[]
     coaches      Coach[]
     technologies Technology[]
-    emails       Email[]
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
@@ -132,8 +132,7 @@ model School {
     name    String @unique
     address String
 
-    contactName  String
-    contactEmail String
+    contactName String
 
     teams   Team[]
     coaches Coach[]
@@ -145,8 +144,9 @@ model School {
 model Organizer {
     id String @id @default(cuid())
 
-    name  String
-    email String?
+    name String
+
+    competitions Competition[]
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
@@ -179,6 +179,8 @@ model Competition {
     maxTeamSize Int
     deadline    DateTime
 
+    organizers Organizer[]
+
     technologies  Technology[]
     categories    Category[]
     teams         Team[]
@@ -189,8 +191,8 @@ model Email {
     id    String @id @default(cuid())
     email String
 
-    teamId String
-    Team   Team   @relation(fields: [teamId], references: [id])
+    accountId String
+    account   Account @relation(fields: [accountId], references: [id])
 }
 
 model Notification {
