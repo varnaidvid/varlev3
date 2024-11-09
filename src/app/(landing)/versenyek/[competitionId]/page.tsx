@@ -2,6 +2,7 @@ import { api } from "@/trpc/server";
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { WinnersTable } from "@/components/WinnersTable"
 
 export default async function Page({
   params,
@@ -11,6 +12,29 @@ export default async function Page({
   const { competitionId } = await params;
 
   const competition = await api.competition.getById({ id: competitionId });
+
+  const teams = [
+    {
+      team: "Csapat 1",
+      score: "182",
+    },
+    {
+      team: "Csapat 2",
+      score: "176",
+    },
+    {
+      team: "Csapat 3",
+      score: "150",
+    },
+    {
+      team: "Csapat 4",
+      score: "139",
+    },
+    {
+      team: "Csapat 5",
+      score: "104",
+    },
+  ]
 
   return (
     <>
@@ -47,11 +71,18 @@ export default async function Page({
                     ))}
                   </div>
                 </div>
-                <p className="py-2 font-bold mt-4">Leírás</p>
-                <Separator />
-                <p className="py-2">{competition?.description}</p>
               </div>
-              <Button className="w-full">Jelentkezés</Button>
+            </div>
+          </div>
+          <div className="flex flex-col justify-between md:flex-row py-4 mt-8 space-y-12 lg:space-y-0 space-x-0 lg:space-x-12">
+            <div className="w-fit lg:w-2/4">
+              <h1 className="text-3xl font-bold pb-2">Ranglista</h1>
+              <WinnersTable teams={ teams } />
+            </div>
+            <div className="w-fit lg:w-2/4">
+              <p className="font-bold text-3xl pb-4">Leírás</p>
+              <Separator />
+              <div className="pt-4" dangerouslySetInnerHTML={{ __html: competition?.description }} />
             </div>
           </div>
         </div>
