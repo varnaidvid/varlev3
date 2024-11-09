@@ -23,22 +23,21 @@ import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
 import { School, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
-import SelectSchool from "../ui/select-school";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
-import { useEffect } from "react";
+import SelectSchool from "../../../ui/select-school";
+import { Checkbox } from "../../../ui/checkbox";
+import { Label } from "../../../ui/label";
 
 export function TeamDetailsForm({
   technologies,
   form,
   onSubmit,
+  onBack,
   schools,
-  selectedTechnologies,
 }: {
   technologies: Technology[];
-  selectedTechnologies: string[];
   form: UseFormReturn<z.infer<typeof formTwoSchema>>;
   onSubmit: () => void;
+  onBack: () => void;
   schools: School[];
 }) {
   const addCoach = () => {
@@ -53,10 +52,6 @@ export function TeamDetailsForm({
       );
     }
   };
-
-  useEffect(() => {
-    form.setValue("technologies", selectedTechnologies);
-  }, [selectedTechnologies]);
 
   return (
     <Form {...form}>
@@ -101,7 +96,6 @@ export function TeamDetailsForm({
                   <SelectSchool
                     schools={schools}
                     onSelect={(schoolId) => form.setValue("school", schoolId)}
-                    initialSchool={form.watch("school")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -165,9 +159,6 @@ export function TeamDetailsForm({
                       <Checkbox
                         id={technology.id}
                         className="order-1 after:absolute"
-                        defaultChecked={selectedTechnologies.includes(
-                          technology.id,
-                        )}
                         checked={(
                           form.getValues("technologies") || []
                         ).includes(technology.id)}
@@ -209,6 +200,15 @@ export function TeamDetailsForm({
           <Button className="w-full" type="submit">
             Következő lépés
             <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            type="button"
+            onClick={onBack}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Vissza
           </Button>
         </CardFooter>
       </form>

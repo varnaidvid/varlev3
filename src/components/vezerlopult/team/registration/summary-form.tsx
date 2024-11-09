@@ -23,7 +23,7 @@ import { teamRegistrationSchema } from "@/lib/zod/team-registration";
 
 const SuccessCard = () => {
   return (
-    <Card className="mx-auto mt-4 w-full max-w-md">
+    <Card className="mx-auto mt-4 w-full max-w-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -86,7 +86,7 @@ export function SummaryStep({
   if (showSuccess) return <SuccessCard />;
 
   return (
-    <Card className="mx-auto w-full max-w-md">
+    <Card className="mx-auto w-full max-w-lg">
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon

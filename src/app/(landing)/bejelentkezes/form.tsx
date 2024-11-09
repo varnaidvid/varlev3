@@ -52,7 +52,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <Card className="mx-auto w-full max-w-md">
+      <Card className="mx-auto w-full max-w-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CardHeader className="border-b">

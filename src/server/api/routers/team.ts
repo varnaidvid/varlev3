@@ -22,7 +22,7 @@ export const teamsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return await ctx.db.team.findFirst({
+      const res = await ctx.db.team.findFirst({
         where: {
           accountId: input.accountId,
         },
@@ -31,6 +31,7 @@ export const teamsRouter = createTRPCRouter({
           coaches: true,
           school: true,
           technologies: true,
+          SubCategory: true,
           account: {
             include: {
               emails: true,
@@ -38,11 +39,16 @@ export const teamsRouter = createTRPCRouter({
           },
           Competition: {
             include: {
+              subCategories: true,
+              technologies: true,
               categories: true,
             },
           },
         },
       });
+      if (!res) throw new Error("Team not found");
+
+      return res;
     }),
 
   getTeamById: protectedProcedure
@@ -135,7 +141,7 @@ export const teamsRouter = createTRPCRouter({
           ? "WAITING_FOR_ORGANIZER_APPROVAL"
           : team?.status;
 
-      await ctx.db.team.update({
+      const res = await ctx.db.team.update({
         where: {
           id: teamId,
         },
@@ -177,6 +183,10 @@ export const teamsRouter = createTRPCRouter({
           technologies: true,
         },
       });
+
+      console.log("RES FROM updateTeam", res);
+
+      return res;
     }),
 
   getTeamsForCSV: publicProcedure
@@ -195,7 +205,11 @@ export const teamsRouter = createTRPCRouter({
           coaches: true,
           school: true,
           technologies: true,
-          emails: true,
+          account: {
+            include: {
+              emails: true,
+            },
+          },
         },
       });
     }),

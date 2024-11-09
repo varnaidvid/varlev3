@@ -18,7 +18,7 @@ import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { formThreeSchema } from "@/lib/zod/team-registration";
 import { Competition } from "@prisma/client";
-import TeamMember from "../ui/team-member";
+import TeamMember from "../../../ui/team-member";
 
 export function TeamMembersForm({
   form,

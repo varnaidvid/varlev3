@@ -183,6 +183,9 @@ async function main() {
       categories: {
         connect: [{ id: category1.id }, { id: category2.id }],
       },
+      organizers: {
+        connect: [{ id: organizer1.id }],
+      },
     },
   });
 

@@ -7,6 +7,7 @@ import {
 import {
   AlertCircle,
   AlertTriangle,
+  ArrowRight,
   CalendarDays,
   Check,
   CheckCircle2,
@@ -98,15 +99,17 @@ export function NotificationItem({
       )}
 
       <div className="flex items-start gap-3">
+        <div className="flex-shrink-0">
+          <Badge
+            variant="default"
+            className={`rounded-full p-[2px] ${typeProps.color}`}
+          >
+            <Icon className="size-4" />
+          </Badge>
+        </div>
         <div className="flex-1">
-          <div className="flex items-center gap-2">
-            <Badge
-              variant="default"
-              className={`rounded-full p-[2px] ${typeProps.color}`}
-            >
-              <Icon className="size-4" />
-            </Badge>
-            <h3 className="break-words pr-2 font-semibold">
+          <div className="flex items-start gap-2">
+            <h3 className="max-w-[calc(100%-50px)] break-words pr-2 font-semibold">
               {notification.subject}
             </h3>
           </div>
@@ -114,10 +117,12 @@ export function NotificationItem({
           {notification.redirectTo && (
             <Button
               variant="link"
-              className="mt-2 inline-block text-sm"
+              className="mt-4 flex justify-start gap-1 p-0 text-sm"
               asChild
             >
-              <Link href={notification.redirectTo}>További részletek</Link>
+              <Link href={notification.redirectTo}>
+                További részletek <ArrowRight className="size-4" />
+              </Link>
             </Button>
           )}
 

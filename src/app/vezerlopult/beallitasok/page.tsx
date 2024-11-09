@@ -1,11 +1,10 @@
-import { TeamApprovedByOrganizerEmail } from "@/components/email-templates";
 import { PageTitle } from "@/components/ui/page-title";
 import NotificationCenter from "@/components/vezerlopult/notification-center";
 import { auth } from "@/server/auth";
 import { Cog } from "lucide-react";
-import TeamSettings from "./team-settings";
 import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
+import TeamSettings from "./team-settings";
 
 export default async function Page() {
   const session = await auth();

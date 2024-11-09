@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { api, RouterOutputs } from "@/trpc/react";
 import { z } from "zod";
-import { TeamDetailsForm } from "@/components/team-update/details-form";
-import { TeamMembersForm } from "@/components/team-update/members-form";
-import { SummaryStep } from "@/components/team-update/summary-form";
+import { TeamDetailsForm } from "@/components/vezerlopult/team/update/details-form";
+import { TeamMembersForm } from "@/components/vezerlopult/team/update/members-form";
+import { SummaryStep } from "@/components/vezerlopult/team/update/summary-form";
 import { toast } from "sonner";
 import {
   formThreeSchema,
@@ -18,16 +16,17 @@ import {
   updateTeamSchema,
 } from "@/lib/zod/team-registration";
 import { School } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 export default function EditForm({
   initialData,
   schools,
-  competitionTechnologies,
 }: {
   initialData: RouterOutputs["team"]["getTeamByAccountId"];
   schools: School[];
-  competitionTechnologies: RouterOutputs["technology"]["getCompetitionTechnologies"];
 }) {
+  const router = useRouter();
+
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,24 +36,28 @@ export default function EditForm({
   const formTwo = useForm({
     resolver: zodResolver(formTwoSchema),
     defaultValues: {
-      name: initialData?.name || "",
-      school: initialData?.school.name,
-      coaches: initialData?.coaches.map((coach) => coach.name) || [""],
-      technologies: initialData?.technologies?.map((tech) => tech.name) || [""],
+      name: initialData.name,
+      school: initialData.school.name,
+      coaches: initialData.coaches.map((coach) => coach.name),
+      technologies: initialData.technologies,
+      subCategory: {
+        id: initialData.SubCategory.id,
+        name: initialData.SubCategory.name,
+      },
     },
-  }) as any;
+  });
 
   const formThree = useForm({
     resolver: zodResolver(formThreeSchema),
-    defaultValues: initialData?.members
+    defaultValues: initialData.members
       ? {
-          members: initialData?.members
+          members: initialData.members
             .filter((member) => !member.isReserve)
             .map((member) => ({
               name: member.name,
               year: member.year,
             })),
-          reserveMember: initialData?.members.find(
+          reserveMember: initialData.members.find(
             (member) => member.isReserve,
           ) || { name: "", year: 1 },
         }
@@ -75,7 +78,7 @@ export default function EditForm({
 
   const handleNextStep = async () => {
     if (step === 1) {
-      if (formTwo.getValues("technologies")?.length === 0) {
+      if (formTwo.getValues("technologies").map((t) => t.id).length === 0) {
         formTwo.setError("technologies", {
           type: "required",
           message: "Legalább egy technológiát ki kell választani.",
@@ -91,7 +94,7 @@ export default function EditForm({
   };
 
   const getAllFormData = (): z.infer<typeof updateTeamSchema> => ({
-    teamId: initialData?.id || "",
+    teamId: initialData.id || "",
     formOne: formTwo.getValues(),
     formTwo: {
       members: formThree.getValues().members,
@@ -107,16 +110,17 @@ export default function EditForm({
       setIsSubmitting(true);
       const formData = getAllFormData();
 
-      if (!initialData?.id || !initialData?.Competition.id) return;
+      if (!initialData.id || !initialData.Competition.id) return;
 
-      await updateTeamMutation.mutateAsync(formData);
       await sendTeamUpdateMutation.mutateAsync({
-        teamId: initialData?.id,
-        competitionId: initialData?.Competition.id,
-        redirectTo: "/bejelentkezes",
+        teamId: initialData.id,
+        competitionId: initialData.Competition.id,
+        redirectTo: "/vezerlopult",
       });
+      await updateTeamMutation.mutateAsync(formData);
 
       toast.success("Sikeres frissítés!");
+      router.push("/vezerlopult");
     } catch (error) {
       console.error("Update error:", error);
       toast.error("Hiba történt a frissítés során.");
@@ -128,13 +132,11 @@ export default function EditForm({
   return (
     <div className="mt-8 space-y-4">
       {step === 1 && (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-lg">
           <TeamDetailsForm
-            technologies={competitionTechnologies}
-            selectedTechnologies={
-              initialData?.technologies.map((tech) => tech.id) || []
-            }
-            form={formTwo}
+            subCategories={initialData.Competition.subCategories}
+            technologies={initialData.Competition.technologies}
+            form={formTwo as any}
             schools={schools}
             onSubmit={handleNextStep}
           />
@@ -142,10 +144,10 @@ export default function EditForm({
       )}
 
       {step === 2 && (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-lg">
           <TeamMembersForm
             form={formThree as any}
-            competition={initialData?.Competition as any}
+            competition={initialData.Competition}
             memberFields={memberFields}
             memberAppend={memberAppend}
             memberRemove={memberRemove}
@@ -157,7 +159,7 @@ export default function EditForm({
 
       {step === 3 && (
         <SummaryStep
-          formData={getAllFormData() as any}
+          formData={getAllFormData()}
           onBack={() => setStep(2)}
           onSubmit={handleSubmit}
           isSubmitting={isSubmitting}

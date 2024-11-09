@@ -23,48 +23,8 @@ import {
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
-import {
-  teamRegistrationSchema,
-  updateTeamSchema,
-} from "@/lib/zod/team-registration";
-import { Separator } from "../ui/separator";
-import { Badge } from "../ui/badge";
-
-const SuccessCard = () => {
-  return (
-    <Card className="mx-auto mt-4 w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-2xl">
-          <ExtraIcon
-            Icon={CheckCircle2}
-            variant="small"
-            fromColor="from-green-500/20"
-            toColor="to-emerald-400/20"
-          />
-          Sikeres regisztráció
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-2">
-          <div className="mt-4 flex items-center gap-1 text-sm">
-            <CheckCircle2 className="size-4 text-green-700" />
-            <span>Értesítés küldve iskolának a jóváhagyásért</span>
-          </div>
-          <div className="mt-4 flex items-center gap-1 text-sm">
-            <CheckCircle2 className="size-4 text-green-700" />
-            <span>Jelentkezési státuszotok megfigyelhető a vezérlőpultban</span>
-          </div>
-        </div>
-
-        <Button asChild variant={"link"} className="mt-4">
-          <Link href="/bejelentkezes">
-            Jelentkezz be most a vezérlőpultodba
-          </Link>
-        </Button>
-      </CardContent>
-    </Card>
-  );
-};
+import { updateTeamSchema } from "@/lib/zod/team-registration";
+import { Badge } from "../../../ui/badge";
 
 export function SummaryStep({
   formData,
@@ -83,18 +43,10 @@ export function SummaryStep({
     teamId,
   } = formData;
 
-  const [showSuccess, setShowSuccess] = useState(false);
   const submitButtonRef = React.useRef(null);
 
-  const handleSubmit = async () => {
-    await onSubmit();
-    setShowSuccess(true);
-  };
-
-  if (showSuccess) return <SuccessCard />;
-
   return (
-    <Card className="mx-auto w-full max-w-md">
+    <Card className="mx-auto w-full max-w-lg">
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -113,7 +65,7 @@ export function SummaryStep({
         <h1 className="text-2xl font-semibold">{name}:</h1>
 
         <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <School className="size-6 rounded-full border p-[3px]" />
             Iskola
           </h2>
@@ -121,7 +73,7 @@ export function SummaryStep({
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <Users className="size-6 rounded-full border p-[3px]" />
             Csapattagok
           </h2>
@@ -141,7 +93,7 @@ export function SummaryStep({
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <BrainCircuit className="size-6 rounded-full border p-[3px]" />
             Felkészítő tanárok
           </h2>
@@ -155,7 +107,7 @@ export function SummaryStep({
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <Cpu className="size-6 rounded-full border p-[3px]" />
             Technológiák
           </h2>
@@ -167,7 +119,7 @@ export function SummaryStep({
         </div>
 
         <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <Blocks className="size-6 rounded-full border p-[3px]" />
             Kategória
           </h2>
@@ -177,7 +129,7 @@ export function SummaryStep({
       <CardFooter className="flex-col gap-2 border-t pt-6">
         <Button
           className="w-full"
-          onClick={handleSubmit}
+          onClick={onSubmit}
           disabled={isSubmitting}
           ref={submitButtonRef}
         >

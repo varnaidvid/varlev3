@@ -7,7 +7,6 @@ import {
 import { z } from "zod";
 import { Resend } from "resend";
 import {
-  Notification,
   NotificationTopic,
   NotificationType,
   PrismaClient,
@@ -22,6 +21,7 @@ import {
   TeamUpdatedDataEmail,
 } from "@/components/email-templates";
 import React from "react";
+import { TRPCError } from "@trpc/server";
 
 const resend = new Resend(process.env.RESEND_KEY);
 
@@ -46,32 +46,47 @@ async function createNotification({
   redirectTo?: string;
   db: PrismaClient;
 }) {
-  await db.notification.create({
+  console.log("THE RECEIVER ACCOUNT ID", receiverAccountId);
+  const senderAcc = await db.account.findUnique({
+    where: { id: senderAccountId },
+    select: { id: true, emails: true },
+  });
+  console.log("SENDER ACCOUNT", senderAcc);
+  if (!senderAcc) throw new Error("A feladó fiókja nem található");
+
+  const noti = await db.notification.create({
     data: {
       topic,
       type,
       message,
       redirectTo,
-      senderAccountId,
-      receiverAccountId,
       subject,
+      senderAccount: {
+        connect: {
+          id: senderAccountId,
+        },
+      },
+      receiverAccount: {
+        connect: {
+          id: receiverAccountId,
+        },
+      },
     },
   });
+  console.log("NOTIFICATION CREATED", noti);
 
   const receiver = await db.account.findUnique({
     where: { id: receiverAccountId },
+    select: { emails: true },
   });
   if (!receiver) throw new Error("A fogadó felhasználó nem található");
 
-  const emails = await db.email.findMany({
-    where: { accountId: senderAccountId },
-    select: { email: true },
-  });
+  console.log("//////////////////////////", receiver.emails.length);
 
-  if (emails.length > 0) {
+  if (receiver.emails.length > 0) {
     await resend.emails.send({
       from: "VarleV3 <no-reply@varlev3.hu>",
-      to: emails.map((e) => e.email),
+      to: receiver.emails.map((e) => e.email),
       subject: subject,
       react: react,
     });
@@ -100,6 +115,8 @@ export const notificationRouter = createTRPCRouter({
         createdAt: "desc",
       },
     });
+
+    if (!notification) throw new TRPCError({ code: "NOT_FOUND" });
 
     return notification;
   }),
@@ -283,7 +300,7 @@ export const notificationRouter = createTRPCRouter({
           ),
           subject: `${team.name} csapat jelentkezése várja jóváhagyásod`,
           senderAccountId: input.schoolId,
-          receiverAccountId: organizer.id,
+          receiverAccountId: organizer.accountId,
           redirectTo: input.redirectForOrganizer,
           db: ctx.db,
         });
@@ -389,7 +406,7 @@ export const notificationRouter = createTRPCRouter({
 
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, account: true },
       });
       if (!team) throw new Error("A csapat nem található");
 
@@ -412,8 +429,8 @@ export const notificationRouter = createTRPCRouter({
             />
           ),
           subject: `${team.name} csapat frissítette adatait`,
-          senderAccountId: input.teamId,
-          receiverAccountId: organizer.id,
+          senderAccountId: team.account.id,
+          receiverAccountId: organizer.accountId,
           redirectTo: input.redirectTo,
           db: ctx.db,
         });

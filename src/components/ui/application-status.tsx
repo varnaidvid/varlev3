@@ -143,70 +143,89 @@ export default function ApplicationStatusCard({
             )}
             {message && (
               <Alert className="mt-2">
-                <AlertTitle>{message}</AlertTitle>
+                <AlertTitle>
+                  {message.split("\n\n").map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      <br className="mt-1" />
+                    </React.Fragment>
+                  ))}
+                </AlertTitle>
                 <AlertDescription>
                   Ha bármilyen kérdésed van, kérlek vedd fel a kapcsolatot a
                   szervezőkkel.
                 </AlertDescription>
               </Alert>
             )}
-            {/* 
-            <div className="mt-4 text-sm text-gray-500">
-              <p>Csapat: {team.name}</p>
-              <p className="flex items-center gap-1">
-                Verseny:
-                <Link
-                  href={`/versenyek/${competition.id}`}
-                  className="flex items-start gap-1 text-sm hover:underline"
-                >
-                  {competition.name}
-                  <ExternalLink className="size-3" />
-                </Link>
-              </p>
-              <p>
-                Határidő:{" "}
-                {new Date(competition.deadline).toLocaleDateString("hu-HU")}
-              </p>
-            </div>
-*/}
-            <div className="mt-6 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {team.status === "REJECTED_BY_ORGANIZER" && (
+
+            {message ? (
+              <div className="mt-6 text-sm text-gray-500">
+                <p>
+                  <b>Csapat:</b> {team.name}
+                </p>
+                <p className="flex items-center gap-1">
+                  <b>Verseny:</b>
+                  <Link
+                    href={`/versenyek/${competition.id}`}
+                    className="flex items-start gap-1 text-sm hover:underline"
+                  >
+                    {competition.name}
+                    <ExternalLink className="size-3" />
+                  </Link>
+                </p>
+                <p>
+                  <b>Határidő:</b>{" "}
+                  {new Date(competition.deadline).toLocaleDateString("hu-HU")}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-6 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {team.status === "REJECTED_BY_ORGANIZER" && (
+                    <Button
+                      asChild
+                      variant="outline"
+                      className={`${config.color}`}
+                    >
+                      <Link href={`/vezerlopult/beallitasok`}>
+                        Hiánypótlás
+                        <MousePointerClickIcon className="size-2" />
+                      </Link>
+                    </Button>
+                  )}
+
                   <Button
                     asChild
                     variant="outline"
                     className={`${config.color}`}
                   >
-                    <Link href={`/vezerlopult/beallitasok`}>
-                      Hiánypótlás
-                      <MousePointerClickIcon className="size-2" />
+                    <Link href={`/versenyek/${competition.id}`}>
+                      Verseny részletei
+                      <ExternalLink className="size-2" />
                     </Link>
                   </Button>
-                )}
+                </div>
 
-                <Button asChild variant="outline" className={`${config.color}`}>
-                  <Link href={`/versenyek/${competition.id}`}>
-                    Verseny részletei
-                    <ExternalLink className="size-2" />
-                  </Link>
-                </Button>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    Verseny kezdetéig
+                  </span>
+                  <Clock className={`h-4 w-4 ${config.color}`} />
+                </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Verseny kezdetéig</span>
-                <Clock className={`h-4 w-4 ${config.color}`} />
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
-        <div className="mt-8">
-          <div className="relative z-10 flex justify-end">
-            <div className={`text-2xl font-medium ${config.color}`}>
-              <Countdown targetDate={competition.deadline.toISOString()} />
+        {!message && (
+          <div className="mt-8">
+            <div className="relative z-10 flex justify-end">
+              <div className={`text-2xl font-medium ${config.color}`}>
+                <Countdown targetDate={competition.deadline.toISOString()} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );
