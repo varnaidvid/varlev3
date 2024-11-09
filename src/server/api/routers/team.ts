@@ -9,8 +9,34 @@ import { z } from "zod";
 
 export const teamsRouter = createTRPCRouter({
   getAllTeams: publicProcedure.query(async ({ ctx }) => {
-    return ctx.db.team.findMany();
+    return await ctx.db.team.findMany();
   }),
+
+  getTeamByAccountId: protectedProcedure
+    .input(
+      z.object({
+        accountId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.team.findFirst({
+        where: {
+          accountId: input.accountId,
+        },
+        include: {
+          members: true,
+          coaches: true,
+          school: true,
+          technologies: true,
+          emails: true,
+          Competition: {
+            include: {
+              categories: true,
+            },
+          },
+        },
+      });
+    }),
 
   getTeamsByCompetition: publicProcedure
     .input(
@@ -19,7 +45,7 @@ export const teamsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return ctx.db.team.findMany({
+      return await ctx.db.team.findMany({
         where: {
           competitionId: input.competitionId,
         },

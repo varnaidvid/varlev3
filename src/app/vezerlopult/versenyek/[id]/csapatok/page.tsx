@@ -11,10 +11,17 @@ export default async function TeamsPage({
   params: { id: string };
 }) {
   const competitionId = (await params).id;
+  const competition = await api.competition.getById({
+    id: competitionId,
+  });
 
   const teams = await api.team.getTeamsByCompetition({
     competitionId: competitionId,
   });
+
+  //   const schools = await api.school.getSchoolsByCompetitionId({
+  //     competitionId,
+  //   });
 
   return (
     <>
@@ -23,12 +30,22 @@ export default async function TeamsPage({
           Icon={Users}
           fromColor="from-indigo-300"
           toColor="to-indigo-400"
-          title="Csapatok"
-          links={[{ href: "/vezerlopult/csapatok", label: "Csapatok" }]}
+          title="Jelentkező Csapatok"
+          links={[
+            { href: "/vezerlopult/versenyek", label: "Versenyek" },
+            {
+              href: `/vezerlopult/versenyek/${competitionId}/`,
+              label: (competition?.name ?? competitionId) as string,
+            },
+            {
+              href: `/vezerlopult/versenyek/${competitionId}/csapatok`,
+              label: "Csapatok",
+            },
+          ]}
         />
       </header>
       <main className="px-4">
-        <DataTable columns={columns} data={teams} />
+        <DataTable columns={columns} data={teams} /*schools={schools}*/ />
       </main>
     </>
   );

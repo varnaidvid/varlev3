@@ -22,7 +22,7 @@ const schoolNav = [
 const organizerNav = [
   {
     name: "Versenyek",
-    url: "/vezerlopult/felhasznalok",
+    url: "/vezerlopult/versenyek",
     icon: Trophy,
   },
   {

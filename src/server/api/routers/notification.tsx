@@ -108,6 +108,21 @@ export const notificationRouter = createTRPCRouter({
     return count;
   }),
 
+  getDenialNotification: protectedProcedure.query(async ({ ctx }) => {
+    const notification = await ctx.db.notification.findFirst({
+      where: {
+        receiverAccountId: ctx.session.user.id,
+        topic: "TEAM_REJECTED_BY_ORGANIZER",
+        status: "UNREAD",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return notification;
+  }),
+
   getNotifications: protectedProcedure
     .input(
       z.object({
@@ -142,9 +157,14 @@ export const notificationRouter = createTRPCRouter({
 
         if (sender.school) {
           item.senderName = sender.school.name;
+          item.senderType = "SCHOOL";
         } else if (sender.organizer) {
           item.senderName = sender.organizer.name;
-        } else if (sender.team) item.senderName = sender.team.name;
+          item.senderType = "ORGANIZER";
+        } else if (sender.team) {
+          item.senderName = sender.team.name;
+          item.senderType = "TEAM";
+        }
       }
 
       let nextCursor: typeof cursor | undefined = undefined;

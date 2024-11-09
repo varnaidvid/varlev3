@@ -14,7 +14,11 @@ export default async function Layout({
 
   return (
     <SidebarProvider>
-      <AppSidebar>{children}</AppSidebar>
+      <AppSidebar>
+        <main className="mx-auto mt-8 h-full min-h-[calc(100vh-57px-97px)] w-[calc(100%-16px)] flex-1 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
+          <div className="container mx-auto max-w-5xl">{children}</div>
+        </main>
+      </AppSidebar>
     </SidebarProvider>
   );
 }

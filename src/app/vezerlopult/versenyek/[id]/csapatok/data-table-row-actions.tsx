@@ -1,5 +1,12 @@
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal, Trash } from "lucide-react";
+import {
+  CheckCircle,
+  Eye,
+  File,
+  MoreHorizontal,
+  Trash,
+  XCircle,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +17,16 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -20,42 +35,83 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState("");
+
+  const handleApprove = () => {
+    // Implement approval logic here
+    console.log("Application approved");
+  };
+
+  const handleReject = () => {
+    // Implement rejection logic here
+    console.log("Application rejected with reason:", rejectionReason);
+    setIsRejectDialogOpen(false);
+    setRejectionReason("");
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button
-          variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          size={"icon"}
+          className="flex items-center gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200"
         >
-          <MoreHorizontal />
-          <span className="sr-only">Menü megnyitása</span>
+          <Eye />
+          {/* <span>Részletek</span> */}
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Szerkesztés</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <Dialog>
-          <DropdownMenuItem asChild>
-            <DialogTrigger>
-              <div className="flex items-center space-x-2">
-                <Trash className="h-4 w-4 text-destructive" />
-                <span>Törlés</span>
-              </div>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[625px]">
+        <DialogHeader>
+          <DialogTitle>Csapat neve majd</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          {/* Add your application details here */}
+          <p>Team Name: some name placeholder</p>
+          <p>Members: placeholder</p>
+          <p>Project Description: placeholder</p>
+          {/* Add more fields as needed */}
+        </div>
+        <DialogFooter className="sm:justify-start">
+          <Button
+            onClick={handleApprove}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <CheckCircle className="mr-2 h-4 w-4" /> Approve
+          </Button>
+          <Dialog
+            open={isRejectDialogOpen}
+            onOpenChange={setIsRejectDialogOpen}
+          >
+            <DialogTrigger asChild>
+              <Button variant="destructive">
+                <XCircle className="mr-2 h-4 w-4" /> Reject
+              </Button>
             </DialogTrigger>
-          </DropdownMenuItem>
-          <DialogTitle>Csapat törlése</DialogTitle>
-          <DialogContent>
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Csapat törlése</h3>
-              <p>Biztosan törölni szeretnéd ezt a csapatot?</p>
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline">Mégse</Button>
-                <Button variant="destructive">Törlés</Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </DropdownMenuContent>
-    </DropdownMenu>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reject Application</DialogTitle>
+              </DialogHeader>
+              <Textarea
+                placeholder="Enter reason for rejection"
+                value={rejectionReason}
+                onChange={(e) => setRejectionReason(e.target.value)}
+              />
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsRejectDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button variant="destructive" onClick={handleReject}>
+                  Confirm Rejection
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
