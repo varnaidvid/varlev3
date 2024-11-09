@@ -112,12 +112,12 @@ export default function EditForm({
 
       if (!initialData.id || !initialData.Competition.id) return;
 
+      await updateTeamMutation.mutateAsync(formData);
       await sendTeamUpdateMutation.mutateAsync({
         teamId: initialData.id,
         competitionId: initialData.Competition.id,
         redirectTo: "/vezerlopult",
       });
-      await updateTeamMutation.mutateAsync(formData);
 
       toast.success("Sikeres frissítés!");
       router.push("/vezerlopult");

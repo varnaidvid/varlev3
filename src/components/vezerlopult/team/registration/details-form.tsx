@@ -21,20 +21,23 @@ import { Input } from "@/components/ui/input";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
-import { School, Technology } from "@prisma/client";
+import { School, SubCategory, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
 import SelectSchool from "../../../ui/select-school";
 import { Checkbox } from "../../../ui/checkbox";
 import { Label } from "../../../ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function TeamDetailsForm({
   technologies,
+  subCategories,
   form,
   onSubmit,
   onBack,
   schools,
 }: {
   technologies: Technology[];
+  subCategories: SubCategory[];
   form: UseFormReturn<z.infer<typeof formTwoSchema>>;
   onSubmit: () => void;
   onBack: () => void;
@@ -159,23 +162,28 @@ export function TeamDetailsForm({
                       <Checkbox
                         id={technology.id}
                         className="order-1 after:absolute"
-                        checked={(
-                          form.getValues("technologies") || []
-                        ).includes(technology.id)}
+                        defaultChecked={form
+                          .getValues("technologies")
+                          ?.map((tech) => tech.id)
+                          .includes(technology.id)}
+                        checked={form
+                          .getValues("technologies")
+                          ?.map((tech) => tech.id)
+                          .includes(technology.id)}
                         onCheckedChange={(checked) => {
-                          const currentValues =
+                          const selectedTechnologies =
                             form.getValues("technologies") || [];
 
                           if (checked) {
                             form.setValue("technologies", [
-                              ...currentValues,
-                              technology.id,
+                              ...selectedTechnologies,
+                              technology,
                             ]);
                           } else {
                             form.setValue(
                               "technologies",
-                              currentValues.filter(
-                                (id: string) => id !== technology.id,
+                              selectedTechnologies.filter(
+                                (tech) => tech.id !== technology.id,
                               ),
                             );
                           }
@@ -191,6 +199,48 @@ export function TeamDetailsForm({
                     </label>
                   ))}
                 </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subCategory"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kategória *</FormLabel>
+                <RadioGroup
+                  className="gap-2"
+                  onValueChange={(newId) => {
+                    const selectedSubCategory = subCategories.find(
+                      (category) => category.id === newId,
+                    );
+
+                    if (selectedSubCategory)
+                      form.setValue("subCategory", selectedSubCategory);
+                  }}
+                  defaultValue={field?.value?.id}
+                >
+                  {subCategories.map((category) => (
+                    <div
+                      key={category.id}
+                      className="relative flex w-full items-start gap-2 rounded-lg border border-input p-3 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
+                    >
+                      <RadioGroupItem
+                        value={category.id}
+                        id={category.id}
+                        className="order-1 after:absolute after:inset-0"
+                      />
+                      <div className="grid grow gap-2">
+                        <Label htmlFor={`${category.id}`}>
+                          {category.name}
+                        </Label>
+                      </div>
+                    </div>
+                  ))}
+                </RadioGroup>
+
                 <FormMessage />
               </FormItem>
             )}

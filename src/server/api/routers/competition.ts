@@ -1,7 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import type { inferRouterOutputs } from "@trpc/server";
-import { Competition } from "@prisma/client";
+import { AccountType, Competition } from "@prisma/client";
 import {
   teamRegistrationSchema,
   TeamRegistrationType,
@@ -9,6 +9,7 @@ import {
 import { saltAndHashPassword } from "@/utils/password";
 import withRole from "@/utils/withRole";
 import { id } from "date-fns/locale";
+import { connect } from "http2";
 
 export const competitionRouter = createTRPCRouter({
   getById: publicProcedure
@@ -16,7 +17,7 @@ export const competitionRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.competition.findUnique({
         where: { id: input.id },
-        include: { technologies: true, categories: true },
+        include: { technologies: true, categories: true, subCategories: true },
       });
     }),
 
@@ -30,7 +31,7 @@ export const competitionRouter = createTRPCRouter({
       const {
         account: { username, password },
         members: { members, reserveMember },
-        team: { name, school, coaches, technologies },
+        team: { name, school, coaches, technologies, subCategory },
         competitionId,
       } = input;
 
@@ -39,47 +40,46 @@ export const competitionRouter = createTRPCRouter({
       });
       if (!competition) throw new Error("Nincs ilyen verseny!");
 
-      console.log("school we're tryna find NAME:", school);
-
-      const _school = await ctx.db.school.findUnique({
-        where: { name: school },
-      });
-      if (!_school) throw new Error("Nincs ilyen iskola!");
-
-      console.log("school exists", _school);
-
       const team = await ctx.db.team.create({
         data: {
           name,
-          school: { connect: { id: _school.id } },
+          school: { connect: { name: school } },
           coaches: {
             createMany: {
               data: coaches.map((coach) => ({
                 name: coach,
-                schoolId: _school.id,
+                schoolName: school,
               })),
             },
           },
           Competition: { connect: { id: competitionId } },
           technologies: {
-            connect: technologies?.map((tech) => ({ id: tech })),
+            connect: technologies!.map((tech) => ({ id: tech.id })),
           },
           account: {
             create: {
               username,
-              type: "TEAM",
+              type: "TEAM" as AccountType,
               ...saltAndHashPassword(password),
             },
           },
+          SubCategory: { connect: { id: subCategory.id } },
+          status: "WAITING_FOR_SCHOOL_APPROVAL",
+        },
+        include: {
+          school: true,
         },
       });
 
       await ctx.db.member.createMany({
         data: members.map((member) => ({ ...member, teamId: team.id })),
       });
-      await ctx.db.member.create({
-        data: { ...reserveMember, teamId: team.id, isReserve: true },
-      });
+
+      let _temp: any = reserveMember;
+      if (reserveMember?.name)
+        await ctx.db.member.create({
+          data: { ..._temp, teamId: team.id },
+        });
 
       return team;
     }),

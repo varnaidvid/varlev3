@@ -1,6 +1,7 @@
 import {
   createTRPCRouter,
   protectedProcedure,
+  publicProcedure,
   withOwner,
   withRole,
 } from "@/server/api/trpc";
@@ -46,15 +47,13 @@ async function createNotification({
   redirectTo?: string;
   db: PrismaClient;
 }) {
-  console.log("THE RECEIVER ACCOUNT ID", receiverAccountId);
-  const senderAcc = await db.account.findUnique({
-    where: { id: senderAccountId },
-    select: { id: true, emails: true },
+  const receiver = await db.account.findUnique({
+    where: { id: receiverAccountId },
+    select: { emails: true },
   });
-  console.log("SENDER ACCOUNT", senderAcc);
-  if (!senderAcc) throw new Error("A feladó fiókja nem található");
+  if (!receiver) throw new Error("A fogadó felhasználó nem található");
 
-  const noti = await db.notification.create({
+  await db.notification.create({
     data: {
       topic,
       type,
@@ -73,15 +72,6 @@ async function createNotification({
       },
     },
   });
-  console.log("NOTIFICATION CREATED", noti);
-
-  const receiver = await db.account.findUnique({
-    where: { id: receiverAccountId },
-    select: { emails: true },
-  });
-  if (!receiver) throw new Error("A fogadó felhasználó nem található");
-
-  console.log("//////////////////////////", receiver.emails.length);
 
   if (receiver.emails.length > 0) {
     await resend.emails.send({
@@ -202,7 +192,7 @@ export const notificationRouter = createTRPCRouter({
     });
   }),
 
-  newTeamRegistered: protectedProcedure
+  newTeamRegistered: publicProcedure
     .input(
       z.object({
         teamId: z.string(),
@@ -214,9 +204,15 @@ export const notificationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, account: true },
       });
       if (!team) throw new Error("A csapat nem található");
+
+      const school = await ctx.db.school.findUnique({
+        where: { id: input.schoolId },
+        select: { name: true, account: true },
+      });
+      if (!school) throw new Error("Az iskola nem található");
 
       const competition = await ctx.db.competition.findUnique({
         where: { id: input.competitionId },
@@ -230,14 +226,14 @@ export const notificationRouter = createTRPCRouter({
         message: `${team.name} csapat regisztrált a ${competition.name} versenyre!`,
         react: (
           <TeamRegisteredEmail
-            redirectUrl="http://localhost:3000"
+            redirectUrl={input.redirectTo}
             teamName={team.name}
             competitionName={competition.name}
           />
         ),
         subject: "Csapat regisztráció",
-        senderAccountId: input.teamId,
-        receiverAccountId: input.schoolId,
+        senderAccountId: team.account.id,
+        receiverAccountId: school.account.id,
         redirectTo: input.redirectTo,
         db: ctx.db,
       });
@@ -255,7 +251,7 @@ export const notificationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, account: true },
       });
       if (!team) throw new Error("A csapat nem található");
 
@@ -264,6 +260,12 @@ export const notificationRouter = createTRPCRouter({
         select: { name: true, organizers: true },
       });
       if (!competition) throw new Error("A verseny nem található");
+
+      const school = await ctx.db.school.findUnique({
+        where: { id: input.schoolId },
+        select: { name: true, account: true },
+      });
+      if (!school) throw new Error("Az iskola nem található");
 
       // for the team
       await createNotification({
@@ -277,8 +279,8 @@ export const notificationRouter = createTRPCRouter({
           />
         ),
         subject: "Csapatod elfogadva az iskola által",
-        senderAccountId: input.schoolId,
-        receiverAccountId: input.teamId,
+        senderAccountId: school.account.id,
+        receiverAccountId: team.account.id,
         redirectTo: input.redirectForOrganizer,
         db: ctx.db,
       });
@@ -297,7 +299,7 @@ export const notificationRouter = createTRPCRouter({
             />
           ),
           subject: `${team.name} csapat jelentkezése várja jóváhagyásod`,
-          senderAccountId: input.schoolId,
+          senderAccountId: school.account.id,
           receiverAccountId: organizer.accountId,
           redirectTo: input.redirectForOrganizer,
           db: ctx.db,
@@ -317,9 +319,15 @@ export const notificationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, account: true },
       });
       if (!team) throw new Error("A csapat nem található");
+
+      const organizer = await ctx.db.organizer.findUnique({
+        where: { id: input.organizerId },
+        select: { name: true, account: true },
+      });
+      if (!organizer) throw new Error("A szervező nem található");
 
       const competition = await ctx.db.competition.findUnique({
         where: { id: input.competitionId },
@@ -338,8 +346,8 @@ export const notificationRouter = createTRPCRouter({
           />
         ),
         subject: "Csapatod jóváhagyva a szervező által",
-        senderAccountId: input.organizerId,
-        receiverAccountId: input.teamId,
+        senderAccountId: organizer.account.id,
+        receiverAccountId: team.account.id,
         redirectTo: input.redirectTo,
         db: ctx.db,
       });
@@ -358,9 +366,15 @@ export const notificationRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
-        select: { name: true },
+        select: { name: true, account: true },
       });
       if (!team) throw new Error("A csapat nem található");
+
+      const organizer = await ctx.db.organizer.findUnique({
+        where: { id: input.organizerId },
+        select: { name: true, account: true },
+      });
+      if (!organizer) throw new Error("A szervező nem található");
 
       const competition = await ctx.db.competition.findUnique({
         where: { id: input.competitionId },
@@ -381,8 +395,8 @@ export const notificationRouter = createTRPCRouter({
           />
         ),
         subject: "Csapatod elutasítva a szervező által",
-        senderAccountId: input.organizerId,
-        receiverAccountId: input.teamId,
+        senderAccountId: organizer.account.id,
+        receiverAccountId: team.account.id,
         redirectTo: input.redirectTo,
         db: ctx.db,
       });
@@ -438,6 +452,7 @@ export const notificationRouter = createTRPCRouter({
   competitionAnnouncement: withRole(["ORGANIZER"])
     .input(
       z.object({
+        organizerAccountId: z.string(),
         competitionId: z.string(),
         message: z.string(),
         redirectTo: z.string(),
@@ -453,7 +468,7 @@ export const notificationRouter = createTRPCRouter({
       // send notification to all teams that organizer made an announcement
       const teams = await ctx.db.team.findMany({
         where: { competitionId: input.competitionId },
-        select: { id: true },
+        select: { id: true, account: true },
       });
       for (const team of teams) {
         await createNotification({
@@ -467,8 +482,8 @@ export const notificationRouter = createTRPCRouter({
             />
           ),
           subject: "Verseny bejelentés!",
-          senderAccountId: input.competitionId,
-          receiverAccountId: team.id,
+          senderAccountId: input.organizerAccountId,
+          receiverAccountId: team.account.id,
           redirectTo: input.redirectTo,
           db: ctx.db,
         });

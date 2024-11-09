@@ -12,7 +12,7 @@ export default async function LandingLayout({
 
   return (
     <div className="min-h-screen">
-      <main className="mx-auto h-full min-h-[calc(100vh-57px-97px)] w-[calc(100%-16px)] flex-1 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
+      <main className="mx-auto h-full min-h-[calc(100vh-57px-97px)] w-[calc(100%-16px)] flex-1 overflow-hidden sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
         <Header session={session} />
 
         {children}

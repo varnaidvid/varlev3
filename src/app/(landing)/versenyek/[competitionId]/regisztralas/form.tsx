@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Competition, School, Technology } from "@prisma/client";
+import { Competition, School, SubCategory, Technology } from "@prisma/client";
 import {
   formOneSchema,
   formTwoSchema,
@@ -17,6 +17,7 @@ import { TeamMembersForm } from "@/components/vezerlopult/team/registration/memb
 import { SummaryStep } from "@/components/vezerlopult/team/registration/summary-form";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { login } from "@/app/(landing)/bejelentkezes/actions";
 
 export type TeamRegistrationData = {
   account: z.infer<typeof formOneSchema>;
@@ -29,14 +30,19 @@ export default function RegisterForm({
   competition,
   schools,
   technologies,
+  subCategories,
 }: {
   competition: Competition;
   schools: School[];
   technologies: Technology[];
+  subCategories: SubCategory[];
 }) {
   const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const mutation = api.competition.registerTeam.useMutation();
+
+  const registerTeamMutation = api.competition.registerTeam.useMutation();
+  const notifyNewTeamMutation =
+    api.notification.newTeamRegistered.useMutation();
 
   const formOne = useForm<z.infer<typeof formOneSchema>>({
     resolver: zodResolver(formOneSchema),
@@ -95,10 +101,6 @@ export default function RegisterForm({
     }
   };
 
-  useEffect(() => {
-    console.log("technologies", formTwo.getValues("technologies"));
-  }, [formTwo.watch("technologies")]);
-
   const getAllFormData = () => {
     return {
       account: formOne.getValues(),
@@ -113,14 +115,23 @@ export default function RegisterForm({
       setIsSubmitting(true);
       const formData = getAllFormData();
 
-      console.log(formData);
+      const data = await registerTeamMutation.mutateAsync(formData);
+      await notifyNewTeamMutation.mutateAsync({
+        competitionId: competition.id,
+        teamId: data.id,
+        schoolId: data.school.id,
+        redirectTo: "/vezerlopult",
+      });
 
-      await mutation.mutateAsync(formData);
-
-      toast.success("Sikeres regisztráció!");
+      await login(
+        {
+          username: formData.account.username,
+          password: formData.account.password,
+        },
+        true,
+      );
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error("Hiba történt a regisztráció során.");
     } finally {
       setIsSubmitting(false);
     }
@@ -139,6 +150,7 @@ export default function RegisterForm({
       {step === 2 && (
         <Card className="mx-auto w-full max-w-lg">
           <TeamDetailsForm
+            subCategories={subCategories}
             technologies={technologies}
             form={formTwo}
             schools={schools}
