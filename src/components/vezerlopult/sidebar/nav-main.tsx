@@ -9,9 +9,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import data from "./data";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { organizerNav, schoolNav, teamNav } from "./data";
 
 export function NavMain() {
   const session = useSession();
@@ -19,37 +19,36 @@ export function NavMain() {
   if (!session?.data?.user) return null;
 
   return (
-    <>
-      <SidebarGroup>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={"Vezérlőpult"} asChild>
-              <Link href="/vezerlopult">
-                <Gauge />
-                <span>Vezérlőpult</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroup>
+    <SidebarGroup className="space-y-2">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton tooltip={"Vezérlőpult"} asChild>
+            <Link href="/vezerlopult">
+              <Gauge />
+              <span>Vezérlőpult</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
 
-      {session?.data.user?.role === "WEBMESTER" && (
-        <SidebarGroup>
-          <SidebarGroupLabel>Felhasználók</SidebarGroupLabel>
-          <SidebarMenu>
-            {data.users.map((item, index) => (
-              <SidebarMenuItem key={index}>
-                <SidebarMenuButton tooltip={item.name} asChild>
-                  <Link href={item.url}>
-                    {item.icon && <item.icon />}
-                    <span>{item.name}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+      {["ORGANIZER", "SCHOOL", "TEAM"].includes(session?.data.user.type) &&
+        (session?.data.user.type === "ORGANIZER"
+          ? organizerNav
+          : session?.data.user.type === "SCHOOL"
+            ? schoolNav
+            : teamNav
+        ).map((item, index) => (
+          <SidebarMenu key={index}>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={item.name} asChild>
+                <Link href={item.url}>
+                  {item.icon && <item.icon />}
+                  <span>{item.name}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarGroup>
-      )}
-    </>
+        ))}
+    </SidebarGroup>
   );
 }

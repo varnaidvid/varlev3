@@ -35,7 +35,7 @@ export default function RegisterForm({
   schools: School[];
   technologies: Technology[];
 }) {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const mutation = api.competition.registerTeam.useMutation();
 
@@ -54,7 +54,7 @@ export default function RegisterForm({
       name: "",
       school: "",
       coaches: [""],
-      technologies: [""],
+      technologies: [],
     },
   });
 
@@ -80,6 +80,14 @@ export default function RegisterForm({
       const isValid = await formOne.trigger();
       if (isValid) setStep(2);
     } else if (step === 2) {
+      if (formTwo.getValues("technologies")?.length === 0) {
+        formTwo.setError("technologies", {
+          type: "required",
+          message: "Legalább egy technológiát ki kell választani.",
+        });
+        return;
+      }
+
       const isValid = await formTwo.trigger();
       if (isValid) setStep(3);
     } else if (step === 3) {

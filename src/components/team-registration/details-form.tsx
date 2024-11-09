@@ -26,7 +26,6 @@ import { UseFormReturn } from "react-hook-form";
 import SelectSchool from "../ui/select-school";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { useEffect, useState } from "react";
 
 export function TeamDetailsForm({
   technologies,
@@ -160,9 +159,9 @@ export function TeamDetailsForm({
                       <Checkbox
                         id={technology.id}
                         className="order-1 after:absolute"
-                        checked={form
-                          .getValues("technologies")
-                          .includes(technology.id)}
+                        checked={(
+                          form.getValues("technologies") || []
+                        ).includes(technology.id)}
                         onCheckedChange={(checked) => {
                           const currentValues =
                             form.getValues("technologies") || [];

@@ -16,9 +16,7 @@ export const formTwoSchema = z.object({
   coaches: z
     .array(z.string().min(3, "Adja meg a tanár teljes nevét!"))
     .min(1, "Legalább egy felkészítő tanárt meg kell adni!"),
-  technologies: z.array(
-    z.string().min(1, "Válasszon ki legalább 1 technológiát!"),
-  ),
+  technologies: z.array(z.string()).optional(),
 });
 export const formThreeSchema = z.object({
   members: z

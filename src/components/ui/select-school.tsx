@@ -32,7 +32,9 @@ export default function SelectSchool({
   const [selectedName, setSelectedName] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log(selectedName);
     if (selectedName) onSelect(selectedName);
+    else onSelect("");
   }, [selectedName]);
 
   return (
