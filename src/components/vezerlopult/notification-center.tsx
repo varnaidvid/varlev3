@@ -142,10 +142,10 @@ export default function NotificationCenter() {
           </div>
         )} */}
         <ScrollArea className="h-[300px]" onScrollCapture={handleScroll}>
-          <div className="flex flex-col">
+          <div className="flex h-full w-full flex-col">
             {processedNotifications.length === 0 ? (
               <div className="flex h-full w-full items-center justify-center p-4 text-center text-sm text-muted-foreground">
-                Nem jött még értesítés számodra
+                Szólunk, amint érkezik valami értesítésed.
               </div>
             ) : (
               <>

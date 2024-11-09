@@ -1,16 +1,19 @@
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
+import { auth } from "@/server/auth";
 import React from "react";
 
-export default function LandingLayout({
+export default async function LandingLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
   return (
     <div className="min-h-screen">
       <main className="mx-auto h-full min-h-[calc(100vh-57px-97px)] w-[calc(100%-16px)] flex-1 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
-        <Header />
+        <Header session={session} />
 
         {children}
 

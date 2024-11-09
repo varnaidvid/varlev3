@@ -6,8 +6,6 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 
 export default async function Page() {
-  await withRole(["WEBMESTER"]);
-
   return (
     <>
       <header className="mx-auto mt-8 flex w-full max-w-xl flex-col gap-2 transition-[width,height] ease-linear">
