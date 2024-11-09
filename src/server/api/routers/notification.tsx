@@ -5,7 +5,12 @@ import {
 } from "@/server/api/trpc";
 import { z } from "zod";
 import { Resend } from "resend";
-import { NotificationType, PrismaClient } from "@prisma/client";
+import {
+  Notification,
+  NotificationTopic,
+  NotificationType,
+  PrismaClient,
+} from "@prisma/client";
 import {
   CompetitionAnnouncementEmail,
   TeamApprovedByOrganizerEmail,
@@ -20,6 +25,7 @@ import React from "react";
 const resend = new Resend(process.env.RESEND_KEY);
 
 async function createNotification({
+  topic,
   type,
   message,
   react,
@@ -29,6 +35,7 @@ async function createNotification({
   redirectTo,
   db,
 }: {
+  topic: NotificationTopic;
   type: NotificationType;
   message: string;
   react: React.ReactNode;
@@ -40,11 +47,13 @@ async function createNotification({
 }) {
   await db.notification.create({
     data: {
+      topic,
       type,
       message,
       redirectTo,
       senderAccountId,
       receiverAccountId,
+      subject,
     },
   });
 
@@ -89,19 +98,90 @@ async function createNotification({
 }
 
 export const notificationRouter = createTRPCRouter({
-  getAccountNotifications: protectedProcedure
-    .input(z.object({ accountId: z.string() }))
+  getUnreadCount: protectedProcedure.query(async ({ ctx }) => {
+    const count = await ctx.db.notification.count({
+      where: {
+        receiverAccountId: ctx.session.user.id,
+        status: "UNREAD",
+      },
+    });
+    return count;
+  }),
+
+  getNotifications: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).default(3),
+        cursor: z.string().nullish(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      await ctx.db.notification.updateMany({
-        where: { receiverAccountId: input.accountId },
-        data: { status: "READ" },
+      const { limit, cursor } = input;
+
+      let items: any[] = await ctx.db.notification.findMany({
+        take: limit + 1,
+        where: {
+          receiverAccountId: ctx.session.user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        cursor: cursor ? { id: cursor } : undefined,
       });
 
-      return ctx.db.notification.findMany({
-        where: { receiverAccountId: input.accountId },
-        orderBy: { createdAt: "desc" },
-      });
+      for (const item of items) {
+        const sender = await ctx.db.account.findUnique({
+          where: { id: item.senderAccountId },
+          select: {
+            school: { select: { name: true } },
+            organizer: { select: { name: true } },
+            team: { select: { name: true } },
+          },
+        });
+        if (!sender) throw new Error("A feladó fiókja nem található");
+
+        if (sender.school) {
+          item.senderName = sender.school.name;
+        } else if (sender.organizer) {
+          item.senderName = sender.organizer.name;
+        } else if (sender.team) item.senderName = sender.team.name;
+      }
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop();
+        nextCursor = nextItem!.id;
+      }
+
+      return {
+        items,
+        nextCursor,
+      };
     }),
+
+  markAsRead: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.notification.updateMany({
+      where: {
+        receiverAccountId: ctx.session.user.id,
+        status: "UNREAD",
+      },
+      data: {
+        status: "READ",
+      },
+    });
+  }),
+
+  markAllAsRead: protectedProcedure.mutation(async ({ ctx }) => {
+    await ctx.db.notification.updateMany({
+      where: {
+        receiverAccountId: ctx.session.user.id,
+        status: "UNREAD",
+      },
+      data: {
+        status: "READ",
+      },
+    });
+  }),
 
   newTeamRegistered: protectedProcedure
     .input(
@@ -126,7 +206,8 @@ export const notificationRouter = createTRPCRouter({
       if (!competition) throw new Error("A verseny nem található");
 
       await createNotification({
-        type: NotificationType.TEAM_REGISTERED,
+        topic: NotificationTopic.TEAM_REGISTERED,
+        type: NotificationType.INFO,
         message: `${team.name} csapat regisztrált a ${competition.name} versenyre!`,
         react: (
           <TeamRegisteredEmail
@@ -167,7 +248,8 @@ export const notificationRouter = createTRPCRouter({
 
       // for the team
       await createNotification({
-        type: NotificationType.TEAM_APPROVED_BY_SCHOOL,
+        topic: NotificationTopic.TEAM_APPROVED_BY_SCHOOL,
+        type: NotificationType.SUCCESS,
         message: `${team.name} csapatodat elfogadta az iskolád a ${competition.name} versenyre!`,
         react: (
           <TeamApprovedBySchoolEmail
@@ -184,7 +266,8 @@ export const notificationRouter = createTRPCRouter({
 
       // for organizer
       await createNotification({
-        type: NotificationType.TEAM_APPROVED_BY_SCHOOL,
+        topic: NotificationTopic.TEAM_APPROVED_BY_SCHOOL,
+        type: NotificationType.SUCCESS,
         message: `${team.name} csapat jelentkezését jóváhagyta az iskolája a ${competition.name} versenyre!`,
         react: (
           <TeamApprovedBySchoolForOrganizerEmail
@@ -224,7 +307,8 @@ export const notificationRouter = createTRPCRouter({
       if (!competition) throw new Error("A verseny nem található");
 
       await createNotification({
-        type: NotificationType.TEAM_APPROVED_BY_ORGANIZER,
+        topic: NotificationTopic.TEAM_APPROVED_BY_ORGANIZER,
+        type: NotificationType.SUCCESS,
         message: `${team.name} csapatodat jóváhagyta a ${competition.name} verseny szervezője!`,
         react: (
           <TeamApprovedByOrganizerEmail
@@ -263,7 +347,8 @@ export const notificationRouter = createTRPCRouter({
       if (!competition) throw new Error("A verseny nem található");
 
       await createNotification({
-        type: NotificationType.TEAM_REJECTED_BY_ORGANIZER,
+        topic: NotificationTopic.TEAM_REJECTED_BY_ORGANIZER,
+        type: NotificationType.ERROR,
         message: `${team.name} csapatodat elutasította a ${competition.name} verseny szervezője!`,
         react: (
           <TeamRejectedByOrganizerEmail
@@ -303,7 +388,8 @@ export const notificationRouter = createTRPCRouter({
 
       // send notification to organizer that team updated data
       await createNotification({
-        type: NotificationType.TEAM_UPDATE,
+        topic: NotificationTopic.TEAM_UPDATE,
+        type: NotificationType.SUCCESS,
         message: `${team.name} csapat elvégezte a kérvényezett hiánypótlást!`,
         react: (
           <TeamUpdatedDataEmail
@@ -341,7 +427,8 @@ export const notificationRouter = createTRPCRouter({
       });
       for (const team of teams) {
         await createNotification({
-          type: NotificationType.COMPETITION_ANNOUNCEMENT,
+          topic: NotificationTopic.COMPETITION_ANNOUNCEMENT,
+          type: NotificationType.INFO,
           message: input.message,
           react: (
             <CompetitionAnnouncementEmail

@@ -14,7 +14,7 @@ enum AccountType {
     TEAM
 }
 
-enum NotificationType {
+enum NotificationTopic {
     TEAM_REGISTERED
 
     TEAM_APPROVED_BY_SCHOOL
@@ -23,6 +23,13 @@ enum NotificationType {
     TEAM_UPDATE
 
     COMPETITION_ANNOUNCEMENT
+}
+
+enum NotificationType {
+    INFO
+    SUCCESS
+    WARNING
+    ERROR
 }
 
 enum NotificonStatus {
@@ -173,9 +180,10 @@ model Competition {
     maxTeamSize Int
     deadline    DateTime
 
-    technologies Technology[]
-    categories   Category[]
-    teams        Team[]
+    technologies  Technology[]
+    categories    Category[]
+    teams         Team[]
+    notifications Notification[]
 }
 
 model Email {
@@ -189,10 +197,13 @@ model Email {
 model Notification {
     id String @id @default(cuid())
 
-    message    String
-    type       NotificationType
+    subject String
+    message String
+    type    NotificationType
+    topic   NotificationTopic
+    status  NotificonStatus   @default(UNREAD)
+
     redirectTo String?
-    status     NotificonStatus  @default(UNREAD)
 
     createdAt DateTime @default(now())
 
@@ -201,4 +212,7 @@ model Notification {
 
     receiverAccountId String
     receiverAccount   Account @relation(fields: [receiverAccountId], references: [id], name: "Receiver")
+
+    competitionId String?
+    Competition   Competition? @relation(fields: [competitionId], references: [id])
 }
