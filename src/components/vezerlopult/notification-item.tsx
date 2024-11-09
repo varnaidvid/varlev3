@@ -1,4 +1,5 @@
 import {
+  AccountType,
   Notification,
   NotificationTopic,
   NotificationType,
@@ -8,8 +9,12 @@ import {
   AlertTriangle,
   CalendarDays,
   CheckCircle2,
+  Crown,
   Info,
+  School,
   Sparkles,
+  User,
+  Users,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -64,7 +69,11 @@ const getTopicDisplayText = (topic: NotificationTopic) => {
 export function NotificationItem({
   notification,
 }: {
-  notification: Notification & { senderName: string; clientStatus?: string };
+  notification: Notification & {
+    senderName: string;
+    senderType: AccountType;
+    clientStatus?: string;
+  };
 }) {
   const typeProps = getNotificationTypeProps(notification.type);
   const Icon = typeProps.icon;
@@ -110,6 +119,16 @@ export function NotificationItem({
               {getTopicDisplayText(notification.topic)}
             </Badge>
             <Badge variant="outline" className="w-max text-xs text-neutral-600">
+              {notification.senderType === "SCHOOL" && (
+                <School className="mr-2 size-3" />
+              )}
+              {notification.senderType === "ORGANIZER" && (
+                <User className="mr-2 size-3" />
+              )}
+              {notification.senderType === "TEAM" && (
+                <Users className="mr-2 size-3" />
+              )}
+
               {notification.senderName}
             </Badge>
             <Badge variant="outline" className="text-xs text-neutral-600">

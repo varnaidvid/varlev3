@@ -3,8 +3,6 @@ import withRole from "@/utils/withRole";
 import { Users } from "lucide-react";
 
 export default async function Page() {
-  await withRole(["WEBMESTER"]);
-
   return (
     <>
       <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
