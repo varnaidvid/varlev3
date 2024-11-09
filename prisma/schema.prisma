@@ -127,6 +127,8 @@ model Team {
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])
+
+    applicationForm String? // link to the photo of the application form
 }
 
 model School {

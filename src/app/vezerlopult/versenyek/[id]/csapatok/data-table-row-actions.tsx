@@ -7,7 +7,6 @@ import {
   Trash,
   XCircle,
 } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,16 +16,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { DialogTitle } from "@radix-ui/react-dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { TeamDetailDialog } from "@/components/vezerlopult/versenyek/csapatok/team-details-dialog";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,80 +25,21 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const [isRejectDialogOpen, setIsRejectDialogOpen] = useState(false);
-  const [rejectionReason, setRejectionReason] = useState("");
-
   const handleApprove = () => {
     // Implement approval logic here
     console.log("Application approved");
   };
 
-  const handleReject = () => {
+  const handleReject = (reason: string) => {
     // Implement rejection logic here
-    console.log("Application rejected with reason:", rejectionReason);
-    setIsRejectDialogOpen(false);
-    setRejectionReason("");
+    console.log("Application rejected with reason:", reason);
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button size={"sm"} className="flex items-center gap-2">
-          <Eye />
-          <span>Részletek</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px]">
-        <DialogHeader>
-          <DialogTitle>Csapat neve majd</DialogTitle>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {/* Add your application details here */}
-          <p>Team Name: some name placeholder</p>
-          <p>Members: placeholder</p>
-          <p>Project Description: placeholder</p>
-          {/* Add more fields as needed */}
-        </div>
-        <DialogFooter className="sm:justify-start">
-          <Button
-            onClick={handleApprove}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <CheckCircle className="mr-2 h-4 w-4" /> Approve
-          </Button>
-          <Dialog
-            open={isRejectDialogOpen}
-            onOpenChange={setIsRejectDialogOpen}
-          >
-            <DialogTrigger asChild>
-              <Button variant="destructive">
-                <XCircle className="mr-2 h-4 w-4" /> Reject
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Reject Application</DialogTitle>
-              </DialogHeader>
-              <Textarea
-                placeholder="Enter reason for rejection"
-                value={rejectionReason}
-                onChange={(e) => setRejectionReason(e.target.value)}
-              />
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsRejectDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button variant="destructive" onClick={handleReject}>
-                  Confirm Rejection
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <TeamDetailDialog
+      teamId={(row.original as { id: string }).id}
+      onApprove={handleApprove}
+      onReject={handleReject}
+    />
   );
 }

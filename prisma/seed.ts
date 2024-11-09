@@ -256,6 +256,8 @@ async function main() {
           { name: "Molnár Gábor", School: { connect: { id: school1.id } } },
         ],
       },
+      applicationForm:
+        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
     },
   });
 
