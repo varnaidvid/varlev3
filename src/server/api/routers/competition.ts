@@ -60,7 +60,7 @@ export const competitionRouter = createTRPCRouter({
           },
           Competition: { connect: { id: competitionId } },
           technologies: {
-            connect: technologies.map((tech) => ({ id: tech })),
+            connect: technologies?.map((tech) => ({ id: tech })),
           },
           account: {
             create: {
