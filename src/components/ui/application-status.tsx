@@ -18,6 +18,42 @@ import { api } from "@/trpc/react";
 import { Countdown } from "../countdown";
 import { cn } from "@/lib/utils";
 import DotPattern from "./dot-pattern";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, XCircle } from "lucide-react";
+
+const statusColors = {
+  WAITING_FOR_SCHOOL_APPROVAL: "bg-yellow-100 text-yellow-800",
+  APPROVED_BY_SCHOOL: "bg-blue-100 text-blue-800",
+  WAITING_FOR_ORGANIZER_APPROVAL: "bg-yellow-100 text-yellow-800",
+  REJECTED_BY_ORGANIZER: "bg-red-100 text-red-800",
+  REGISTERED: "bg-green-100 text-green-800",
+};
+
+const statusIcons = {
+  REGISTERED: <CheckCircle className="mr-1 h-4 w-4" />,
+  APPROVED_BY_SCHOOL: <CheckCircle className="mr-1 h-4 w-4" />,
+  REJECTED_BY_ORGANIZER: <XCircle className="mr-1 h-4 w-4" />,
+  WAITING_FOR_SCHOOL_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+  WAITING_FOR_ORGANIZER_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+};
+
+export function ApplicationStatusBadge({
+  status,
+}: {
+  status: ApplicationStatus;
+}) {
+  return (
+    <Badge className={`${statusColors[status]}`}>
+      {statusIcons[status]}
+      {status === "REGISTERED" && "Regisztrált"}
+      {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
+      {status === "WAITING_FOR_ORGANIZER_APPROVAL" &&
+        "Szervezői jóváhagyásra vár"}
+      {status === "REJECTED_BY_ORGANIZER" && "Szervező által elutasított"}
+      {status === "WAITING_FOR_SCHOOL_APPROVAL" && "Iskolai jóváhagyásra vár"}
+    </Badge>
+  );
+}
 
 type StatusConfigType = {
   [key in ApplicationStatus]: {

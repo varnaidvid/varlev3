@@ -69,6 +69,7 @@ export const teamsRouter = createTRPCRouter({
           Competition: {
             include: {
               categories: true,
+              subCategories: true,
             },
           },
         },
