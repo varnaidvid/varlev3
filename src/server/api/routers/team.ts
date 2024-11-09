@@ -57,6 +57,27 @@ export const teamsRouter = createTRPCRouter({
         },
       });
     }),
+
+  getTeamsForCSV: publicProcedure
+    .input(
+      z.object({
+        competitionId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.team.findMany({
+        where: {
+          competitionId: input.competitionId,
+        },
+        include: {
+          members: true,
+          coaches: true,
+          school: true,
+          technologies: true,
+          emails: true,
+        },
+      });
+    }),
 });
 
 type TeamsRouter = inferRouterOutputs<typeof teamsRouter>;
