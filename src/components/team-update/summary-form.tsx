@@ -18,6 +18,8 @@ import {
   Users,
   BrainCircuit,
   RefreshCw,
+  Cpu,
+  Blocks,
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
@@ -26,6 +28,7 @@ import {
   updateTeamSchema,
 } from "@/lib/zod/team-registration";
 import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 const SuccessCard = () => {
   return (
@@ -75,7 +78,7 @@ export function SummaryStep({
   isSubmitting: boolean;
 }) {
   const {
-    formOne: { coaches, name, school, technologies },
+    formOne: { coaches, name, school, technologies, subCategory },
     formTwo: { members, reserveMember },
     teamId,
   } = formData;
@@ -149,6 +152,26 @@ export function SummaryStep({
               </li>
             ))}
           </ul>
+        </div>
+
+        <div>
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <Cpu className="size-6 rounded-full border p-[3px]" />
+            Technológiák
+          </h2>
+          {technologies?.map((tech) => (
+            <Badge key={tech.id} variant="secondary">
+              {tech.name}
+            </Badge>
+          ))}
+        </div>
+
+        <div>
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <Blocks className="size-6 rounded-full border p-[3px]" />
+            Kategória
+          </h2>
+          <Badge variant="default">{subCategory.name}</Badge>
         </div>
       </CardContent>
       <CardFooter className="flex-col gap-2 border-t pt-6">

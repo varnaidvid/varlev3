@@ -146,13 +146,19 @@ export const withRole = (allowedTypes: AccountType[]) =>
     return next();
   });
 
-export const withOwner = async (
-  ctx: any,
-  accountIdToBeModified: string,
-  teamId?: string,
-  organizerId?: string,
-  schoolId?: string,
-) => {
+export const withOwner = async ({
+  ctx,
+  accountIdToBeModified,
+  teamId,
+  organizerId,
+  schoolId,
+}: {
+  ctx: any;
+  accountIdToBeModified?: string;
+  teamId?: string;
+  organizerId?: string;
+  schoolId?: string;
+}) => {
   let accountToBeModified = accountIdToBeModified;
 
   if (teamId) {

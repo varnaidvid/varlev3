@@ -100,7 +100,7 @@ model Coach {
     Team   Team   @relation(fields: [teamId], references: [id])
 
     schoolName String
-    School     School @relation(fields: [schoolName], references: [id])
+    School     School @relation(fields: [schoolName], references: [name])
 }
 
 model Team {
@@ -112,16 +112,18 @@ model Team {
     updatedAt DateTime @updatedAt
     createdAt DateTime @default(now())
 
+    members      Member[]
+    coaches      Coach[]
+    technologies Technology[]
+
     schoolName String
-    school     School @relation(fields: [schoolName], references: [id])
+    school     School @relation(fields: [schoolName], references: [name])
 
     accountId String  @unique
     account   Account @relation(fields: [accountId], references: [id])
 
-    members       Member[]
-    coaches       Coach[]
-    technologies  Technology[]
-    subCategories SubCategory[]
+    subCategoryId String
+    SubCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])

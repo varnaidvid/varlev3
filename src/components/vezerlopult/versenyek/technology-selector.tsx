@@ -18,26 +18,29 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { UseFormReturn } from "react-hook-form";
+import { formTwoSchema } from "@/lib/zod/team-registration";
+import { z } from "zod";
 
 export default function TechnologySelector({
   form,
   technologies,
 }: {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<z.infer<typeof formTwoSchema>>;
   technologies: { id: string; name: string }[];
 }) {
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (technology: { id: string; name: string }) => {
-    const currentValues = form.getValues("technologies") || [];
-    if (currentValues.includes(technology.id)) {
+    // this is an array of objects (name, id)
+    const technologies! = form.getValues("technologies");
+
+    if (technologies?.includes(technology.id)) {
       form.setValue(
         "technologies",
-        currentValues.filter((id: string) => id !== technology.id),
+        technologies.filter((tech) => tech !== technology.id),
       );
     } else {
-      form.setValue("technologies", [...currentValues, technology.id]);
-    }
+      form.setValue("technologies", [...technologies, technology.id]);
   };
 
   const selectedTechnologies = technologies.filter((tech) =>

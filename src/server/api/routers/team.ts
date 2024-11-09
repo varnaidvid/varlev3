@@ -99,7 +99,7 @@ export const teamsRouter = createTRPCRouter({
     .input(updateTeamSchema)
     .mutation(async ({ ctx, input }) => {
       const {
-        formOne: { coaches, name, school, technologies },
+        formOne: { coaches, name, school, technologies, subCategory },
         formTwo: { members, reserveMember },
         teamId,
       } = input;
@@ -109,6 +109,11 @@ export const teamsRouter = createTRPCRouter({
           id: teamId,
         },
       });
+
+      const schoolRecord = await ctx.db.school.findUnique({
+        where: { name: school },
+      });
+      if (!schoolRecord) throw new Error("School not found");
 
       let newMembers = [
         ...members.map((member) => ({
@@ -130,8 +135,6 @@ export const teamsRouter = createTRPCRouter({
           ? "WAITING_FOR_ORGANIZER_APPROVAL"
           : team?.status;
 
-      console.log("STASTUS TO UPDATE", status);
-
       await ctx.db.team.update({
         where: {
           id: teamId,
@@ -140,24 +143,27 @@ export const teamsRouter = createTRPCRouter({
           name: name,
           status: status as ApplicationStatus,
           school: {
-            connect: { name: school },
+            connect: { id: schoolRecord.id },
           },
           coaches: {
             deleteMany: {},
             create: coaches.map((coachName) => ({
               name: coachName,
-              schoolName: school,
+              School: {
+                connect: { id: schoolRecord.id },
+              },
             })),
           },
           technologies: {
             set: [],
-            connectOrCreate:
-              technologies?.map((techName) => ({
-                where: { name: techName },
-                create: { name: techName },
-              })) || [],
+            connectOrCreate: technologies?.map((tech) => ({
+              where: { id: tech.id },
+              create: { name: tech.name },
+            })),
           },
-
+          SubCategory: {
+            connect: { id: subCategory.id },
+          },
           members: {
             deleteMany: {},
             create: [...newMembers],

@@ -16,7 +16,18 @@ export const formTwoSchema = z.object({
   coaches: z
     .array(z.string().min(3, "Adja meg a tanár teljes nevét!"))
     .min(1, "Legalább egy felkészítő tanárt meg kell adni!"),
-  technologies: z.array(z.string()).optional(),
+  technologies: z
+    .array(
+      z.object({
+        name: z.string(),
+        id: z.string(),
+      }),
+    )
+    .optional(),
+  subCategory: z.object({
+    name: z.string({ required_error: "Adja meg a kategóriát!" }),
+    id: z.string({ required_error: "Adja meg a kategóriát!" }),
+  }),
 });
 export const formThreeSchema = z.object({
   members: z
@@ -54,7 +65,18 @@ export const updateFormOneSchema = z.object({
   coaches: z
     .array(z.string().min(3, "Adja meg a tanár teljes nevét!"))
     .min(1, "Legalább egy felkészítő tanárt meg kell adni!"),
-  technologies: z.array(z.string()).optional(),
+  technologies: z
+    .array(
+      z.object({
+        name: z.string(),
+        id: z.string(),
+      }),
+    )
+    .optional(),
+  subCategory: z.object({
+    name: z.string({ required_error: "Adja meg a kategóriát!" }),
+    id: z.string({ required_error: "Adja meg a kategóriát!" }),
+  }),
 });
 export const updateFormTwoSchema = z.object({
   members: z

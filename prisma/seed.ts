@@ -238,8 +238,8 @@ async function main() {
           type: "TEAM" as AccountType,
         },
       },
-      subCategories: {
-        connect: [{ id: subCategory3.id }],
+      SubCategory: {
+        connect: { id: subCategory1.id },
       },
       members: {
         create: [
@@ -289,8 +289,8 @@ async function main() {
           { name: "Papp Petra", year: 10, isReserve: true },
         ],
       },
-      subCategories: {
-        connect: [{ id: subCategory2.id }],
+      SubCategory: {
+        connect: { id: subCategory1.id },
       },
       coaches: {
         create: [
@@ -325,8 +325,8 @@ async function main() {
           type: "TEAM" as AccountType,
         },
       },
-      subCategories: {
-        connect: [{ id: subCategory2.id }],
+      SubCategory: {
+        connect: { id: subCategory1.id },
       },
       members: {
         create: [

@@ -382,7 +382,10 @@ export const notificationRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      await withOwner(ctx, input.teamId);
+      await withOwner({
+        ctx,
+        teamId: input.teamId,
+      });
 
       const team = await ctx.db.team.findUnique({
         where: { id: input.teamId },
