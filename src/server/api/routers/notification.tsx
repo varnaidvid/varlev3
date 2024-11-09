@@ -6,14 +6,23 @@ import {
 import { z } from "zod";
 import { Resend } from "resend";
 import { NotificationType, PrismaClient } from "@prisma/client";
-import { redirect } from "next/dist/server/api-utils";
+import {
+  CompetitionAnnouncementEmail,
+  TeamApprovedByOrganizerEmail,
+  TeamApprovedBySchoolEmail,
+  TeamRegisteredEmail,
+  TeamRejectedByOrganizerEmail,
+  TeamApprovedBySchoolForOrganizerEmail,
+  TeamUpdatedDataEmail,
+} from "@/components/email-templates";
+import React from "react";
 
 const resend = new Resend(process.env.RESEND_KEY);
 
 async function createNotification({
   type,
   message,
-  html,
+  react,
   subject,
   senderAccountId,
   receiverAccountId,
@@ -22,7 +31,7 @@ async function createNotification({
 }: {
   type: NotificationType;
   message: string;
-  html: string;
+  react: React.ReactNode;
   subject: string;
   senderAccountId: string;
   receiverAccountId: string;
@@ -74,7 +83,7 @@ async function createNotification({
       from: "VarleV3 <no-reply@varlev3.hu>",
       to: emails.map((e) => e.email),
       subject: subject,
-      text: html,
+      react: react,
     });
   }
 }
@@ -119,14 +128,13 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_REGISTERED,
         message: `${team.name} csapat regisztrált a ${competition.name} versenyre!`,
-        html: `
-                <h1>Regisztrált egy csapat a ${competition.name} versenyre!</h1>
-                <p>A jóváhagyásod szükséges a jelentkezésünk megerősítéséhez.</p>
-
-                <p>
-                    <a href="${input.redirectTo}">Jóváhagyás -></a>
-                </p>
-            `,
+        react: (
+          <TeamRegisteredEmail
+            redirectUrl="http://localhost:3000"
+            teamName={team.name}
+            competitionName={competition.name}
+          />
+        ),
         subject: "Csapat regisztráció",
         senderAccountId: input.teamId,
         receiverAccountId: input.schoolId,
@@ -161,10 +169,12 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_APPROVED_BY_SCHOOL,
         message: `${team.name} csapatodat elfogadta az iskolád a ${competition.name} versenyre!`,
-        html: `
-                <h1>${team.name} csapatodat elfogadta az iskolád a ${competition.name} versenyre!</h1>
-                <p>A verseny szervezőjének jóváhagyásáról további értesítést küldünk.</p>
-            `,
+        react: (
+          <TeamApprovedBySchoolEmail
+            teamName={team.name}
+            competitionName={competition.name}
+          />
+        ),
         subject: "Csapatod elfogadva az iskola által",
         senderAccountId: input.schoolId,
         receiverAccountId: input.teamId,
@@ -176,10 +186,13 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_APPROVED_BY_SCHOOL,
         message: `${team.name} csapat jelentkezését jóváhagyta az iskolája a ${competition.name} versenyre!`,
-        html: `
-                <h1>${team.name} csapat jelentkezését jóváhagyta az iskolája a ${competition.name} versenyre!</h1>
-                <p>A csapat adatait a verseny szervezője fogja látni.</p>
-            `,
+        react: (
+          <TeamApprovedBySchoolForOrganizerEmail
+            redirectTo="http://localhost:3000"
+            teamName={team.name}
+            competitionName={competition.name}
+          />
+        ),
         subject: `${team.name} csapat jelentkezése várja jóváhagyásod`,
         senderAccountId: input.schoolId,
         receiverAccountId: input.teamId,
@@ -213,10 +226,12 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_APPROVED_BY_ORGANIZER,
         message: `${team.name} csapatodat jóváhagyta a ${competition.name} verseny szervezője!`,
-        html: `
-                <h1>${team.name} csapatodat jóváhagyta a ${competition.name} verseny szervezője!</h1>
-                <p>A csapat adatait a verseny megfelelőnek ítélte.</p>
-            `,
+        react: (
+          <TeamApprovedByOrganizerEmail
+            teamName={team.name}
+            competitionName={competition.name}
+          />
+        ),
         subject: "Csapatod jóváhagyva a szervező által",
         senderAccountId: input.organizerId,
         receiverAccountId: input.teamId,
@@ -250,14 +265,13 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_REJECTED_BY_ORGANIZER,
         message: `${team.name} csapatodat elutasította a ${competition.name} verseny szervezője!`,
-        html: `
-                <h1>${team.name} csapatodat elutasította a ${competition.name} verseny szervezője!</h1>
-                <p>A versenyre való felkészüléshez kérjük, hogy a csapatod adatait ellenőrizd.</p>
-
-                <p>
-                    <a href="${input.redirectTo}">Ellenőrzés -></a>
-                </p>
-            `,
+        react: (
+          <TeamRejectedByOrganizerEmail
+            redirectUrl="http://localhost:3000"
+            teamName={team.name}
+            competitionName={competition.name}
+          />
+        ),
         subject: "Csapatod elutasítva a szervező által",
         senderAccountId: input.organizerId,
         receiverAccountId: input.teamId,
@@ -291,14 +305,12 @@ export const notificationRouter = createTRPCRouter({
       await createNotification({
         type: NotificationType.TEAM_UPDATE,
         message: `${team.name} csapat elvégezte a kérvényezett hiánypótlást!`,
-        html: `
-                <h1>${team.name} csapat elvégezte a kérvényezett hiánypótlást!</h1>
-                <p>A csapat adataid újra ellenőrizheted a következő hivatkozással:</p>
-
-                <p>
-                    <a href="${input.redirectTo}">Ellenőrzés -></a>
-                </p>
-            `,
+        react: (
+          <TeamUpdatedDataEmail
+            teamName={team.name}
+            redirectUrl="http://localhost:3000"
+          />
+        ),
         subject: `${team.name} csapat hiánypótlása elkészült`,
         senderAccountId: input.teamId,
         receiverAccountId: input.competitionId,
@@ -331,10 +343,12 @@ export const notificationRouter = createTRPCRouter({
         await createNotification({
           type: NotificationType.COMPETITION_ANNOUNCEMENT,
           message: input.message,
-          html: `
-                        <h1>A verseny szervezője fontos bejelentést tett!</h1>
-                        <p>${input.message}</p>
-                    `,
+          react: (
+            <CompetitionAnnouncementEmail
+              competitionName={competition.name}
+              message={input.message}
+            />
+          ),
           subject: "Verseny bejelentés!",
           senderAccountId: input.competitionId,
           receiverAccountId: team.id,
