@@ -33,6 +33,29 @@ export const competitionRouter = createTRPCRouter({
     return await ctx.db.competition.findMany();
   }),
 
+  getResults: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const results = await ctx.db.result.findMany({
+        where: {
+          competitionId: input.id,
+        },
+        include: {
+          Team: {
+            include: {
+              members: true,
+              school: true,
+              coaches: true,
+              technologies: true,
+              SubCategory: true,
+            },
+          },
+        },
+      });
+
+      return results;
+    }),
+
   registerTeam: publicProcedure
     .input(teamRegistrationSchema)
     .mutation(async ({ ctx, input }) => {
