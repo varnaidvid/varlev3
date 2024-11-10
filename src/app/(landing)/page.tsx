@@ -44,16 +44,13 @@ export default async function HomePage() {
 
       <h1 className="mt-16 p-4 text-3xl font-bold">Rólunk</h1>
       <p className="mt-8 px-4 text-justify text-lg font-medium">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ad eius
-        harum dolore molestiae nihil ipsa est eveniet sed? Totam sapiente itaque
-        minima reprehenderit placeat incidunt quibusdam nam similique
-        repellendus. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-        Quia distinctio atque velit aliquid at iusto similique excepturi,
-        molestiae, ut dolorem temporibus dolore sed aliquam soluta harum sit
-        labore officia. Repellat? Lorem ipsum dolor sit amet, consectetur
-        adipisicing elit. Eos laboriosam sapiente tenetur ea facilis et ad
-        veritatis, similique voluptate omnis, expedita saepe eius cupiditate
-        quaerat animi culpa. Ullam, doloribus ut?
+        Elkötelezettek és szakmailag felkészültek vagyunk alkalmazásunk
+        fejlesztésében. A csapat most intenzíven dolgozik a verseny
+        idején, és minden erőfeszítésünket arra összpontosítjuk, hogy az
+        alkalmazásunk a lehető legjobb teljesítményt nyújtsa a versenyen.
+        A csapatunk tagjai szorosan együttműködnek, és kitartóan
+        törekszünk a kiválóságra, hogy bizonyítsuk elhivatottságunkat és
+        tehetségünket a versenyen.
       </p>
 
       <div className="flex justify-end px-4">
@@ -66,7 +63,6 @@ export default async function HomePage() {
       </div>
 
       <div className="my-12 px-4 text-center text-5xl font-medium">
-        {/*to-do: fetch data from database*/}
         <div className="text-left">
           <ClientOnly>
             <Countdown targetDate="2025-01-01T23:59:59" />
@@ -101,10 +97,7 @@ export default async function HomePage() {
               Hogyan zajlik a folyamat?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
-              quo praesentium laborum non totam. Nemo animi officiis doloribus
-              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
-              nisi, modi error.
+              A jelentkezés nagyon egyszerű folyamat...
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-4">
@@ -112,10 +105,7 @@ export default async function HomePage() {
               Mi a fődíj?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
-              quo praesentium laborum non totam. Nemo animi officiis doloribus
-              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
-              nisi, modi error.
+              A fődíj egy országos elismerő oklevél, és tárgyi díj...
             </AccordionContent>
           </AccordionItem>
         </Accordion>
