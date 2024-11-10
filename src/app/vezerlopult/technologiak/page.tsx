@@ -37,7 +37,7 @@ export default async function TechnologiesPage() {
         </Button>
       </div>
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         <Card className="mx-auto w-full">
           <TechnologiesTable technologies={technologies} />
         </Card>

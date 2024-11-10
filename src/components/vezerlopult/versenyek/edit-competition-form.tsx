@@ -98,7 +98,7 @@ export function EditCompetitionForm({
             Verseny szerkesztése
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
-            Kérjük, módosítsa a verseny adatait.
+            Alábbi űrlap segítségével szerkesztheti a verseny adatait.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">

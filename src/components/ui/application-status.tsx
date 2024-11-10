@@ -27,6 +27,8 @@ const statusColors = {
   WAITING_FOR_ORGANIZER_APPROVAL: "bg-yellow-100 text-yellow-800",
   REJECTED_BY_ORGANIZER: "bg-red-100 text-red-800",
   REGISTERED: "bg-green-100 text-green-800",
+
+  COMPETITION_RUNNING: "bg-blue-100 text-blue-800",
 };
 
 const statusIcons = {
@@ -35,12 +37,14 @@ const statusIcons = {
   REJECTED_BY_ORGANIZER: <XCircle className="mr-1 h-4 w-4" />,
   WAITING_FOR_SCHOOL_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
   WAITING_FOR_ORGANIZER_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+
+  COMPETITION_RUNNING: <Clock className="mr-1 h-4 w-4" />,
 };
 
 export function ApplicationStatusBadge({
   status,
 }: {
-  status: ApplicationStatus;
+  status: ApplicationStatus & "COMPETITION_RUNNING";
 }) {
   return (
     <Badge className={`${statusColors[status]}`}>
@@ -51,12 +55,13 @@ export function ApplicationStatusBadge({
         "Szervezői jóváhagyásra vár"}
       {status === "REJECTED_BY_ORGANIZER" && "Hiánypótlásra vár"}
       {status === "WAITING_FOR_SCHOOL_APPROVAL" && "Iskolai jóváhagyásra vár"}
+      {status === "COMPETITION_RUNNING" && "Verseny éppen zajlik"}
     </Badge>
   );
 }
 
 type StatusConfigType = {
-  [key in ApplicationStatus]: {
+  [key: string]: {
     title: string;
     description: string;
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -122,6 +127,17 @@ const statusConfig: StatusConfigType = {
     timerColor: "text-neutral-600",
     dotColor: "fill-red-400/30",
   },
+
+  COMPETITION_RUNNING: {
+    title: "Verseny éppen zajlik",
+    description: "A verseny éppen zajlik. Sok sikert kívánunk!",
+    icon: Clock,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+    timerColor: "text-neutral-600",
+    dotColor: "fill-blue-400/30",
+  },
 };
 
 export default function ApplicationStatusCard({
@@ -133,7 +149,11 @@ export default function ApplicationStatusCard({
   team: Team;
   message?: string;
 }) {
-  const config = statusConfig[team.status];
+  const isRunning = competition.deadline > new Date() && !competition.ended;
+
+  const config = statusConfig[isRunning ? "COMPETITION_RUNNING" : team.status];
+  if (!config) return;
+
   const StatusIcon = config.icon;
 
   const { data: notification } =

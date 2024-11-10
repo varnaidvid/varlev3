@@ -29,7 +29,7 @@ export default async function NewCompetition() {
         ]}
       />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         {/* <DataTable columns={columns} data={teams} /> */}
         {/* <div>
         {competitions.map((competition) => (

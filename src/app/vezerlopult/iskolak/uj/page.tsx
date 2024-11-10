@@ -25,7 +25,7 @@ export default async function NewCategory() {
         ]}
       />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         <RegisterSchoolForm />
       </main>
     </>

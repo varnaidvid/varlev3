@@ -31,7 +31,7 @@ export default async function CategoriesPage() {
         </Button>
       </div>
 
-      <main className="px-4">
+      <main>
         <CategoriesTable categories={categories} />
       </main>
     </>

@@ -34,7 +34,7 @@ export default async function SchoolsPage() {
         </Button>
       </div>
 
-      <main className="px-4">
+      <main>
         <DataTable columns={columns} data={schools} />
       </main>
     </>
