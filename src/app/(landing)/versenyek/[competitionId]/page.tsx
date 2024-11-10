@@ -7,9 +7,9 @@ import { TeamLeaderboard } from "./team-leaderboard";
 export default async function Page({
   params,
 }: {
-  params: { competitionId: string };
+  params: Promise<{ competitionId: string }>;
 }) {
-  const { competitionId } = params;
+  const { competitionId } = await params;
   const competition = await api.competition.getById({ id: competitionId });
   if (!competition) return null;
   const competitionStatus = competition.ended
@@ -85,6 +85,11 @@ export default async function Page({
               <h1 className="text-4xl font-bold text-primary">
                 {competition.name}
               </h1>
+              <Badge variant="outline" className="text-xs">
+                {competitionStatus === "PENDING" && "Függőben"}
+                {competitionStatus === "RUNNING" && "Fut"}
+                {competitionStatus === "CLOSED" && "Lezárva"}
+              </Badge>
               <div className="grid gap-4">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">Max. csapat létszám</span>
@@ -124,10 +129,21 @@ export default async function Page({
           </div>
         </div>
       </div>
-      <div className="grid gap-8 lg:grid-cols-2">
-        <div className="rounded-lg border bg-card p-6">
-          <TeamLeaderboard teams={mockTeams} />
+      {(competitionStatus === "RUNNING" || competitionStatus === "CLOSED") && (
+        <div className="grid gap-8 lg:grid-cols-2">
+          <div className="rounded-lg border bg-card p-6">
+            <TeamLeaderboard teams={mockTeams} />
+          </div>
+          <div className="rounded-lg border bg-card p-6">
+            <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
+            <div
+              className="prose prose-sm dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: competition.description }}
+            />
+          </div>
         </div>
+      )}
+      {competitionStatus === "PENDING" && (
         <div className="rounded-lg border bg-card p-6">
           <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
           <div
@@ -135,7 +151,7 @@ export default async function Page({
             dangerouslySetInnerHTML={{ __html: competition.description }}
           />
         </div>
-      </div>
+      )}
     </div>
   );
 }
