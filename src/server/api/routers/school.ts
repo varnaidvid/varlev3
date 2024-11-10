@@ -3,14 +3,45 @@ import {
   protectedProcedure,
   publicProcedure,
   withOwner,
+  withRole,
 } from "@/server/api/trpc";
 import { z } from "zod";
-import { schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { schoolRegisterType, schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { saltAndHashPassword } from "@/utils/password";
 
 export const schoolRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.school.findMany();
   }),
+
+  registerSchool: withRole(["ORGANIZER"])
+    .input(schoolRegisterType)
+    .mutation(async ({ ctx, input }) => {
+      const {
+        stepOne: { username, password },
+        stepTwo: { address, contactEmail, contactName, name },
+      } = input;
+
+      return await ctx.db.school.create({
+        data: {
+          name,
+          address,
+          contactName,
+          account: {
+            create: {
+              username,
+              ...saltAndHashPassword(password),
+              type: "SCHOOL",
+              emails: {
+                create: {
+                  email: contactEmail,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 
   getTotalRegisteredTeamCount: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.team.count({

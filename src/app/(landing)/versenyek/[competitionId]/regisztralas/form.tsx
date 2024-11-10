@@ -93,6 +93,62 @@ export default function RegisterForm({
       emails: formThree.watch("emails") ?? [],
     });
 
+  useEffect(() => {
+    if (
+      isUsernameAvailable !== undefined &&
+      isUsernameAvailable !== null &&
+      !isUsernameAvailable
+    ) {
+      formOne.setError("username", {
+        type: "manual",
+        message: "Ez a felhasználónév már foglalt!",
+      });
+    }
+
+    if (isUsernameAvailable && formOne.formState.errors.username)
+      formOne.clearErrors("username");
+  }, [isUsernameAvailable]);
+  useEffect(() => {
+    if (
+      isTeamnameAvailable !== undefined &&
+      isTeamnameAvailable !== null &&
+      !isTeamnameAvailable
+    ) {
+      formTwo.setError("name", {
+        type: "manual",
+        message: "Ez a csapatnév már foglalt!",
+      });
+    }
+
+    if (isTeamnameAvailable && formTwo.formState.errors.name)
+      formTwo.clearErrors("name");
+  });
+
+  useEffect(() => {
+    if (
+      unavailableEmails !== undefined &&
+      unavailableEmails !== null &&
+      unavailableEmails.length > 0
+    ) {
+      for (const email of unavailableEmails) {
+        const index = formThree.getValues("emails")?.indexOf(email);
+
+        if (index !== undefined && index !== -1) {
+          formThree.setError(`emails.${index}`, {
+            type: "manual",
+            message: "Ez az e-mail cím már használatban van.",
+          });
+        }
+      }
+    }
+
+    if (
+      (!unavailableEmails || unavailableEmails.length === 0) &&
+      formThree.formState.errors.emails
+    )
+      formThree.clearErrors("emails");
+  }, [unavailableEmails]);
+
   const [pending, startTransition] = useTransition();
   const handleNextStep = () => {
     startTransition(async () => {
