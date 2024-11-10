@@ -19,24 +19,22 @@ export default async function EditCategory({
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Folder}
-          fromColor="from-indigo-300"
-          toColor="to-indigo-400"
-          title="Kategória Szerkesztése"
-          links={[
-            {
-              href: "/vezerlopult/kategoriak",
-              label: "Kategóriák",
-            },
-            {
-              href: `/vezerlopult/kategoriak/${categoryId}`,
-              label: "Kategória Szerkesztése",
-            },
-          ]}
-        />
-      </header>
+      <PageTitle
+        Icon={Folder}
+        fromColor="from-indigo-300"
+        toColor="to-indigo-400"
+        title="Kategória Szerkesztése"
+        links={[
+          {
+            href: "/vezerlopult/kategoriak",
+            label: "Kategóriák",
+          },
+          {
+            href: `/vezerlopult/kategoriak/${categoryId}`,
+            label: "Kategória Szerkesztése",
+          },
+        ]}
+      />
 
       <main className="px-4 pb-16">
         <Card className="mx-auto w-full max-w-lg">

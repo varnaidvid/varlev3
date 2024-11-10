@@ -11,31 +11,30 @@ export default async function TechnologiesPage() {
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <div className="flex items-center justify-between">
-          <PageTitle
-            Icon={Cpu}
-            fromColor="from-indigo-300"
-            toColor="to-indigo-400"
-            title="Technológiák"
-            links={[
-              {
-                href: "/vezerlopult/technologiak",
-                label: "Technológiák",
-              },
-              {
-                href: "/vezerlopult/technologiak/uj",
-                label: "Új technológia",
-              },
-            ]}
-          />
-          <Button asChild>
-            <Link href="/vezerlopult/technologiak/uj">
-              <Plus /> Új technológia létrehozása
-            </Link>
-          </Button>
-        </div>
-      </header>
+      <div className="flex items-center justify-between">
+        <PageTitle
+          Icon={Cpu}
+          fromColor="from-indigo-300"
+          toColor="to-indigo-400"
+          title="Technológiák"
+          links={[
+            {
+              href: "/vezerlopult/technologiak",
+              label: "Technológiák",
+            },
+            {
+              href: "/vezerlopult/technologiak/uj",
+              label: "Új technológia",
+            },
+          ]}
+        />
+
+        <Button asChild>
+          <Link href="/vezerlopult/technologiak/uj">
+            <Plus /> Új technológia létrehozása
+          </Link>
+        </Button>
+      </div>
 
       <main className="px-4 pb-16">
         <Card className="mx-auto w-full">

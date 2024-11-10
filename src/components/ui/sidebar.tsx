@@ -273,9 +273,32 @@ Sidebar.displayName = "Sidebar";
 
 const SidebarTrigger = React.forwardRef<
   React.ElementRef<typeof Button>,
-  React.ComponentProps<typeof Button>
->(({ className, onClick, ...props }, ref) => {
+  React.ComponentProps<typeof Button> & { isDock?: boolean }
+>(({ className, onClick, isDock = false, ...props }, ref) => {
   const { toggleSidebar, open } = useSidebar();
+
+  if (isDock)
+    return (
+      <Button
+        ref={ref}
+        data-sidebar="trigger"
+        variant="ghost"
+        size="icon"
+        aria-label="Menü"
+        className={cn(
+          "w-max rounded-full px-4 py-2 text-muted-foreground hover:text-black",
+          className,
+        )}
+        onClick={(event) => {
+          onClick?.(event);
+          toggleSidebar();
+        }}
+        {...props}
+      >
+        <PanelLeft />
+        <span className="hidden md:block">Menü kinyitása</span>
+      </Button>
+    );
 
   return (
     <Button
@@ -283,7 +306,10 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar="trigger"
       variant="ghost"
       size="icon"
-      className={cn("h-7 w-7", className)}
+      className={cn(
+        "h-7 w-7 text-muted-foreground hover:text-black",
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
@@ -291,6 +317,7 @@ const SidebarTrigger = React.forwardRef<
       {...props}
     >
       <PanelLeft />
+      {isDock && <span className="hidden md:block">Menü kinyitása</span>}
       <span className="sr-only">Menü {open ? "bezárása" : "kinyitása"}</span>
     </Button>
   );

@@ -1,6 +1,7 @@
 import { db } from "../src/server/db";
 import { AccountType, PrismaClient } from "@prisma/client";
 import { saltAndHashPassword } from "@/utils/password";
+import { Account } from "next-auth";
 
 const prisma = new PrismaClient();
 async function main() {
@@ -215,7 +216,7 @@ async function main() {
     },
   });
 
-  // create 4 coach accounts
+  // create 4 coach accounts for school1
   const coach1 = await prisma.coach.create({
     data: {
       name: "Molnár Gábor",
@@ -245,6 +246,32 @@ async function main() {
       name: "Lakatos Péter",
       School: {
         connect: { id: school1.id },
+      },
+    },
+  });
+
+  // create 3 coach accounts for school2
+  const coach5 = await prisma.coach.create({
+    data: {
+      name: "Kovács Péter",
+      School: {
+        connect: { id: school2.id },
+      },
+    },
+  });
+  const coach6 = await prisma.coach.create({
+    data: {
+      name: "Nagy Gábor",
+      School: {
+        connect: { id: school2.id },
+      },
+    },
+  });
+  const coach7 = await prisma.coach.create({
+    data: {
+      name: "Kiss János",
+      School: {
+        connect: { id: school2.id },
       },
     },
   });
@@ -377,6 +404,167 @@ async function main() {
         connect: [{ id: coach2.id }, { id: coach4.id }],
       },
     },
+  });
+
+  // create two team for school2
+  const team4 = await prisma.team.create({
+    data: {
+      name: "Vanilla JS Mesterek",
+      status: "WAITING_FOR_SCHOOL_APPROVAL",
+      Competition: {
+        connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech5.id }],
+      },
+      school: {
+        connect: { id: school2.id },
+      },
+      createdAt: new Date("2024-10-04"),
+      coaches: {
+        connect: [{ id: coach5.id }],
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Kovács Gábor", year: 12 },
+          { name: "Nagy Péter", year: 11 },
+          { name: "Kiss János", year: 10 },
+        ],
+      },
+      account: {
+        create: {
+          emails: {
+            create: {
+              email: "vanillajsmesterek@varlev3.hu",
+            },
+          },
+          username: "vanillajsmesterek",
+          ...saltAndHashPassword("teampassword4"),
+          type: "TEAM" as AccountType,
+        },
+      },
+    },
+  });
+  const team5 = await prisma.team.create({
+    data: {
+      name: "Angular Mesterek",
+      status: "WAITING_FOR_SCHOOL_APPROVAL",
+      Competition: {
+        connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech3.id }],
+      },
+      school: {
+        connect: { id: school2.id },
+      },
+      createdAt: new Date("2024-10-20"),
+      coaches: {
+        connect: [{ id: coach5.id }, { id: coach6.id }],
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Kovács Gábor", year: 12 },
+          { name: "Nagy Péter", year: 11 },
+          { name: "Kiss János", year: 10 },
+        ],
+      },
+      account: {
+        create: {
+          emails: {
+            create: {
+              email: "angular.mesterek@varlev3.hu",
+            },
+          },
+          username: "angularmesterek",
+          ...saltAndHashPassword("teampassword5"),
+          type: "TEAM" as AccountType,
+        },
+      },
+    },
+  });
+  const team6 = await prisma.team.create({
+    data: {
+      name: "PHP Mesterek",
+      status: "WAITING_FOR_SCHOOL_APPROVAL",
+      Competition: {
+        connect: { id: competition.id },
+      },
+      technologies: {
+        connect: [{ id: tech2.id }],
+      },
+      school: {
+        connect: { id: school2.id },
+      },
+      createdAt: new Date("2024-10-04"),
+      coaches: {
+        connect: [{ id: coach5.id }, { id: coach7.id }],
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Kovács Gábor", year: 12 },
+          { name: "Nagy Péter", year: 11 },
+          { name: "Kiss János", year: 10 },
+        ],
+      },
+      account: {
+        create: {
+          emails: {
+            create: {
+              email: "php.mesterek@varlev3.hu",
+            },
+          },
+          username: "phpmesterek",
+          ...saltAndHashPassword("teampassword6"),
+          type: "TEAM" as AccountType,
+        },
+      },
+    },
+  });
+
+  // seed team registered notifications for team4 and team5 and team6 for school2
+  await prisma.notification.createMany({
+    data: [
+      {
+        subject: "Új csapat regisztrált",
+        message: "A Vanilla JS Mesterek csapat regisztrált egy versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        createdAt: new Date("2024-11-08"),
+        receiverAccountId: school2.accountId,
+        senderAccountId: team4.accountId,
+      },
+      {
+        subject: "Új csapat regisztrált",
+        message: "Az Angular Mesterek csapat regisztrált egy versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        createdAt: new Date("2024-10-20"),
+        receiverAccountId: school2.accountId,
+        senderAccountId: team5.accountId,
+      },
+      {
+        subject: "Új csapat regisztrált",
+        message: "A PHP Mesterek csapat regisztrált egy versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        createdAt: new Date("2024-10-04"),
+        receiverAccountId: school2.accountId,
+        senderAccountId: team6.accountId,
+      },
+    ],
   });
 
   // seed notifications

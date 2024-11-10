@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/ui/page-title";
 import { api } from "@/trpc/server";
-import { Folder, Plus } from "lucide-react";
+import { Folder, Plus, School } from "lucide-react";
 import Link from "next/link";
-import CategoriesTable from "./categories-table";
 import { CategoryWithDetails } from "@/server/api/routers/category";
 
 export default async function CategoriesPage() {
@@ -28,27 +27,25 @@ export default async function CategoriesPage() {
     <>
       <div className="flex items-center justify-between">
         <PageTitle
-          Icon={Folder}
+          Icon={School}
           fromColor="from-indigo-300"
           toColor="to-indigo-400"
-          title="Kategóriák"
+          title="Iskolák"
           links={[
             {
-              href: "/vezerlopult/kategoriak",
-              label: "Kategóriák",
+              href: "/vezerlopult/iskolak",
+              label: "Iskolák",
             },
           ]}
         />
         <Button asChild>
-          <Link href="/vezerlopult/kategoriak/uj">
-            <Plus /> Új kategória létrehozása
+          <Link href="/vezerlopult/iskolak/uj">
+            <Plus /> Új iskola beregisztrálása
           </Link>
         </Button>
       </div>
 
-      <main className="px-4">
-        <CategoriesTable categories={categories} />
-      </main>
+      <main className="px-4"></main>
     </>
   );
 }

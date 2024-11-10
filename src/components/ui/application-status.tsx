@@ -215,38 +215,40 @@ export default function ApplicationStatusCard({
                 </p>
               </div>
             ) : (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="mb-2 text-xs font-medium uppercase text-neutral-400">
-                  További műveletek:
-                </p>
+              <div className="mt-6 flex flex-col justify-between gap-10 sm:flex-row">
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase text-neutral-400">
+                    További műveletek:
+                  </p>
 
-                <div className="flex items-center gap-2">
-                  {team.status === "REJECTED_BY_ORGANIZER" && (
+                  <div className="flex items-center gap-2">
+                    {team.status === "REJECTED_BY_ORGANIZER" && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        className={`${config.color}`}
+                      >
+                        <Link href={`/vezerlopult/beallitasok`}>
+                          Hiánypótlás
+                          <MousePointerClickIcon className="size-2" />
+                        </Link>
+                      </Button>
+                    )}
+
                     <Button
                       asChild
                       variant="outline"
                       className={`${config.color}`}
                     >
-                      <Link href={`/vezerlopult/beallitasok`}>
-                        Hiánypótlás
-                        <MousePointerClickIcon className="size-2" />
+                      <Link href={`/versenyek/${competition.id}`}>
+                        Verseny részletei
+                        <ExternalLink className="size-2" />
                       </Link>
                     </Button>
-                  )}
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    className={`${config.color}`}
-                  >
-                    <Link href={`/versenyek/${competition.id}`}>
-                      Verseny részletei
-                      <ExternalLink className="size-2" />
-                    </Link>
-                  </Button>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="-mb-4 flex items-center justify-end gap-2">
                   <span className="text-sm text-gray-600">
                     Verseny kezdetéig
                   </span>
@@ -260,7 +262,9 @@ export default function ApplicationStatusCard({
         {!message && (
           <div className="mt-8">
             <div className="relative z-10 flex justify-end">
-              <div className={`text-2xl font-medium ${config.color}`}>
+              <div
+                className={`text-lg font-medium sm:text-xl md:text-2xl ${config.color}`}
+              >
                 <Countdown targetDate={competition.deadline.toISOString()} />
               </div>
             </div>

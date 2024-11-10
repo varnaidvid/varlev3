@@ -19,7 +19,7 @@ export default async function TeamDashboard() {
   if (!competition) return;
 
   return (
-    <div>
+    <div className="space-y-12">
       <ApplicationStatusCard
         team={teamWithIncludes}
         competition={competition}

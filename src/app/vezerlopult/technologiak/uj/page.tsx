@@ -7,24 +7,22 @@ import { Cpu } from "lucide-react";
 export default function NewTechnology() {
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Cpu}
-          fromColor="from-indigo-300"
-          toColor="to-indigo-400"
-          title="Technológia Létrehozása"
-          links={[
-            {
-              href: "/vezerlopult/technologiak",
-              label: "Technológiák",
-            },
-            {
-              href: "/vezerlopult/technologiak/uj",
-              label: "Új technológia",
-            },
-          ]}
-        />
-      </header>
+      <PageTitle
+        Icon={Cpu}
+        fromColor="from-indigo-300"
+        toColor="to-indigo-400"
+        title="Technológia Létrehozása"
+        links={[
+          {
+            href: "/vezerlopult/technologiak",
+            label: "Technológiák",
+          },
+          {
+            href: "/vezerlopult/technologiak/uj",
+            label: "Új technológia",
+          },
+        ]}
+      />
 
       <main className="px-4 pb-16">
         <Card className="mx-auto w-full max-w-lg">

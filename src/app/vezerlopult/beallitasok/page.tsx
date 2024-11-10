@@ -35,17 +35,13 @@ export default async function Page() {
     // </div>
 
     <>
-      <header className="flex items-center justify-between gap-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Cog}
-          fromColor="from-gray-400/50"
-          toColor="to-slate-500/50"
-          title={"Beállítások"}
-          links={[{ href: "/vezerlopult/beallitasok", label: "Beállítások" }]}
-        />
-
-        <NotificationCenter />
-      </header>
+      <PageTitle
+        Icon={Cog}
+        fromColor="from-gray-400/50"
+        toColor="to-slate-500/50"
+        title={"Beállítások"}
+        links={[{ href: "/vezerlopult/beallitasok", label: "Beállítások" }]}
+      />
 
       {session?.user.type === "TEAM" && <TeamSettings />}
       {session?.user.type === "SCHOOL" && <SchoolSettings />}
