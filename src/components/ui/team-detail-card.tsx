@@ -155,11 +155,13 @@ export default function TeamDetailCard({
             <Cpu className="size-6 rounded-full border p-[3px]" />
             Technológiák
           </h2>
-          {data?.technologies.map((tech) => (
-            <Badge key={tech.id} variant="secondary">
-              {tech.name}
-            </Badge>
-          ))}
+          <div className="flex flex-wrap gap-2">
+            {data?.technologies.map((tech) => (
+              <Badge key={tech.id} variant="secondary">
+                {tech.name}
+              </Badge>
+            ))}
+          </div>
         </div>
 
         <div>

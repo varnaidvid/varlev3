@@ -1,7 +1,7 @@
 import { PageTitle } from "../../components/ui/page-title";
 import { Gauge } from "lucide-react";
 import { auth } from "@/server/auth";
-import NotificationCenter from "@/components/vezerlopult/notification-center";
+import NotificationCenter from "@/components/vezerlopult/notification-center/notification-center";
 import TeamDashboard from "./team-dashboard";
 import { api } from "@/trpc/server";
 import { Team } from "@prisma/client";

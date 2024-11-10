@@ -17,9 +17,6 @@ export default async function RegisterTeam({
   });
 
   const schools = await api.school.getAll();
-  const technologies = await api.technology.getCompetitionTechnologies({
-    competitionId,
-  });
 
   // TODO - handle not found
   if (!competition) return "Nem találtuk meg a megadott versenyt!";
@@ -27,18 +24,16 @@ export default async function RegisterTeam({
   return (
     <div className="relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-background p-2 py-[100px]">
       <div className="z-10 mx-auto flex w-full flex-col items-center justify-center">
-        <h1 className="mb-2 text-center font-mono text-4xl font-bold">
+        <h1 className="mb-8 mt-10 max-w-xl break-words text-center font-mono text-4xl font-bold">
           {competition.name}
-        </h1>
-        <h1 className="mb-12 text-center text-muted-foreground">
-          {competition.description}
         </h1>
 
         <ClientOnly>
           <RegisterForm
+            subCategories={competition.subCategories}
             competition={competition}
             schools={schools}
-            technologies={technologies}
+            technologies={competition.technologies}
           />
         </ClientOnly>
 

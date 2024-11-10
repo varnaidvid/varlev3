@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Plus, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Box,
+  Plus,
+  Trash2,
+  ArrowRight,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import {
   CardContent,
   CardDescription,
@@ -23,23 +30,25 @@ import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
 import { School, SubCategory, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
-import SelectSchool from "../../../ui/select-school";
-import { Checkbox } from "../../../ui/checkbox";
-import { Label } from "../../../ui/label";
-import { RadioGroup, RadioGroupItem } from "../../../ui/radio-group";
+import SelectSchool from "@/components/ui/select-school";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function TeamDetailsForm({
-  subCategories,
   technologies,
+  subCategories,
   form,
   onSubmit,
   schools,
+  pending = false,
 }: {
-  subCategories: SubCategory[];
   technologies: Technology[];
+  subCategories: SubCategory[];
   form: UseFormReturn<z.infer<typeof formTwoSchema>>;
   onSubmit: () => void;
   schools: School[];
+  pending?: boolean;
 }) {
   const addCoach = () => {
     form.setValue("coaches", [...form.getValues("coaches"), ""]);
@@ -219,12 +228,12 @@ export function TeamDetailsForm({
                     if (selectedSubCategory)
                       form.setValue("subCategory", selectedSubCategory);
                   }}
-                  defaultValue={field.value.id}
+                  defaultValue={field?.value?.id}
                 >
                   {subCategories.map((category) => (
                     <div
                       key={category.id}
-                      className="relative flex w-full items-start gap-2 rounded-lg border border-input p-4 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
+                      className="relative flex w-full items-start gap-2 rounded-lg border border-input p-3 shadow-sm shadow-black/5 has-[[data-state=checked]]:border-ring"
                     >
                       <RadioGroupItem
                         value={category.id}
@@ -246,9 +255,13 @@ export function TeamDetailsForm({
           />
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit">
+          <Button className="group w-full" type="submit" disabled={pending}>
             Következő lépés
-            <ArrowRight className="ml-2 h-4 w-4" />
+            {pending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            )}
           </Button>
         </CardFooter>
       </form>

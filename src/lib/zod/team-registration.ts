@@ -24,10 +24,13 @@ export const formTwoSchema = z.object({
       }),
     )
     .optional(),
-  subCategory: z.object({
-    name: z.string({ required_error: "Adja meg a kategóriát!" }),
-    id: z.string({ required_error: "Adja meg a kategóriát!" }),
-  }),
+  subCategory: z.object(
+    {
+      name: z.string({ required_error: "Adja meg a kategóriát!" }),
+      id: z.string({ required_error: "Adja meg a kategóriát!" }),
+    },
+    { required_error: "Adja meg a kategóriát!" },
+  ),
 });
 export const formThreeSchema = z.object({
   members: z
@@ -43,6 +46,9 @@ export const formThreeSchema = z.object({
       name: z.string().optional(),
       year: z.number().int().positive("Adja meg az évfolyamát!").optional(),
     })
+    .optional(),
+  emails: z
+    .array(z.string().email("Adjon meg egy érvényes e-mail címet!"))
     .optional(),
 });
 
@@ -92,6 +98,9 @@ export const updateFormTwoSchema = z.object({
       name: z.string().optional(),
       year: z.number().int().positive("Adja meg az évfolyamát!").optional(),
     })
+    .optional(),
+  emails: z
+    .array(z.string().email("Adjon meg egy érvényes e-mail címet!"))
     .optional(),
 });
 export const updateTeamSchema = z.object({

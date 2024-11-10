@@ -12,6 +12,7 @@ import {
 import { api } from "@/trpc/react";
 import { NotificationItem } from "./notification-item";
 import { Skeleton } from "@/components/ui/skeleton";
+import NotificationItemSkeleton from "./notification-skeleton";
 
 export default function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,16 +21,14 @@ export default function NotificationCenter() {
     new Set(),
   );
 
-  const {
-    data: unreadCount = 0,
-    refetch: refetchUnreadCount,
-    isFetching,
-  } = api.notification.getUnreadCount.useQuery();
+  const { data: unreadCount = 0, refetch: refetchUnreadCount } =
+    api.notification.getUnreadCount.useQuery();
 
   const {
     data: notificationsData,
     fetchNextPage,
     hasNextPage,
+    isLoading,
     isFetchingNextPage,
     refetch: refetchNotifications,
   } = api.notification.getNotifications.useInfiniteQuery(
@@ -130,6 +129,13 @@ export default function NotificationCenter() {
         )} */}
         <ScrollArea className="h-[300px]" onScrollCapture={handleScroll}>
           <div className="flex h-full w-full flex-col">
+            {isLoading && (
+              <div className="flex flex-col gap-2">
+                <NotificationItemSkeleton />
+                <NotificationItemSkeleton />
+              </div>
+            )}
+
             {processedNotifications.length === 0 ? (
               <div className="flex h-full w-full items-center justify-center p-4 text-center text-sm text-muted-foreground">
                 Szólunk, amint érkezik valami értesítésed.
@@ -156,14 +162,6 @@ export default function NotificationCenter() {
                     Nincs további értesítésed.
                   </div>
                 )}
-              </>
-            )}
-
-            {isFetching && (
-              <>
-                <Skeleton className="h-[100px] w-full" />
-                <Skeleton className="h-[100px] w-full" />
-                <Skeleton className="h-[100px] w-full" />
               </>
             )}
           </div>
