@@ -7,9 +7,9 @@ import { TeamLeaderboard } from "./team-leaderboard";
 export default async function Page({
   params,
 }: {
-  params: { competitionId: string };
+  params: Promise<{ competitionId: string }>;
 }) {
-  const { competitionId } = params;
+  const { competitionId } = await params;
   const competition = await api.competition.getById({ id: competitionId });
   if (!competition) return null;
   const competitionStatus = competition.ended
