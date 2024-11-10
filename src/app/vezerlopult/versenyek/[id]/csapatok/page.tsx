@@ -11,8 +11,9 @@ export default async function TeamsPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { name?: string };
+  params: Promise<{ id: string }>;
+
+  searchParams: Promise<{ name?: string }>;
 }) {
   await withRole(["ORGANIZER"]);
   const session = await auth();

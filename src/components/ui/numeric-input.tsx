@@ -36,7 +36,7 @@ export default function NumericInput({
         <Button
           slot="decrement"
           className="-ms-px flex aspect-square h-[inherit] items-center justify-center rounded-s-lg border border-input bg-background text-sm text-muted-foreground/80 ring-offset-background transition-shadow hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-          onMouseDown={() => handleChange(internalValue - 1)}
+          onPress={() => handleChange(internalValue - 1)}
         >
           <Minus size={16} strokeWidth={2} aria-hidden="true" />
         </Button>
@@ -50,7 +50,7 @@ export default function NumericInput({
         <Button
           slot="increment"
           className="-me-px flex aspect-square h-[inherit] items-center justify-center rounded-e-lg border border-input bg-background text-sm text-muted-foreground/80 ring-offset-background transition-shadow hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-          onMouseDown={() => handleChange(internalValue + 1)}
+          onPress={() => handleChange(internalValue + 1)}
         >
           <Plus size={16} strokeWidth={2} aria-hidden="true" />
         </Button>

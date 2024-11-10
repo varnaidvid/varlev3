@@ -6,12 +6,14 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   accountId: string;
   setData: React.Dispatch<React.SetStateAction<TData[]>>;
+  schoolId: string;
 }
 
 export function DataTableRowActions<TData>({
   row,
   accountId,
   setData,
+  schoolId,
 }: DataTableRowActionsProps<TData>) {
   const teamApprovedBySchoolMutation =
     api.notification.teamApprovedBySchool.useMutation();

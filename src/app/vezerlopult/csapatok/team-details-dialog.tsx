@@ -159,7 +159,11 @@ export function TeamDetailDialog({
               <span className="flex items-center gap-2">
                 {team?.name}
                 {team?.status && (
-                  <ApplicationStatusBadge status={team.status} />
+                  <ApplicationStatusBadge
+                    status={
+                      team.status as ApplicationStatus & "COMPETITION_RUNNING"
+                    }
+                  />
                 )}
               </span>
             </DialogTitle>

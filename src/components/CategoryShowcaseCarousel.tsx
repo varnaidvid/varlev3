@@ -1,11 +1,16 @@
-"use client"
+"use client";
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import SignUpModal from "@/components/SignUpModal";
 import CompetitionCard from "@/components/vezerlopult/versenyek/competition-card";
 import { CompetitionWithDetails } from "@/server/api/routers/competition";
-
 
 export function CategoryShowcaseCarousel({
   competitions,
@@ -19,7 +24,9 @@ export function CategoryShowcaseCarousel({
           {Array.from({ length: 5 }).map((_, index) => (
             <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={index}>
               <div className="p-1">
-                <CompetitionCard competition={competitions[0]}/>
+                {competitions[0] && (
+                  <CompetitionCard competition={competitions[0]} />
+                )}
               </div>
             </CarouselItem>
           ))}
@@ -28,5 +35,5 @@ export function CategoryShowcaseCarousel({
         <CarouselNext />
       </Carousel>
     </div>
-  )
+  );
 }

@@ -8,7 +8,7 @@ import withRole from "@/utils/withRole";
 export default async function CompetitionPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await withRole(["ORGANIZER"]);
   const competitionId = (await params).id;

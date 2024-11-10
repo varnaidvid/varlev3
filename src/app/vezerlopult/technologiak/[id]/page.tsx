@@ -9,7 +9,7 @@ import withRole from "@/utils/withRole";
 export default async function EditTechnology({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await withRole(["ORGANIZER"]);
   const technologyId = (await params).id;

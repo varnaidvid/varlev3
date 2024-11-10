@@ -27,14 +27,14 @@ import { DataTablePagination } from "@/components/ui/data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { DataTableRowActions } from "./data-table-row-actions";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { school: { id: string } }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   initialData: TData[];
   accountId: string;
   teamName?: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { school: { id: string } }, TValue>({
   columns,
   initialData,
   accountId,

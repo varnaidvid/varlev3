@@ -9,7 +9,7 @@ import { Folder } from "lucide-react";
 export default async function EditCategory({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   await withRole(["ORGANIZER"]);
   const categoryId = (await params).id;

@@ -55,7 +55,8 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
       <DataTableColumnHeader column={column} title="Státusz" />
     ),
     cell: ({ row }) => {
-      const status = row.getValue("status") as ApplicationStatus;
+      const status = row.getValue("status") as ApplicationStatus &
+        "COMPETITION_RUNNING";
       return <ApplicationStatusBadge status={status} />;
     },
     filterFn: (row, id, filterValue) => {

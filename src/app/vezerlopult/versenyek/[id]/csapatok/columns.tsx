@@ -66,7 +66,11 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
     ),
     cell: ({ row }) => {
       const status = row.getValue("status") as ApplicationStatus;
-      return <ApplicationStatusBadge status={status} />;
+      return (
+        <ApplicationStatusBadge
+          status={status as ApplicationStatus & "COMPETITION_RUNNING"}
+        />
+      );
     },
     filterFn: (row, id, filterValue) => {
       return filterValue.length === 0 || filterValue.includes(row.getValue(id));
