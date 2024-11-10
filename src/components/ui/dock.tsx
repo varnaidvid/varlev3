@@ -16,14 +16,7 @@ export default function DashboardDock() {
     >
       <div className="mx-auto w-max rounded-full border px-4 py-1 backdrop-blur-md">
         <div className="flex h-full w-full gap-4">
-          <Button
-            className="rounded-full text-muted-foreground transition-all hover:text-black"
-            size={"icon"}
-            variant={"ghost"}
-            asChild
-          >
-            <SidebarTrigger />
-          </Button>
+          <SidebarTrigger isDock />
 
           <NotificationCenter />
         </div>
