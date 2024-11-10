@@ -6,8 +6,9 @@ const main = {
 
 const container = {
   backgroundColor: "#ffffff",
-  margin: "0 auto",
-  padding: "20px 0 48px",
+  margin: "10px auto",
+  borderRadius: "12px",
+  padding: "20px 20px 48px",
   marginBottom: "64px",
 };
 
@@ -35,6 +36,6 @@ const btn = {
   textDecoration: "none",
   textAlign: "center" as const,
   display: "block",
-  width: "100%",
+  width: "auto",
 };
 export { main, container, h1, text, btn };

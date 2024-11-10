@@ -1,15 +1,18 @@
-import { Card } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
-import { Folder } from "lucide-react";
+import { School } from "lucide-react";
+import RegisterSchoolForm from "../../../../components/vezerlopult/school/register/form";
+import withRole from "@/utils/withRole";
 
-export default function NewCategory() {
+export default async function NewCategory() {
+  await withRole(["ORGANIZER"]);
+
   return (
     <>
       <PageTitle
-        Icon={Folder}
+        Icon={School}
         fromColor="from-indigo-300"
         toColor="to-indigo-400"
-        title="Iskola beregisztrálása"
+        title="Új iskola beregisztrálása"
         links={[
           {
             href: "/vezerlopult/iskolak",
@@ -22,7 +25,9 @@ export default function NewCategory() {
         ]}
       />
 
-      <main className="px-4 pb-16"></main>
+      <main className="px-4 pb-16">
+        <RegisterSchoolForm />
+      </main>
     </>
   );
 }

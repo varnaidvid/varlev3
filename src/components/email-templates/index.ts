@@ -5,3 +5,4 @@ export { TeamApprovedBySchoolForOrganizerEmail } from "./team-approved-by-school
 export { TeamRegisteredEmail } from "./team-registered";
 export { TeamRejectedByOrganizerEmail } from "./team-rejected-by-organizer";
 export { TeamUpdatedDataEmail } from "./team-updated-data";
+export { SchoolRegistrationEmail } from "./school-registration";

@@ -54,6 +54,37 @@ export default function SchoolUpdateForm({
       email: form.watch("contactEmail"),
     });
 
+  useEffect(() => {
+    if (
+      isSchoolnameAvailable !== undefined &&
+      isSchoolnameAvailable !== null &&
+      !isSchoolnameAvailable
+    ) {
+      form.setError("name", {
+        type: "manual",
+        message: "Ez az iskola már regisztrálva van!",
+      });
+    }
+
+    if (isSchoolnameAvailable && form.formState.errors.name)
+      form.clearErrors("name");
+  });
+  useEffect(() => {
+    if (
+      isEmailAvailable !== undefined &&
+      isEmailAvailable !== null &&
+      !isEmailAvailable
+    ) {
+      form.setError("contactEmail", {
+        type: "manual",
+        message: "Ez az email cím már regisztrálva van!",
+      });
+    }
+
+    if (isEmailAvailable && form.formState.errors.contactEmail)
+      form.clearErrors("contactEmail");
+  });
+
   const [pending, startTransition] = useTransition();
   async function updateSchool(values: z.infer<typeof schoolUpdateSchema>) {
     startTransition(async () => {

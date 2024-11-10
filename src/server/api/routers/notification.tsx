@@ -20,6 +20,7 @@ import {
   TeamRejectedByOrganizerEmail,
   TeamApprovedBySchoolForOrganizerEmail,
   TeamUpdatedDataEmail,
+  SchoolRegistrationEmail,
 } from "@/components/email-templates";
 import React from "react";
 import { TRPCError } from "@trpc/server";
@@ -236,6 +237,52 @@ export const notificationRouter = createTRPCRouter({
         receiverAccountId: school.account.id,
         redirectTo: input.redirectTo,
         db: ctx.db,
+      });
+    }),
+
+  notifySchoolAboutRegistration: withRole(["ORGANIZER"])
+    .input(
+      z.object({
+        schoolId: z.string(),
+        email: z.string(),
+        username: z.string(),
+        password: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const school = await ctx.db.school.findUnique({
+        where: { id: input.schoolId },
+        select: { name: true },
+      });
+      if (!school)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Az iskola nem található",
+        });
+
+      const organizer = await ctx.db.organizer.findUnique({
+        where: { accountId: ctx.session.user.id },
+        select: { name: true },
+      });
+      if (!organizer)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "A szervező nem található",
+        });
+
+      await resend.emails.send({
+        from: "VarleV3 <no-reply@varlev3.hu>",
+        to: input.email,
+        subject: "Iskolai regisztráció",
+        react: (
+          <SchoolRegistrationEmail
+            organizerName={organizer.name}
+            schoolName={school.name}
+            username={input.username}
+            password={input.password}
+            redirectUrl="http://localhost:3000/bejelentkezes"
+          />
+        ),
       });
     }),
 
