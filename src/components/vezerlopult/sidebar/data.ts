@@ -18,14 +18,14 @@ const teamNav = [
 ];
 const schoolNav = [
   {
-    name: "Beállítások",
-    url: "/vezerlopult/beallitasok",
-    icon: Cog,
-  },
-  {
     name: "Jelentkezett csapatok",
     url: "/vezerlopult/csapatok",
     icon: Users,
+  },
+  {
+    name: "Beállítások",
+    url: "/vezerlopult/beallitasok",
+    icon: Cog,
   },
 ];
 const organizerNav = [

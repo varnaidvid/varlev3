@@ -8,17 +8,28 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Form,
+  FormControl,
   FormDescription,
+  FormField,
+  FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Users2, ArrowRight, Plus, ArrowLeft } from "lucide-react";
+import {
+  Users2,
+  ArrowRight,
+  Plus,
+  ArrowLeft,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { formThreeSchema } from "@/lib/zod/team-registration";
+import { formThreeSchema } from "@/lib/zod/team-crud";
 import { Competition } from "@prisma/client";
 import TeamMember from "../../../ui/team-member";
+import { Input } from "@/components/ui/input";
 
 export function TeamMembersForm({
   form,
@@ -28,7 +39,9 @@ export function TeamMembersForm({
   memberFields,
   memberAppend,
   memberRemove,
+  pending,
 }: {
+  pending: boolean;
   form: UseFormReturn<z.infer<typeof formThreeSchema>>;
   onSubmit: () => void;
   onBack: () => void;
@@ -37,6 +50,22 @@ export function TeamMembersForm({
   memberAppend: (data: { name: string; year: number }) => void;
   memberRemove: (index: number) => void;
 }) {
+  const addEmail = () => {
+    form.setValue("emails", [...(form.getValues("emails") || []), ""]);
+  };
+
+  const removeEmail = (index: number) => {
+    const emails = form.getValues("emails") || [];
+    if (emails.length > 1 || (emails.length === 1 && emails[0] !== "")) {
+      form.setValue(
+        "emails",
+        emails.filter((_, i) => i !== index),
+      );
+    } else if (emails.length === 1 && emails[0] === "") {
+      form.setValue("emails", []);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -91,9 +120,9 @@ export function TeamMembersForm({
           </div>
 
           <div>
-            <FormLabel>Pót csapattag *</FormLabel>
+            <FormLabel>Pót csapattag</FormLabel>
             <FormDescription>
-              Adja meg a pót csapattag nevét és évfolyamát
+              Szintén teljes név és évfolyam szükséges
             </FormDescription>
             <TeamMember
               index="reserved"
@@ -101,11 +130,58 @@ export function TeamMembersForm({
               remove={undefined}
             />
           </div>
+
+          <div>
+            <FormLabel>Email címek</FormLabel>
+            <FormDescription>
+              Opcionálisan értesítünk a megadott email címeken is üzeneteitekről
+            </FormDescription>
+            {form.watch("emails")?.map((coach, index) => (
+              <div key={index} className="mt-2 flex items-start space-x-2">
+                <FormField
+                  control={form.control}
+                  name={`emails.${index}`}
+                  render={({ field }) => (
+                    <FormItem className="flex-grow">
+                      <FormControl>
+                        <Input
+                          placeholder={`${index + 1}. email cím`}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => removeEmail(index)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-2 w-full"
+              onClick={addEmail}
+            >
+              <Plus className="mr-2 h-4 w-4" /> Új email hozzáadása
+            </Button>
+          </div>
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit">
+          <Button className="group w-full" type="submit" disabled={pending}>
             Következő lépés
-            <ArrowRight className="ml-2 h-4 w-4" />
+            {pending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            )}
           </Button>
           <Button
             variant="outline"

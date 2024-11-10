@@ -1,4 +1,4 @@
-import { updateTeamSchema } from "@/lib/zod/team-registration";
+import { updateTeamSchema } from "@/lib/zod/team-crud";
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -11,6 +11,38 @@ import { z } from "zod";
 import { schoolRouter } from "./school";
 
 export const teamsRouter = createTRPCRouter({
+  checkIfUsernameAvailable: publicProcedure
+    .input(
+      z.object({
+        username: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const account = await ctx.db.account.findFirst({
+        where: {
+          username: input.username,
+        },
+      });
+
+      return !account;
+    }),
+
+  checkIfTeamNameAvailable: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const team = await ctx.db.team.findFirst({
+        where: {
+          name: input.name,
+        },
+      });
+
+      return !team;
+    }),
+
   getAllTeams: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.team.findMany();
   }),
@@ -107,7 +139,7 @@ export const teamsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const {
         formOne: { coaches, name, school, technologies, subCategory },
-        formTwo: { members, reserveMember },
+        formTwo: { members, reserveMember, emails },
         teamId,
       } = input;
 
@@ -160,6 +192,16 @@ export const teamsRouter = createTRPCRouter({
                 connect: { id: schoolRecord.id },
               },
             })),
+          },
+          account: {
+            update: {
+              emails: {
+                deleteMany: {},
+                create: emails?.map((email) => ({
+                  email: email,
+                })),
+              },
+            },
           },
           technologies: {
             set: [],

@@ -17,19 +17,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { User, ArrowRight } from "lucide-react";
+import { User, ArrowRight, Loader2 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { formOneSchema } from "@/lib/zod/team-registration";
+import { formOneSchema } from "@/lib/zod/team-crud";
 
 export function AccountForm({
   form,
   onSubmit,
+  pending = false,
 }: {
   form: UseFormReturn<z.infer<typeof formOneSchema>>;
   onSubmit: () => void;
+  pending?: boolean;
 }) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -110,9 +112,13 @@ export function AccountForm({
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit">
+          <Button className="group w-full" type="submit" disabled={pending}>
             Következő lépés
-            <ArrowRight className="ml-2 h-4 w-4" />
+            {pending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            )}
           </Button>
         </CardFooter>
       </form>

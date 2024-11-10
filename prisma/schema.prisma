@@ -207,7 +207,7 @@ model Competition {
 
 model Email {
     id    String @id @default(cuid())
-    email String
+    email String @unique
 
     accountId String
     account   Account @relation(fields: [accountId], references: [id])

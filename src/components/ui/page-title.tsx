@@ -38,7 +38,7 @@ export function PageTitle({
             <BreadcrumbList>
               <BreadcrumbItem className="uppercase">
                 <BreadcrumbLink asChild>
-                  <Link href="/">Vezérlőpult</Link>
+                  <Link href="/vezerlopult">Vezérlőpult</Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               {links?.map((link) => (

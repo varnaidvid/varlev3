@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { UseFormReturn } from "react-hook-form";
-import { formTwoSchema } from "@/lib/zod/team-registration";
+import { formTwoSchema } from "@/lib/zod/team-crud";
 import { z } from "zod";
 
 export default function TechnologySelector({

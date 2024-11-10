@@ -1,8 +1,12 @@
 import { auth } from "@/server/auth";
 import { CategoryShowcaseCarousel } from "@/components/CategoryShowcaseCarousel";
-import { Hero } from "@/components/Hero";
+import Hero from "@/components/Hero";
+import { api } from "@/trpc/server";
 import { Countdown } from "@/components/countdown";
 import { ClientOnly } from "@/components/client-only";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 import {
   Accordion,
@@ -14,44 +18,25 @@ import {
 export default async function HomePage() {
   const session = await auth();
 
-  const competitionsName = [
-    "Verseny I.",
-    "Verseny II.",
-    "Verseny III.",
-    "Verseny IV.",
-    "Verseny V.",
-  ];
+  const competitions = await api.competition.getAllWithDetails();
 
-  const competitionsDetails = [
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor.",
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae purus. Sed euismod, nisl nec ultrices. Quisque ut dolor.",
-  ];
-
-  const competitionDueDates = [
-    "2022.01.01",
-    "2022.01.02",
-    "2022.01.03",
-    "2022.01.04",
-    "2022.01.05",
-  ];
+  const popularCompetitions = competitions.sort(
+    (a, b) => b.teams.length - a.teams.length
+  ).slice(0, 5);  
 
   return (
     <>
+
       <Hero />
 
-      <h1 className="p-4 text-3xl font-bold">Aktuális versenyek</h1>
+      <h1 className="p-4 text-3xl font-bold">A legpopulárisabb versenyek</h1>
 
       <CategoryShowcaseCarousel
-        competitionsName={competitionsName}
-        competitionsDetails={competitionsDetails}
-        competitionDueDates={competitionDueDates}
+        competitions={popularCompetitions}
       />
 
-      <h1 className="mt-16 p-4 text-3xl font-bold">A verseny története</h1>
-      <p className="my-8 px-4 text-justify text-lg font-medium">
+      <h1 className="mt-16 p-4 text-3xl font-bold">Rólunk</h1>
+      <p className="mt-8 px-4 text-justify text-lg font-medium">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit ad eius
         harum dolore molestiae nihil ipsa est eveniet sed? Totam sapiente itaque
         minima reprehenderit placeat incidunt quibusdam nam similique
@@ -63,6 +48,15 @@ export default async function HomePage() {
         veritatis, similique voluptate omnis, expedita saepe eius cupiditate
         quaerat animi culpa. Ullam, doloribus ut?
       </p>
+
+      <div className="flex justify-end px-4">
+        <Link href="/rolunk">
+          <Button className="w-full sm:w-auto">
+            <ArrowRight className="mr-2 size-4" />
+            Rólunk
+          </Button>
+        </Link>
+      </div>
 
       <div className="my-12 px-4 text-center text-5xl font-medium">
         {/*to-do: fetch data from database*/}

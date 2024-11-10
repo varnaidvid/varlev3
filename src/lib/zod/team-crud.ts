@@ -47,6 +47,9 @@ export const formThreeSchema = z.object({
       year: z.number().int().positive("Adja meg az évfolyamát!").optional(),
     })
     .optional(),
+  emails: z
+    .array(z.string().email("Adjon meg egy érvényes e-mail címet!"))
+    .optional(),
 });
 
 export type TeamRegistrationType = {
@@ -95,6 +98,9 @@ export const updateFormTwoSchema = z.object({
       name: z.string().optional(),
       year: z.number().int().positive("Adja meg az évfolyamát!").optional(),
     })
+    .optional(),
+  emails: z
+    .array(z.string().email("Adjon meg egy érvényes e-mail címet!"))
     .optional(),
 });
 export const updateTeamSchema = z.object({

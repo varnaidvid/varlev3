@@ -25,6 +25,39 @@ export const authRouter = createTRPCRouter({
     }
   }),
 
+  checkIfEmailIsAvailable: publicProcedure
+    .input(
+      z.object({
+        email: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const email = await ctx.db.email.findFirst({
+        where: {
+          email: input.email,
+        },
+      });
+
+      return !email;
+    }),
+  checkIfAnyOfTheEmailArrayIsNotAvailable: publicProcedure
+    .input(
+      z.object({
+        emails: z.array(z.string()),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const emails = await ctx.db.email.findMany({
+        where: {
+          email: {
+            in: input.emails,
+          },
+        },
+      });
+
+      return emails.map((email) => email.email);
+    }),
+
   logout: protectedProcedure.query(async ({ ctx }) => {
     await signOut({ redirectTo: "/", redirect: true });
   }),

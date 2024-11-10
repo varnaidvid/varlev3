@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import {
   formOneSchema,
   formTwoSchema,
   formThreeSchema,
-} from "@/lib/zod/team-registration";
+} from "@/lib/zod/team-crud";
 import { Card } from "@/components/ui/card";
 import { AccountForm } from "@/components/vezerlopult/team/registration/account-form";
 import { TeamDetailsForm } from "@/components/vezerlopult/team/registration/details-form";
@@ -80,25 +80,78 @@ export default function RegisterForm({
     name: "members",
   });
 
-  const handleNextStep = async () => {
-    if (step === 1) {
-      const isValid = await formOne.trigger();
-      if (isValid) setStep(2);
-    } else if (step === 2) {
-      if (formTwo.getValues("technologies")?.length === 0) {
-        formTwo.setError("technologies", {
-          type: "required",
-          message: "Legalább egy technológiát ki kell választani.",
-        });
-        return;
-      }
+  const { data: isUsernameAvailable, isFetching: fetch1 } =
+    api.team.checkIfUsernameAvailable.useQuery({
+      username: formOne.watch("username"),
+    });
+  const { data: isTeamnameAvailable, isFetching: fetch2 } =
+    api.team.checkIfTeamNameAvailable.useQuery({
+      name: formTwo.watch("name"),
+    });
+  const { data: unavailableEmails, isFetching: fetch3 } =
+    api.auth.checkIfAnyOfTheEmailArrayIsNotAvailable.useQuery({
+      emails: formThree.watch("emails") ?? [],
+    });
 
-      const isValid = await formTwo.trigger();
-      if (isValid) setStep(3);
-    } else if (step === 3) {
-      const isValid = await formThree.trigger();
-      if (isValid) setStep(4);
-    }
+  const [pending, startTransition] = useTransition();
+  const handleNextStep = () => {
+    startTransition(async () => {
+      if (step === 1) {
+        const isValid = await formOne.trigger();
+        if (!isValid) return;
+
+        if (!isUsernameAvailable) {
+          formOne.setError("username", {
+            type: "manual",
+            message: "A felhasználónév foglalt. Kérjük válassz másikat.",
+          });
+
+          return;
+        }
+
+        setStep(2);
+      } else if (step === 2) {
+        if (formTwo.getValues("technologies")?.length === 0) {
+          formTwo.setError("technologies", {
+            type: "required",
+            message: "Legalább egy technológiát ki kell választani.",
+          });
+          return;
+        }
+
+        if (!isTeamnameAvailable) {
+          formTwo.setError("name", {
+            type: "manual",
+            message: "A csapatnév foglalt. Kérjük válassz másikat.",
+          });
+
+          return;
+        }
+
+        const isValid = await formTwo.trigger();
+        if (isValid) setStep(3);
+      } else if (step === 3) {
+        const isValid = await formThree.trigger();
+        if (!isValid) return;
+
+        if (unavailableEmails && unavailableEmails.length > 0) {
+          for (const email of unavailableEmails) {
+            const index = formThree.getValues("emails")?.indexOf(email);
+
+            if (index !== undefined && index !== -1) {
+              formThree.setError(`emails.${index}`, {
+                type: "manual",
+                message: "Ez az e-mail cím már használatban van.",
+              });
+            }
+          }
+
+          return;
+        }
+
+        if (isValid) setStep(4);
+      }
+    });
   };
 
   const getAllFormData = () => {
@@ -143,13 +196,18 @@ export default function RegisterForm({
     <>
       {step === 1 && (
         <Card className="mx-auto w-full max-w-lg">
-          <AccountForm form={formOne} onSubmit={handleNextStep} />
+          <AccountForm
+            pending={pending || fetch1}
+            form={formOne}
+            onSubmit={handleNextStep}
+          />
         </Card>
       )}
 
       {step === 2 && (
         <Card className="mx-auto w-full max-w-lg">
           <TeamDetailsForm
+            pending={pending || fetch2}
             subCategories={subCategories}
             technologies={technologies}
             form={formTwo}
@@ -164,6 +222,7 @@ export default function RegisterForm({
         <Card className="mx-auto w-full max-w-lg">
           <TeamMembersForm
             form={formThree}
+            pending={pending || fetch3}
             competition={competition}
             memberFields={memberFields}
             memberAppend={memberAppend}
