@@ -30,19 +30,11 @@ import { DataTableRowActions } from "./data-table-row-actions";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  schools: string[];
-  competitionId: string;
-  accountId: string;
-  teamName?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  schools,
-  competitionId,
-  accountId,
-  teamName,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -53,11 +45,8 @@ export function DataTable<TData, TValue>({
 
   React.useEffect(() => {
     const initialFilters: ColumnFiltersState = [];
-    if (teamName) {
-      initialFilters.push({ id: "name", value: teamName });
-    }
     setColumnFilters(initialFilters);
-  }, [teamName]);
+  }, []);
 
   const table = useReactTable({
     data,
@@ -79,7 +68,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} schools={schools} teamName={teamName} />
+      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -113,11 +102,7 @@ export function DataTable<TData, TValue>({
                     </TableCell>
                   ))}
                   <TableCell>
-                    <DataTableRowActions
-                      row={row}
-                      competitionId={competitionId}
-                      accountId={accountId}
-                    />
+                    <DataTableRowActions row={row} />
                   </TableCell>
                 </TableRow>
               ))

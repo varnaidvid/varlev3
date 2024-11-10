@@ -3,25 +3,12 @@ import { PageTitle } from "@/components/ui/page-title";
 import { api } from "@/trpc/server";
 import { Folder, Plus, School } from "lucide-react";
 import Link from "next/link";
-import { CategoryWithDetails } from "@/server/api/routers/category";
+import { SchoolsWithDetails } from "@/server/api/routers/school";
+import { columns } from "./columns";
+import { DataTable } from "./schools-table";
 
-export default async function CategoriesPage() {
-  const categories = await api.category.getAllWithDetails();
-
-  // categories: ({
-  //     competitions: {
-  //         description: string;
-  //         id: string;
-  //         name: string;
-  //         image: string;
-  //         maxTeamSize: number;
-  //         deadline: Date;
-  //     }[];
-  // } & {
-  //     description: string;
-  //     id: string;
-  //     name: string;
-  // })[]
+export default async function SchoolsPage() {
+  const schools = await api.school.getSchoolsWithDetails();
 
   return (
     <>
@@ -45,7 +32,9 @@ export default async function CategoriesPage() {
         </Button>
       </div>
 
-      <main className="px-4"></main>
+      <main className="px-4">
+        <DataTable columns={columns} data={schools} />
+      </main>
     </>
   );
 }

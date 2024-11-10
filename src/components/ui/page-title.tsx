@@ -45,7 +45,11 @@ export function PageTitle({
                     <BreadcrumbSeparator />
                     <BreadcrumbItem className="uppercase">
                       <BreadcrumbLink asChild>
-                        <Link href={link.href}>{link.label}</Link>
+                        <Link href={link.href}>
+                          {link.label.length > 20
+                            ? `${link.label.substring(0, 20)}...`
+                            : link.label}
+                        </Link>
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                   </div>

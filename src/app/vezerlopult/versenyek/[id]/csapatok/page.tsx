@@ -8,11 +8,14 @@ import { auth } from "@/server/auth";
 
 export default async function TeamsPage({
   params,
+  searchParams,
 }: {
   params: { id: string };
+  searchParams: { name?: string };
 }) {
   const session = await auth();
   const competitionId = (await params).id;
+  const { name } = await searchParams;
   const competition = await api.competition.getById({
     id: competitionId,
   });
@@ -72,6 +75,7 @@ export default async function TeamsPage({
           schools={schools}
           competitionId={competitionId}
           accountId={session!.user.id}
+          teamName={name}
         />
       </main>
     </>

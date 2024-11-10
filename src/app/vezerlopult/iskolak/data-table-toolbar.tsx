@@ -8,26 +8,16 @@ import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
 import { DataTableFacetedFilter } from "@/components/ui/data-table-faceted-filter";
 
-export function DataTableToolbar<TData>({
-  table,
-  schools,
-  teamName,
-}: {
-  table: Table<TData>;
-  schools: string[];
-  teamName?: string;
-}) {
+export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const [searchInput, setSearchInput] = React.useState<string>(teamName ?? "");
+  const [searchInput, setSearchInput] = React.useState<string>("");
   const router = useRouter();
   const pathname = usePathname();
 
   React.useEffect(() => {
-    if (teamName) {
-      setSearchInput(teamName);
-      table.getColumn("name")?.setFilterValue(teamName);
-    }
-  }, [teamName, table]);
+    setSearchInput("");
+    table.getColumn("name")?.setFilterValue("");
+  }, [table]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
@@ -69,35 +59,11 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Csapat keresése..."
+          placeholder="Iskola keresése..."
           value={searchInput}
           onChange={handleSearchChange}
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Státusz"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("schoolName") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("schoolName")}
-            title="Iskola"
-            options={schools.map((school) => ({
-              label: school,
-              value: school,
-            }))}
-          />
-        )}
-        {table.getColumn("coaches") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("coaches")}
-            title="Felkészítő tanárok"
-            options={coaches}
-          />
-        )}
         {isFiltered && (
           <Button
             variant="ghost"

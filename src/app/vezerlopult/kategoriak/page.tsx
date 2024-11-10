@@ -9,21 +9,6 @@ import { CategoryWithDetails } from "@/server/api/routers/category";
 export default async function CategoriesPage() {
   const categories = await api.category.getAllWithDetails();
 
-  // categories: ({
-  //     competitions: {
-  //         description: string;
-  //         id: string;
-  //         name: string;
-  //         image: string;
-  //         maxTeamSize: number;
-  //         deadline: Date;
-  //     }[];
-  // } & {
-  //     description: string;
-  //     id: string;
-  //     name: string;
-  // })[]
-
   return (
     <>
       <div className="flex items-center justify-between">
