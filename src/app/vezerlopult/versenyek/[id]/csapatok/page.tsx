@@ -44,28 +44,27 @@ export default async function TeamsPage({
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <div className="flex items-center justify-between">
-          <PageTitle
-            Icon={Users}
-            fromColor="from-indigo-300"
-            toColor="to-indigo-400"
-            title="Jelentkező Csapatok"
-            links={[
-              { href: "/vezerlopult/versenyek", label: "Versenyek" },
-              {
-                href: `/vezerlopult/versenyek/${competitionId}/`,
-                label: (competition?.name ?? competitionId) as string,
-              },
-              {
-                href: `/vezerlopult/versenyek/${competitionId}/csapatok`,
-                label: "Csapatok",
-              },
-            ]}
-          />
-          <ExportCSV data={csvData} filename={csvFilename} />
-        </div>
-      </header>
+      <div className="flex items-center justify-between">
+        <PageTitle
+          Icon={Users}
+          fromColor="from-indigo-300"
+          toColor="to-indigo-400"
+          title="Jelentkező Csapatok"
+          links={[
+            { href: "/vezerlopult/versenyek", label: "Versenyek" },
+            {
+              href: `/vezerlopult/versenyek/${competitionId}/`,
+              label: (competition?.name ?? competitionId) as string,
+            },
+            {
+              href: `/vezerlopult/versenyek/${competitionId}/csapatok`,
+              label: "Csapatok",
+            },
+          ]}
+        />
+        <ExportCSV data={csvData} filename={csvFilename} />
+      </div>
+
       <main className="px-4">
         <DataTable
           columns={columns}

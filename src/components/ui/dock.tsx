@@ -1,9 +1,6 @@
 import React from "react";
-import { Button } from "./button";
-import { Bell, PanelLeft } from "lucide-react";
 import NotificationCenter from "../vezerlopult/notification-center/notification-center";
 import { SidebarTrigger } from "./sidebar";
-import { Separator } from "./separator";
 import { cn } from "@/lib/utils";
 
 export default function DashboardDock() {

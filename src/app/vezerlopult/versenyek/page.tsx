@@ -10,27 +10,25 @@ export default async function CompetitionsPage() {
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <div className="flex items-center justify-between">
-          <PageTitle
-            Icon={Trophy}
-            fromColor="from-indigo-300"
-            toColor="to-indigo-400"
-            title="Versenyek"
-            links={[
-              {
-                href: "/vezerlopult/versenyek",
-                label: "Versenyek",
-              },
-            ]}
-          />
-          <Button asChild>
-            <Link href="/vezerlopult/versenyek/uj">
-              <Plus /> Új verseny létrehozása
-            </Link>
-          </Button>
-        </div>
-      </header>
+      <div className="flex items-center justify-between">
+        <PageTitle
+          Icon={Trophy}
+          fromColor="from-indigo-300"
+          toColor="to-indigo-400"
+          title="Versenyek"
+          links={[
+            {
+              href: "/vezerlopult/versenyek",
+              label: "Versenyek",
+            },
+          ]}
+        />
+        <Button asChild>
+          <Link href="/vezerlopult/versenyek/uj">
+            <Plus /> Új verseny létrehozása
+          </Link>
+        </Button>
+      </div>
 
       <main className="px-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2">

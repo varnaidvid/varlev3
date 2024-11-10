@@ -8,16 +8,6 @@ import {
   BreadcrumbSeparator,
 } from "./breadcrumb";
 import Link from "next/link";
-import NotificationCenter from "../vezerlopult/notification-center/notification-center";
-import { Button } from "./button";
-import { SidebarTrigger } from "./sidebar";
-import { ClientOnly } from "../client-only";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./tooltip";
 
 interface ILink {
   href: string;
