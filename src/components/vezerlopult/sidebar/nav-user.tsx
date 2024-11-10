@@ -73,13 +73,6 @@ export function NavUser({ session }: { session: Session }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Cog />
-                Beállítások
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link href="/kijelentkezes">
                 <LogOut />

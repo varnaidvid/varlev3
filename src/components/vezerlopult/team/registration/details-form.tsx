@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Plus, Trash2, ArrowRight, ArrowLeft } from "lucide-react";
+import {
+  Box,
+  Plus,
+  Trash2,
+  ArrowRight,
+  ArrowLeft,
+  Loader2,
+} from "lucide-react";
 import {
   CardContent,
   CardDescription,
@@ -23,9 +30,9 @@ import { z } from "zod";
 import { formTwoSchema } from "@/lib/zod/team-registration";
 import { School, SubCategory, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
-import SelectSchool from "../../../ui/select-school";
-import { Checkbox } from "../../../ui/checkbox";
-import { Label } from "../../../ui/label";
+import SelectSchool from "@/components/ui/select-school";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 export function TeamDetailsForm({
@@ -35,6 +42,7 @@ export function TeamDetailsForm({
   onSubmit,
   onBack,
   schools,
+  pending = false,
 }: {
   technologies: Technology[];
   subCategories: SubCategory[];
@@ -42,6 +50,7 @@ export function TeamDetailsForm({
   onSubmit: () => void;
   onBack: () => void;
   schools: School[];
+  pending?: boolean;
 }) {
   const addCoach = () => {
     form.setValue("coaches", [...form.getValues("coaches"), ""]);
@@ -99,6 +108,7 @@ export function TeamDetailsForm({
                   <SelectSchool
                     schools={schools}
                     onSelect={(schoolId) => form.setValue("school", schoolId)}
+                    initialSchool={form.watch("school")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -247,17 +257,22 @@ export function TeamDetailsForm({
           />
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit">
+          <Button className="group w-full" type="submit" disabled={pending}>
             Következő lépés
-            <ArrowRight className="ml-2 h-4 w-4" />
+            {pending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            )}
           </Button>
           <Button
             variant="outline"
             className="w-full"
             type="button"
             onClick={onBack}
+            disabled={pending}
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Vissza
           </Button>
         </CardFooter>

@@ -18,6 +18,7 @@ import {
   School,
   Blocks,
   Cpu,
+  Mail,
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
@@ -73,7 +74,7 @@ export function SummaryStep({
 }) {
   const {
     account: { password, password2, username },
-    members: { members, reserveMember },
+    members: { members, reserveMember, emails },
     team: { coaches, name, school, subCategory, technologies },
     competitionId,
   } = formData;
@@ -127,6 +128,27 @@ export function SummaryStep({
                 <b>{reserveMember.year}</b> (Póttag)
               </li>
             )}
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="mb-1 flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <Mail className="size-6 rounded-full border p-[3px]" />
+            Email címek
+          </h2>
+          <ul className="list-disc pl-5 text-gray-600">
+            {emails?.map((email) => (
+              <li key={email} className="text-sm">
+                <b>{email}</b>
+              </li>
+            ))}
+
+            {!emails ||
+              (emails?.length === 0 && (
+                <li className="text-sm">
+                  <b>Nincs megadva email cím.</b>
+                </li>
+              ))}
           </ul>
         </div>
 

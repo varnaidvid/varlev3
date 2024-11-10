@@ -52,10 +52,10 @@ export function SummaryStep({
           <ExtraIcon
             Icon={CheckCircle2}
             variant="small"
-            fromColor="from-green-500/20"
-            toColor="to-emerald-400/20"
+            fromColor="from-red-500/20"
+            toColor="to-orange-400/40"
           />
-          Regisztráció összegzése
+          Hiánypótlás összegzése
         </CardTitle>
         <CardDescription className="!mt-4 text-justify">
           Kérjük, ellenőrizd a megadott adatokat a véglegesítés előtt.
