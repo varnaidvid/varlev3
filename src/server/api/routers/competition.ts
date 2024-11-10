@@ -162,13 +162,7 @@ export const competitionRouter = createTRPCRouter({
         deadline: z.date(),
         technologies: z.array(z.string()),
         categories: z.array(z.string()),
-        subCategories: z.array(
-          z.object({
-            id: z.string().optional(),
-            name: z.string(),
-            teamCount: z.number().optional(),
-          }),
-        ),
+        subCategories: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -185,41 +179,11 @@ export const competitionRouter = createTRPCRouter({
           categories: {
             set: categories.map((categoryId) => ({ id: categoryId })),
           },
+          subCategories: {
+            set: subCategories.map((subCategoryId) => ({ id: subCategoryId })),
+          },
         },
       });
-
-      const existingSubCategories = await ctx.db.subCategory.findMany({
-        where: { competitionId: input.id },
-      });
-
-      const subCategoryIdsToDelete = existingSubCategories
-        .filter(
-          (subCategory) =>
-            !subCategories.some((sc) => sc.id === subCategory.id),
-        )
-        .map((subCategory) => subCategory.id);
-
-      await ctx.db.subCategory.deleteMany({
-        where: { id: { in: subCategoryIdsToDelete } },
-      });
-
-      const subCategoryPromises = subCategories.map((subCategory) => {
-        if (subCategory.id) {
-          return ctx.db.subCategory.update({
-            where: { id: subCategory.id },
-            data: { name: subCategory.name },
-          });
-        } else {
-          return ctx.db.subCategory.create({
-            data: {
-              name: subCategory.name,
-              competitionId: competition.id,
-            },
-          });
-        }
-      });
-
-      await Promise.all(subCategoryPromises);
 
       return competition;
     }),
