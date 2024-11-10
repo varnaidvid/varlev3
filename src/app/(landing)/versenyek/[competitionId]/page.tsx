@@ -2,7 +2,6 @@ import { api } from "@/trpc/server";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import JelentkezesButton from "@/components/JelentkezesButton";
-import { TeamLeaderboard } from "./team-leaderboard";
 import {
   Card,
   CardContent,
