@@ -17,7 +17,15 @@ export const competitionRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.competition.findUnique({
         where: { id: input.id },
-        include: { technologies: true, categories: true, subCategories: true },
+        include: {
+          technologies: true,
+          categories: true,
+          subCategories: {
+            include: {
+              teams: true,
+            },
+          },
+        },
       });
     }),
 
@@ -84,7 +92,16 @@ export const competitionRouter = createTRPCRouter({
 
   getAllWithDetails: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.competition.findMany({
-      include: { teams: true, technologies: true, categories: true },
+      include: {
+        teams: true,
+        technologies: true,
+        categories: true,
+        subCategories: {
+          include: {
+            teams: true,
+          },
+        },
+      },
     });
   }),
 
@@ -99,10 +116,12 @@ export const competitionRouter = createTRPCRouter({
         deadline: z.date(),
         technologies: z.array(z.string()),
         categories: z.array(z.string()),
+        subCategories: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { technologies, categories, ...competitionData } = input;
+      const { technologies, categories, subCategories, ...competitionData } =
+        input;
 
       const competition = await ctx.db.competition.create({
         data: {
@@ -115,6 +134,17 @@ export const competitionRouter = createTRPCRouter({
           },
         },
       });
+
+      const subCategoryPromises = subCategories.map((subCategory) =>
+        ctx.db.subCategory.create({
+          data: {
+            name: subCategory,
+            competitionId: competition.id,
+          },
+        }),
+      );
+
+      await Promise.all(subCategoryPromises);
 
       return competition;
     }),
@@ -130,10 +160,12 @@ export const competitionRouter = createTRPCRouter({
         deadline: z.date(),
         technologies: z.array(z.string()),
         categories: z.array(z.string()),
+        subCategories: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { technologies, categories, ...competitionData } = input;
+      const { technologies, categories, subCategories, ...competitionData } =
+        input;
 
       const competition = await ctx.db.competition.update({
         where: { id: input.id },
@@ -144,6 +176,9 @@ export const competitionRouter = createTRPCRouter({
           },
           categories: {
             set: categories.map((categoryId) => ({ id: categoryId })),
+          },
+          subCategories: {
+            set: subCategories.map((subCategoryId) => ({ id: subCategoryId })),
           },
         },
       });

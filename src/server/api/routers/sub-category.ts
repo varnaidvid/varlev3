@@ -1,49 +1,47 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { z } from "zod";
 import { inferRouterOutputs } from "@trpc/server";
+import { SubCategory } from "@prisma/client";
 
-export const categoryRouter = createTRPCRouter({
+export const subCategoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.category.findMany();
+    return await ctx.db.subCategory.findMany();
   }),
 
   getAllWithDetails: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.db.category.findMany({
-      include: {
-        competitions: true,
-      },
+    return await ctx.db.subCategory.findMany({
+      include: { Competition: true, teams: true },
     });
   }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.db.category.findUnique({
+      return await ctx.db.subCategory.findUnique({
         where: { id: input.id },
-        include: {
-          competitions: true,
-        },
       });
     }),
 
   delete: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.category.delete({ where: { id: input.id } });
+      return await ctx.db.subCategory.delete({ where: { id: input.id } });
     }),
 
   create: publicProcedure
     .input(
       z.object({
         name: z.string(),
-        description: z.string(),
+        competitionId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.category.create({
+      return await ctx.db.subCategory.create({
         data: {
           name: input.name,
-          description: input.description,
+          Competition: {
+            connect: { id: input.competitionId },
+          },
         },
       });
     }),
@@ -53,20 +51,19 @@ export const categoryRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         name: z.string(),
-        description: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.category.update({
+      return await ctx.db.subCategory.update({
         where: { id: input.id },
         data: {
           name: input.name,
-          description: input.description,
         },
       });
     }),
 });
 
-type categoryRouterOutputs = inferRouterOutputs<typeof categoryRouter>;
+export type SubCategoryRouter = inferRouterOutputs<typeof subCategoryRouter>;
 
-export type CategoryWithDetails = categoryRouterOutputs["getAllWithDetails"][0];
+export type SubCategoryWithDetails = SubCategory &
+  SubCategoryRouter["getAllWithDetails"][0];

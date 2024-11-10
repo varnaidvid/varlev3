@@ -8,6 +8,7 @@ import { Save, Trophy } from "lucide-react";
 export default async function NewCompetition() {
   const categories = await api.category.getAll();
   const technologies = await api.technology.getAll();
+  const subCategories = await api.subCategory.getAll();
 
   return (
     <>
@@ -42,6 +43,7 @@ export default async function NewCompetition() {
           <CreateCompetitionForm
             categories={categories}
             technologies={technologies}
+            subCategories={subCategories}
           />
         </Card>
       </main>

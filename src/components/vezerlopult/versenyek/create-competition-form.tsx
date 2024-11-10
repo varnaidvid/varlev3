@@ -34,7 +34,7 @@ import { z } from "zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompetitionSchema } from "@/lib/zod/competition";
-import { Technology, Category } from "@prisma/client";
+import { Technology, Category, SubCategory } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { DatePickerField } from "@/components/ui/date-picker-field";
@@ -48,13 +48,16 @@ import { uploadFile } from "@/utils/upload-file";
 import { createCompetition } from "../../../app/vezerlopult/versenyek/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import CustomTagInput from "./custom-tag-input";
 
 export function CreateCompetitionForm({
   technologies,
   categories,
+  subCategories,
 }: {
   technologies: Technology[];
   categories: Category[];
+  subCategories: SubCategory[];
 }) {
   const router = useRouter();
 
@@ -70,6 +73,7 @@ export function CreateCompetitionForm({
       deadline: undefined,
       technologies: [],
       categories: [],
+      subCategories: [],
     },
   });
 
@@ -196,7 +200,7 @@ export function CreateCompetitionForm({
             name="deadline"
             render={({ field }) => (
               <DatePickerField
-                label="Határidő"
+                label="Jelentkezési határidő *"
                 description="Kérjük, válasszon egy határidőt."
                 {...field}
               />
@@ -243,6 +247,29 @@ export function CreateCompetitionForm({
                 </FormControl>
                 <FormDescription>
                   Válassza ki melyik kategóriákba tartozzon a verseny.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subCategories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alkategóriák létrehozása *</FormLabel>
+                <FormControl>
+                  <CustomTagInput
+                    {...field}
+                    value={field.value.map((tag) => ({
+                      id: createId(),
+                      text: tag,
+                    }))}
+                  />
+                </FormControl>
+                <FormDescription>
+                  Adja meg az alkategóriákat, amelyeket létre szeretne hozni.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

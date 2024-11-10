@@ -129,6 +129,7 @@ export const teamsRouter = createTRPCRouter({
           members: true,
           coaches: true,
           technologies: true,
+          SubCategory: true,
         },
       });
     }),
@@ -252,6 +253,24 @@ export const teamsRouter = createTRPCRouter({
               emails: true,
             },
           },
+        },
+      });
+    }),
+
+  updateTeamStatus: publicProcedure
+    .input(
+      z.object({
+        teamId: z.string().cuid(),
+        status: z.nativeEnum(ApplicationStatus),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.team.update({
+        where: {
+          id: input.teamId,
+        },
+        data: {
+          status: input.status,
         },
       });
     }),

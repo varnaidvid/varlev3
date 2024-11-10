@@ -33,12 +33,16 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   schools: string[];
+  competitionId: string;
+  accountId: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   schools,
+  competitionId,
+  accountId,
 }: DataTableProps<TData, TValue>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -104,7 +108,11 @@ export function DataTable<TData, TValue>({
                     </TableCell>
                   ))}
                   <TableCell>
-                    <DataTableRowActions row={row} />
+                    <DataTableRowActions
+                      row={row}
+                      competitionId={competitionId}
+                      accountId={accountId}
+                    />
                   </TableCell>
                 </TableRow>
               ))

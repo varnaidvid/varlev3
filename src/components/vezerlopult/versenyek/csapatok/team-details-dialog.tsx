@@ -31,10 +31,11 @@ import { ApplicationStatus } from "@prisma/client";
 import { ApplicationStatusBadge } from "@/components/ui/application-status";
 import { ImagePreviewOverlay } from "./image-preview-overlay";
 import { downloadFile } from "@/utils/file-helpers";
+import { toast } from "sonner";
 
 interface ApplicationDetailDialogProps {
   teamId: string;
-  onApprove: () => void;
+  onApprove: (id: string) => void;
   onReject: (reason: string) => void;
 }
 
@@ -47,6 +48,7 @@ export function TeamDetailDialog({
   const [rejectionReason, setRejectionReason] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+  const [isApproveLoading, setIsApproveLoading] = useState(false);
 
   const {
     data: team,
@@ -54,12 +56,31 @@ export function TeamDetailDialog({
     error,
   } = api.team.getTeamById.useQuery({ teamId }, { enabled: isDialogOpen });
 
+  const isRegistered = team?.status === "REGISTERED";
+
   console.log(team);
 
   const handleReject = () => {
     onReject(rejectionReason);
     setIsRejectDialogOpen(false);
     setRejectionReason("");
+  };
+
+  const handleApprove = async () => {
+    if (team) {
+      setIsApproveLoading(true);
+      toast.loading("Jóváhagyás folyamatban...");
+      try {
+        await onApprove(team.id);
+        toast.success("Jóváhagyás sikeres!");
+      } catch (error) {
+        toast.error("Jóváhagyás sikertelen!");
+      } finally {
+        setIsApproveLoading(false);
+        setIsDialogOpen(false);
+        toast.dismiss();
+      }
+    }
   };
 
   const handleImagePreviewOpen = () => {
@@ -76,7 +97,7 @@ export function TeamDetailDialog({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button size={"sm"} className="flex items-center gap-2">
-            <CheckCircle />
+            <Eye />
             <span>Részletek</span>
           </Button>
         </DialogTrigger>
@@ -260,8 +281,18 @@ export function TeamDetailDialog({
             )}
           </div>
           <DialogFooter className="space-x-2 sm:justify-start">
-            <Button onClick={onApprove} variant="outline" className="flex-1">
-              <CheckCircle className="mr-2 h-4 w-4" /> Jóváhagyás
+            <Button
+              onClick={handleApprove}
+              variant="outline"
+              className="flex-1"
+              disabled={isApproveLoading || isRegistered || isLoading}
+            >
+              {isApproveLoading ? (
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle className="mr-2 h-4 w-4" />
+              )}
+              Jóváhagyás
             </Button>
 
             <Dialog
@@ -269,7 +300,11 @@ export function TeamDetailDialog({
               onOpenChange={setIsRejectDialogOpen}
             >
               <DialogTrigger asChild>
-                <Button variant="destructive" className="flex-1">
+                <Button
+                  variant="destructive"
+                  className="flex-1"
+                  disabled={isRegistered || isLoading || isApproveLoading}
+                >
                   <XCircle className="mr-2 h-4 w-4" /> Elutasítás
                 </Button>
               </DialogTrigger>

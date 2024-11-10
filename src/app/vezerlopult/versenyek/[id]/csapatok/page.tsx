@@ -4,12 +4,14 @@ import { Users } from "lucide-react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import ExportCSV from "@/components/vezerlopult/versenyek/csapatok/export-csv";
+import { auth } from "@/server/auth";
 
 export default async function TeamsPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const session = await auth();
   const competitionId = (await params).id;
   const competition = await api.competition.getById({
     id: competitionId,
@@ -65,7 +67,13 @@ export default async function TeamsPage({
         </div>
       </header>
       <main className="px-4">
-        <DataTable columns={columns} data={teams} schools={schools} />
+        <DataTable
+          columns={columns}
+          data={teams}
+          schools={schools}
+          competitionId={competitionId}
+          accountId={session!.user.id}
+        />
       </main>
     </>
   );

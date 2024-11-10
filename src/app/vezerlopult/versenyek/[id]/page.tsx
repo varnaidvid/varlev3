@@ -2,7 +2,7 @@ import { PageTitle } from "@/components/ui/page-title";
 import { api } from "@/trpc/server";
 import { Trophy } from "lucide-react";
 import { EditCompetitionForm } from "@/components/vezerlopult/versenyek/edit-competition-form";
-import { CompetitionWithDetails } from "@/server/api/routers/competition";
+import { Card } from "@/components/ui/card";
 
 export default async function CompetitionPage({
   params,
@@ -35,12 +35,14 @@ export default async function CompetitionPage({
         />
       </header>
       <main className="px-4">
-        <EditCompetitionForm
-          // @ts-ignore
-          competition={competition}
-          technologies={technologies}
-          categories={categories}
-        />
+        <Card className="mx-auto w-full max-w-3xl">
+          <EditCompetitionForm
+            //@ts-ignore
+            competition={competition}
+            technologies={technologies}
+            categories={categories}
+          />
+        </Card>
       </main>
     </>
   );

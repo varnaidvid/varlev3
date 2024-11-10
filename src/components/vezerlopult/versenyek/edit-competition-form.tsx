@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, ArrowRight, Loader } from "lucide-react";
+import { Box, ArrowRight, Loader, Users } from "lucide-react";
 import {
   CardContent,
   CardDescription,
@@ -25,16 +25,17 @@ import { z } from "zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompetitionSchema } from "@/lib/zod/competition";
-import { Technology, Category } from "@prisma/client";
+import { Technology, Category, SubCategory } from "@prisma/client";
 import NumericInput from "@/components/ui/numeric-input";
 import { ImageUpload } from "./image-upload";
 import MultiSelect from "./multi-select";
-import { updateCompetition } from "@/app/vezerlopult/versenyek/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ContentEditor } from "./content-editor";
 import { DatePickerField } from "@/components/ui/date-picker-field";
 import { CompetitionWithDetails } from "@/server/api/routers/competition";
+import EditTagInput, { Tag } from "./edit-tag-input";
+import { api } from "@/trpc/react";
 
 export function EditCompetitionForm({
   competition,
@@ -46,6 +47,7 @@ export function EditCompetitionForm({
   categories: Category[];
 }) {
   const router = useRouter();
+  const updateCompetitionMutation = api.competition.update.useMutation();
 
   const form = useForm<z.infer<typeof createCompetitionSchema>>({
     resolver: zodResolver(createCompetitionSchema),
@@ -57,6 +59,7 @@ export function EditCompetitionForm({
       deadline: new Date(competition.deadline),
       technologies: competition.technologies.map((tech) => tech.id),
       categories: competition.categories.map((cat) => cat.id),
+      subCategories: competition.subCategories.map((subCat) => subCat.id),
     },
   });
 
@@ -67,7 +70,10 @@ export function EditCompetitionForm({
   ) => {
     setIsSubmitting(true);
     try {
-      await updateCompetition({ ...data, id: competition.id });
+      await updateCompetitionMutation.mutateAsync({
+        ...data,
+        id: competition.id,
+      });
       toast.success("Verseny sikeresen frissítve!");
     } catch (error) {
       console.error("Error updating competition:", error);
@@ -215,6 +221,31 @@ export function EditCompetitionForm({
                 </FormControl>
                 <FormDescription>
                   Válassza ki melyik kategóriákba tartozzon a verseny.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subCategories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alkategóriák *</FormLabel>
+                <FormControl>
+                  <EditTagInput
+                    value={field.value}
+                    subCategories={competition.subCategories}
+                    competitionId={competition.id}
+                    onChange={(tags) =>
+                      field.onChange(tags.map((tag) => tag.id))
+                    }
+                  />
+                </FormControl>
+                <FormDescription>
+                  Adja meg az alkategóriákat, amelyeket létre szeretne hozni
+                  vagy törölni.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
