@@ -7,6 +7,7 @@ import { ClientOnly } from "@/components/client-only";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import FeaturesBlock from "@/components/featuresBlock";
 
 import {
   Accordion,
@@ -29,7 +30,13 @@ export default async function HomePage() {
 
       <Hero />
 
-      <h1 className="p-4 text-3xl font-bold">A legpopulárisabb versenyek</h1>
+      <div className="mt-96"></div>
+
+      <h1 className="px-4 pt-14 text-3xl font-bold z-50">Fő funkciók</h1>
+
+      <FeaturesBlock />
+
+      <h1 className="px-4 py-14 text-3xl font-bold">Legpopulárisabb versenyek</h1>
 
       <CategoryShowcaseCarousel
         competitions={popularCompetitions}
