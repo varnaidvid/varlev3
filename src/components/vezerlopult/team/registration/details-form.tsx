@@ -27,7 +27,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
-import { formTwoSchema } from "@/lib/zod/team-registration";
+import { formTwoSchema } from "@/lib/zod/team-crud";
 import { School, SubCategory, Technology } from "@prisma/client";
 import { UseFormReturn } from "react-hook-form";
 import SelectSchool from "@/components/ui/select-school";

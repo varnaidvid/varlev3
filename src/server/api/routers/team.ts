@@ -1,4 +1,4 @@
-import { updateTeamSchema } from "@/lib/zod/team-registration";
+import { updateTeamSchema } from "@/lib/zod/team-crud";
 import {
   createTRPCRouter,
   protectedProcedure,

@@ -9,7 +9,7 @@ import {
   formOneSchema,
   formTwoSchema,
   formThreeSchema,
-} from "@/lib/zod/team-registration";
+} from "@/lib/zod/team-crud";
 import { Card } from "@/components/ui/card";
 import { AccountForm } from "@/components/vezerlopult/team/registration/account-form";
 import { TeamDetailsForm } from "@/components/vezerlopult/team/registration/details-form";
@@ -88,6 +88,10 @@ export default function RegisterForm({
     api.team.checkIfTeamNameAvailable.useQuery({
       name: formTwo.watch("name"),
     });
+  const { data: unavailableEmails, isFetching: fetch3 } =
+    api.auth.checkIfAnyOfTheEmailArrayIsNotAvailable.useQuery({
+      emails: formThree.watch("emails") ?? [],
+    });
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = () => {
@@ -128,6 +132,23 @@ export default function RegisterForm({
         if (isValid) setStep(3);
       } else if (step === 3) {
         const isValid = await formThree.trigger();
+        if (!isValid) return;
+
+        if (unavailableEmails && unavailableEmails.length > 0) {
+          for (const email of unavailableEmails) {
+            const index = formThree.getValues("emails")?.indexOf(email);
+
+            if (index !== undefined && index !== -1) {
+              formThree.setError(`emails.${index}`, {
+                type: "manual",
+                message: "Ez az e-mail cím már használatban van.",
+              });
+            }
+          }
+
+          return;
+        }
+
         if (isValid) setStep(4);
       }
     });
@@ -201,6 +222,7 @@ export default function RegisterForm({
         <Card className="mx-auto w-full max-w-lg">
           <TeamMembersForm
             form={formThree}
+            pending={pending || fetch3}
             competition={competition}
             memberFields={memberFields}
             memberAppend={memberAppend}

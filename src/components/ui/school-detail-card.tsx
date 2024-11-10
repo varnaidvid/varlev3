@@ -50,6 +50,9 @@ export default function SchoolDetailCard({
             Kapcsolattartó
           </h2>
           <p className="text-sm text-gray-600">{data?.contactName}</p>
+          <p className="text-sm text-gray-600">
+            {data?.account.emails[0]?.email}
+          </p>
         </div>
 
         <div>
@@ -103,26 +106,6 @@ export default function SchoolDetailCard({
           ) : (
             <p className="text-sm text-gray-500">
               Nincsenek még felkészítő tanárok
-            </p>
-          )}
-        </div>
-
-        <div>
-          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
-            <Mail className="size-6 rounded-full border p-[3px]" />
-            Értesítési email címek
-          </h2>
-          {data?.account.emails && data.account.emails.length > 0 ? (
-            <ul className="list-disc pl-5 text-gray-600">
-              {data.account.emails.map((email) => (
-                <li key={email.id} className="text-sm">
-                  {email.email}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-sm text-gray-500">
-              Nem adtatok meg még értesítendő email címet
             </p>
           )}
         </div>

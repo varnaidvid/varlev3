@@ -12,7 +12,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "nagyjanos@varlev3.hu",
             },
           },
           username: "nagyjanos",
@@ -30,7 +30,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "kiseva@varlev3.hu",
             },
           },
           username: "kiseva",
@@ -51,7 +51,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "neumanngimi@varlev3.hu",
             },
           },
           username: "neumanngimi",
@@ -71,7 +71,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "jedlik@varlev3.hu",
             },
           },
           username: "jedlik",
@@ -233,7 +233,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "kodvadaszok@varlev3.hu",
             },
           },
           username: "kodvadaszok",
@@ -264,7 +264,7 @@ async function main() {
   await prisma.team.create({
     data: {
       name: "BitMesterek",
-      status: "APPROVED_BY_SCHOOL",
+      status: "WAITING_FOR_SCHOOL_APPROVAL",
       Competition: {
         connect: { id: competition.id },
       },
@@ -272,13 +272,13 @@ async function main() {
         connect: [{ id: tech3.id }, { id: tech4.id }],
       },
       school: {
-        connect: { id: school2.id },
+        connect: { id: school1.id },
       },
       account: {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "bitmesterek@varlev3.hu",
             },
           },
           username: "bitmesterek",
@@ -322,7 +322,7 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "thevarlev3@gmail.com",
+              email: "webvirtuozok@varlev3.hu",
             },
           },
           username: "webvirtuozok",

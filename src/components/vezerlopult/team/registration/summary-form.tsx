@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
-import { teamRegistrationSchema } from "@/lib/zod/team-registration";
+import { teamRegistrationSchema } from "@/lib/zod/team-crud";
 import { Badge } from "@/components/ui/badge";
 
 const SuccessCard = () => {

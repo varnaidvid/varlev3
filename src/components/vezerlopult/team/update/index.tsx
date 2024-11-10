@@ -14,7 +14,7 @@ import {
   formThreeSchema,
   formTwoSchema,
   updateTeamSchema,
-} from "@/lib/zod/team-registration";
+} from "@/lib/zod/team-crud";
 import { School } from "@prisma/client";
 import { useRouter } from "next/navigation";
 
@@ -77,6 +77,10 @@ export default function EditForm({
     api.team.checkIfTeamNameAvailable.useQuery({
       name: formTwo.watch("name"),
     });
+  const { data: unavailableEmails, isFetching: fetch2 } =
+    api.auth.checkIfAnyOfTheEmailArrayIsNotAvailable.useQuery({
+      emails: formThree.watch("emails") ?? [],
+    });
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = async () => {
@@ -106,6 +110,25 @@ export default function EditForm({
         if (isValid) setStep(2);
       } else if (step === 2) {
         const isValid = await formThree.trigger();
+
+        if (unavailableEmails && unavailableEmails.length > 0) {
+          for (const email of unavailableEmails) {
+            if (initialData.account.emails.some((e) => e.email === email)) {
+              continue;
+            } else {
+              const index = formThree.getValues("emails")?.indexOf(email);
+
+              if (index !== undefined && index !== -1) {
+                formThree.setError(`emails.${index}`, {
+                  type: "manual",
+                  message: "Ez az e-mail cím már használatban van.",
+                });
+              }
+            }
+          }
+          return;
+        }
+
         if (isValid) setStep(3);
       }
     });
@@ -120,6 +143,7 @@ export default function EditForm({
         name: formThree.getValues().reserveMember?.name,
         year: formThree.getValues().reserveMember?.year,
       },
+      emails: formThree.getValues().emails,
     },
   });
 
@@ -165,6 +189,7 @@ export default function EditForm({
       {step === 2 && (
         <Card className="mx-auto w-full max-w-lg">
           <TeamMembersForm
+            pending={pending || fetch2}
             form={formThree as any}
             competition={initialData.Competition}
             memberFields={memberFields}

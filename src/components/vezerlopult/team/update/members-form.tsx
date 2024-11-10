@@ -15,17 +15,25 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Users2, ArrowRight, Plus, ArrowLeft, Trash2 } from "lucide-react";
+import {
+  Users2,
+  ArrowRight,
+  Plus,
+  ArrowLeft,
+  Trash2,
+  Loader2,
+} from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { formThreeSchema } from "@/lib/zod/team-registration";
+import { formThreeSchema } from "@/lib/zod/team-crud";
 import { Competition } from "@prisma/client";
 import TeamMember from "../../../ui/team-member";
 import { Input } from "@/components/ui/input";
 
 export function TeamMembersForm({
   form,
+  pending,
   onSubmit,
   onBack,
   competition,
@@ -33,6 +41,7 @@ export function TeamMembersForm({
   memberAppend,
   memberRemove,
 }: {
+  pending: boolean;
   form: UseFormReturn<z.infer<typeof formThreeSchema>>;
   onSubmit: () => void;
   onBack: () => void;
@@ -113,7 +122,7 @@ export function TeamMembersForm({
           <div>
             <FormLabel>Pót csapattag</FormLabel>
             <FormDescription>
-              Adja meg a pót csapattag nevét és évfolyamát
+              Szintén teljes név és évfolyam szükséges
             </FormDescription>
             <TeamMember
               index="reserved"
@@ -166,9 +175,13 @@ export function TeamMembersForm({
           </div>
         </CardContent>
         <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="group w-full" type="submit">
+          <Button className="group w-full" type="submit" disabled={pending}>
             Következő lépés
-            <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            {pending ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <ArrowRight className="h-4 w-4 transition-all group-hover:ml-1" />
+            )}
           </Button>
           <Button
             variant="outline"

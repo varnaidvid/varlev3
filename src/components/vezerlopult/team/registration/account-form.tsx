@@ -22,7 +22,7 @@ import { ExtraIcon } from "@/components/ui/extra-icon";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { formOneSchema } from "@/lib/zod/team-registration";
+import { formOneSchema } from "@/lib/zod/team-crud";
 
 export function AccountForm({
   form,

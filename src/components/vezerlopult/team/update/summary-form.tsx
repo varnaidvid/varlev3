@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 import { z } from "zod";
-import { updateTeamSchema } from "@/lib/zod/team-registration";
+import { updateTeamSchema } from "@/lib/zod/team-crud";
 import { Badge } from "../../../ui/badge";
 
 export function SummaryStep({

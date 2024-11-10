@@ -5,7 +5,7 @@ import { AccountType, Competition } from "@prisma/client";
 import {
   teamRegistrationSchema,
   TeamRegistrationType,
-} from "@/lib/zod/team-registration";
+} from "@/lib/zod/team-crud";
 import { saltAndHashPassword } from "@/utils/password";
 import withRole from "@/utils/withRole";
 import { id } from "date-fns/locale";
