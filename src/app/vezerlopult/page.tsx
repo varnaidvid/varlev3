@@ -5,6 +5,7 @@ import NotificationCenter from "@/components/vezerlopult/notification-center/not
 import TeamDashboard from "./team-dashboard";
 import { api } from "@/trpc/server";
 import { Team } from "@prisma/client";
+import SchoolDashboard from "./school-dashboard";
 
 // const chartData = [
 //   { key: "January", value: 186 },
@@ -39,6 +40,7 @@ export default async function Page() {
       </header>
 
       {session?.user.type === "TEAM" && <TeamDashboard />}
+      {session?.user.type === "SCHOOL" && <SchoolDashboard />}
     </>
   );
 }

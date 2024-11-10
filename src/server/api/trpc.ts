@@ -148,18 +148,18 @@ export const withRole = (allowedTypes: AccountType[]) =>
 
 export const withOwner = async ({
   ctx,
-  accountIdToBeModified,
+  accountId,
   teamId,
   organizerId,
   schoolId,
 }: {
   ctx: any;
-  accountIdToBeModified?: string;
+  accountId?: string;
   teamId?: string;
   organizerId?: string;
   schoolId?: string;
 }) => {
-  let accountToBeModified = accountIdToBeModified;
+  let accountToBeModified = accountId;
 
   if (teamId) {
     const team = await ctx.db.team.findFirst({
