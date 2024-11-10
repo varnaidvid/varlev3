@@ -71,7 +71,7 @@ export default async function TeamsPage({
       <main className="px-4">
         <DataTable
           columns={columns}
-          data={teams}
+          initialData={teams}
           schools={schools}
           competitionId={competitionId}
           accountId={session!.user.id}

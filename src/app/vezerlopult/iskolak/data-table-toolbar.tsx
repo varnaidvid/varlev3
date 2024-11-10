@@ -39,7 +39,7 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
       label: "Szervezői jóváhagyásra vár",
       value: "WAITING_FOR_ORGANIZER_APPROVAL",
     },
-    { label: "Szervező által elutasított", value: "REJECTED_BY_ORGANIZER" },
+    { label: "Hiánypótlásra vár", value: "REJECTED_BY_ORGANIZER" },
     { label: "Regisztrált", value: "REGISTERED" },
   ];
 
