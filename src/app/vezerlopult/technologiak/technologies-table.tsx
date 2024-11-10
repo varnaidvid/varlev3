@@ -36,12 +36,14 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { TechnologyWithDetails } from "@/server/api/routers/technology";
 
 export default function TechnologiesTable({
   technologies,
 }: {
-  technologies: Technology[];
+  technologies: TechnologyWithDetails[];
 }) {
+  const [data, setData] = useState<TechnologyWithDetails[]>(technologies);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTechnologyId, setSelectedTechnologyId] = useState<
     string | null
@@ -51,6 +53,9 @@ export default function TechnologiesTable({
   const handleDelete = async () => {
     if (selectedTechnologyId) {
       await deleteTechnologyMutation.mutateAsync({ id: selectedTechnologyId });
+      setData((prevData) =>
+        prevData.filter((technology) => technology.id !== selectedTechnologyId),
+      );
       setOpenDialog(false);
       setSelectedTechnologyId(null);
     }
@@ -66,40 +71,39 @@ export default function TechnologiesTable({
       <TableHeader>
         <TableRow>
           <TableHead>Név</TableHead>
+          <TableHead>Csapatok száma</TableHead>
+          <TableHead>Versenyek száma</TableHead>
           <TableHead className="text-right">Műveletek</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {technologies.map((technology) => (
+        {data.map((technology) => (
           <TableRow key={technology.id}>
             <TableCell className="font-medium">{technology.name}</TableCell>
+            <TableCell>{technology.teams.length}</TableCell>
+            <TableCell>{technology.competitions.length}</TableCell>
             <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="h-8 w-8 p-0">
-                    <span className="sr-only">Műveletek megnyitása</span>
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <Link
-                      href={`/vezerlopult/technologiak/${technology.id}`}
-                      className="flex items-center"
-                    >
-                      <Pencil className="mr-2 h-4 w-4" />
-                      <span>Szerkesztés</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-red-600"
-                    onClick={() => openDeleteDialog(technology.id)}
-                  >
-                    <Trash className="mr-2 h-4 w-4" />
-                    <span>Törlés</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Link
+                href={`/vezerlopult/technologiak/${technology.id}`}
+                className="mr-2"
+              >
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <Pencil className="h-4 w-4" />
+                  <span className="sr-only">Szerkesztés</span>
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0 text-red-600"
+                onClick={() => openDeleteDialog(technology.id)}
+                disabled={
+                  technology.teams.length > 0 ||
+                  technology.competitions.length > 0
+                }
+              >
+                <Trash className="h-4 w-4" />
+                <span className="sr-only">Törlés</span>
+              </Button>
             </TableCell>
           </TableRow>
         ))}
@@ -110,7 +114,7 @@ export default function TechnologiesTable({
             <AlertDialogTitle>
               Biztosan törölni szeretnéd a{" "}
               {
-                technologies.find(
+                data.find(
                   (technology) => technology.id === selectedTechnologyId,
                 )?.name
               }{" "}

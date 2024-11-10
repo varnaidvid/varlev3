@@ -2,14 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
 import { CreateTechnologyForm } from "@/components/vezerlopult/technologiak/create-technology-form";
-import { Folder } from "lucide-react";
+import { Cpu } from "lucide-react";
 
 export default function NewTechnology() {
   return (
     <>
       <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
         <PageTitle
-          Icon={Folder}
+          Icon={Cpu}
           fromColor="from-indigo-300"
           toColor="to-indigo-400"
           title="Technológia Létrehozása"
@@ -27,7 +27,7 @@ export default function NewTechnology() {
       </header>
 
       <main className="px-4 pb-16">
-        <Card className="mx-auto w-full max-w-3xl">
+        <Card className="mx-auto w-full max-w-lg">
           <CreateTechnologyForm />
         </Card>
       </main>

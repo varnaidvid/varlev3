@@ -27,7 +27,7 @@ export default function NewCategory() {
       </header>
 
       <main className="px-4 pb-16">
-        <Card className="mx-auto w-full max-w-3xl">
+        <Card className="mx-auto w-full max-w-lg">
           <CreateCategoryForm />
         </Card>
       </main>

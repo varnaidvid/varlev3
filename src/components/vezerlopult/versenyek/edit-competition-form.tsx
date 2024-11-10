@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, ArrowRight, Loader } from "lucide-react";
+import { Box, ArrowRight, Loader, Users } from "lucide-react";
 import {
   CardContent,
   CardDescription,
@@ -35,17 +35,16 @@ import { useRouter } from "next/navigation";
 import { ContentEditor } from "./content-editor";
 import { DatePickerField } from "@/components/ui/date-picker-field";
 import { CompetitionWithDetails } from "@/server/api/routers/competition";
+import EditTagInput, { Tag } from "./edit-tag-input";
 
 export function EditCompetitionForm({
   competition,
   technologies,
   categories,
-  subCategories,
 }: {
   competition: CompetitionWithDetails;
   technologies: Technology[];
   categories: Category[];
-  subCategories: SubCategory[];
 }) {
   const router = useRouter();
 
@@ -231,16 +230,17 @@ export function EditCompetitionForm({
               <FormItem>
                 <FormLabel>Alkategóriák *</FormLabel>
                 <FormControl>
-                  <MultiSelect
-                    form={form}
-                    name="subCategories"
-                    items={subCategories}
-                    placeholder="Válasszon alkategóriákat..."
-                    noItemsText="Nincs találat."
+                  <EditTagInput
+                    value={field.value}
+                    subCategories={competition.subCategories}
+                    onChange={(tags) =>
+                      field.onChange(tags.map((tag) => tag.text))
+                    }
                   />
                 </FormControl>
                 <FormDescription>
-                  Válassza ki milyen alkategóriái legyenek a versenynek.
+                  Adja meg az alkategóriákat, amelyeket létre szeretne hozni
+                  vagy törölni.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

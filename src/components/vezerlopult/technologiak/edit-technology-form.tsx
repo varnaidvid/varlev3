@@ -18,36 +18,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTechnologySchema } from "@/lib/zod/technology";
+import { updateTechnologySchema } from "@/lib/zod/technology";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Folder } from "lucide-react";
+import { Cpu, Folder, Check, X, Loader } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
-import { TechnologyWithDetails } from "@/server/api/routers/technology";
+import { Technology } from "@prisma/client";
 
-export function EditTechnologyForm({
-  technology,
-}: {
-  technology: TechnologyWithDetails;
-}) {
+export function EditTechnologyForm({ technology }: { technology: Technology }) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof createTechnologySchema>>({
-    resolver: zodResolver(createTechnologySchema),
+  const form = useForm<z.infer<typeof updateTechnologySchema>>({
+    resolver: zodResolver(updateTechnologySchema),
     defaultValues: {
       name: technology.name,
-      description: technology.description,
     },
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const updateTechnologyMutation = api.technology.update.useMutation();
 
-  const handleSubmit = async (data: z.infer<typeof createTechnologySchema>) => {
+  const handleSubmit = async (data: z.infer<typeof updateTechnologySchema>) => {
     setIsSubmitting(true);
     try {
       await updateTechnologyMutation.mutateAsync({
@@ -66,11 +60,14 @@ export function EditTechnologyForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <CardHeader className="border-b">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="mx-auto max-w-md space-y-4"
+      >
+        <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <ExtraIcon
-              Icon={Folder}
+              Icon={Cpu}
               variant="small"
               fromColor="from-indigo-500/20"
               toColor="to-sky-400/20"
@@ -99,24 +96,30 @@ export function EditTechnologyForm({
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Technológia leírása *</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Technológia leírása" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </CardContent>
-        <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Frissítés..." : "Technológia Frissítése"}
-          </Button>
+        <CardFooter className="flex-col gap-2 pt-6">
+          <div className="flex w-full gap-2">
+            <Button className="w-full" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader className="mr-2 animate-spin" /> Frissítés...
+                </>
+              ) : (
+                <>
+                  <Check className="mr-2" /> Technológia Frissítése
+                </>
+              )}
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              type="button"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              <X className="mr-2" /> Mégse
+            </Button>
+          </div>
         </CardFooter>
       </form>
     </Form>

@@ -181,7 +181,7 @@ model SubCategory {
     id   String @id @default(cuid())
     name String
 
-    Team Team[]
+    teams Team[]
 
     competitionId String
     Competition   Competition @relation(fields: [competitionId], references: [id])

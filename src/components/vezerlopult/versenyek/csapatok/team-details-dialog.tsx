@@ -97,7 +97,7 @@ export function TeamDetailDialog({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button size={"sm"} className="flex items-center gap-2">
-            <CheckCircle />
+            <Eye />
             <span>Részletek</span>
           </Button>
         </DialogTrigger>

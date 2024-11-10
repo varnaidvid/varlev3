@@ -16,5 +16,5 @@ export const createCompetitionSchema = z.object({
     .nonempty("Legalább egy kategóriát ki kell választani"),
   subCategories: z
     .array(z.string())
-    .nonempty("Legalább egy alkategóriát ki kell választani"),
+    .nonempty("Legalább egy alkategóriát létre kell hozni"),
 });

@@ -1,7 +1,6 @@
 import { Row } from "@tanstack/react-table";
 import { TeamDetailDialog } from "@/components/vezerlopult/versenyek/csapatok/team-details-dialog";
 import { api } from "@/trpc/react";
-import { te } from "date-fns/locale";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;

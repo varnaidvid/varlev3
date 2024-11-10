@@ -1,16 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PageTitle } from "@/components/ui/page-title";
-import { api } from "@/trpc/react"; // Update the import to use the correct API client
-import {
-  Folder,
-  Plus,
-  Trophy,
-  MoreVertical,
-  Pencil,
-  Trash,
-} from "lucide-react";
+import { api } from "@/trpc/react";
+import { Pencil, Trash } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -20,19 +12,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { CategoryWithDetails } from "@/server/api/routers/category";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,33 +23,38 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { SubCategoryWithDetails } from "@/server/api/routers/sub-category";
 
-export default function CategoriesTable({
-  categories,
+export default function SubCategoriesTable({
+  subCategories,
 }: {
-  categories: CategoryWithDetails[];
+  subCategories: SubCategoryWithDetails[];
 }) {
-  const [data, setData] = useState<CategoryWithDetails[]>(categories);
+  const [data, setData] = useState(subCategories);
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null,
-  );
-  const deleteCategoryMutation = api.category.delete.useMutation();
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<
+    string | null
+  >(null);
+  const deleteSubCategoryMutation = api.subCategory.delete.useMutation();
 
   const handleDelete = async () => {
-    if (selectedCategoryId) {
-      await deleteCategoryMutation.mutateAsync({ id: selectedCategoryId });
+    if (selectedSubCategoryId) {
+      await deleteSubCategoryMutation.mutateAsync({
+        id: selectedSubCategoryId,
+      });
       setData((prevData) =>
-        prevData.filter((category) => category.id !== selectedCategoryId),
+        prevData.filter(
+          (subCategory) => subCategory.id !== selectedSubCategoryId,
+        ),
       );
       setOpenDialog(false);
-      setSelectedCategoryId(null);
+      setSelectedSubCategoryId(null);
     }
   };
 
   const openDeleteDialog = (id: string) => {
-    setSelectedCategoryId(id);
+    setSelectedSubCategoryId(id);
     setOpenDialog(true);
   };
 
@@ -80,24 +64,30 @@ export default function CategoriesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Név</TableHead>
-            <TableHead>Leírás</TableHead>
+            <TableHead>Csapatok száma</TableHead>
             <TableHead>Versenyek száma</TableHead>
             <TableHead className="text-right">Műveletek</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className="font-medium">{category.name}</TableCell>
+          {data.map((subCategory) => (
+            <TableRow key={subCategory.id}>
+              <TableCell className="font-medium">{subCategory.name}</TableCell>
+              <TableCell>{subCategory.teams.length}</TableCell>
               <TableCell>
-                {category.description.length > 50
-                  ? `${category.description.substring(0, 50)}...`
-                  : category.description}
+                <Link
+                  href={`/versenyek/${subCategory.Competition.id}`}
+                  className="block max-w-xs truncate"
+                  title={subCategory.Competition.name}
+                >
+                  {subCategory.Competition.name.length > 20
+                    ? `${subCategory.Competition.name.slice(0, 10)}...${subCategory.Competition.name.slice(-10)}`
+                    : subCategory.Competition.name}
+                </Link>
               </TableCell>
-              <TableCell>{category.competitions.length}</TableCell>
               <TableCell className="text-right">
                 <Link
-                  href={`/vezerlopult/kategoriak/${category.id}`}
+                  href={`/vezerlopult/alkategoriak/${subCategory.id}`}
                   className="mr-2"
                 >
                   <Button variant="ghost" className="h-8 w-8 p-0">
@@ -108,8 +98,8 @@ export default function CategoriesTable({
                 <Button
                   variant="ghost"
                   className="h-8 w-8 p-0 text-red-600"
-                  onClick={() => openDeleteDialog(category.id)}
-                  disabled={category.competitions.length > 0}
+                  onClick={() => openDeleteDialog(subCategory.id)}
+                  disabled={subCategory.teams.length > 0}
                 >
                   <Trash className="h-4 w-4" />
                   <span className="sr-only">Törlés</span>
@@ -125,13 +115,15 @@ export default function CategoriesTable({
             <AlertDialogTitle>
               Biztosan törölni szeretnéd a{" "}
               {
-                data.find((category) => category.id === selectedCategoryId)
-                  ?.name
+                data.find(
+                  (subCategory) => subCategory.id === selectedSubCategoryId,
+                )?.name
               }{" "}
-              kategóriát?
+              alkategóriát?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Ez a művelet nem visszavonható. A kategória véglegesen törlődik.
+              Ez a művelet nem visszavonható. Az alkategória véglegesen
+              törlődik.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

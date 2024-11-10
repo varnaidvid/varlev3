@@ -48,6 +48,7 @@ import { uploadFile } from "@/utils/upload-file";
 import { createCompetition } from "../../../app/vezerlopult/versenyek/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import CustomTagInput from "./custom-tag-input";
 
 export function CreateCompetitionForm({
   technologies,
@@ -199,7 +200,7 @@ export function CreateCompetitionForm({
             name="deadline"
             render={({ field }) => (
               <DatePickerField
-                label="Határidő"
+                label="Jelentkezési határidő *"
                 description="Kérjük, válasszon egy határidőt."
                 {...field}
               />
@@ -257,18 +258,18 @@ export function CreateCompetitionForm({
             name="subCategories"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Alkategóriák *</FormLabel>
+                <FormLabel>Alkategóriák létrehozása *</FormLabel>
                 <FormControl>
-                  <MultiSelect
-                    form={form}
-                    name="subCategories"
-                    items={subCategories}
-                    placeholder="Válasszon alkategóriákat..."
-                    noItemsText="Nincs találat."
+                  <CustomTagInput
+                    {...field}
+                    value={field.value.map((tag) => ({
+                      id: createId(),
+                      text: tag,
+                    }))}
                   />
                 </FormControl>
                 <FormDescription>
-                  Válassza ki milyen alkategóriái legyenek a versenynek.
+                  Adja meg az alkategóriákat, amelyeket létre szeretne hozni.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

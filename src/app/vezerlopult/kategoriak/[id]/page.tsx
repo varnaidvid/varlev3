@@ -39,7 +39,7 @@ export default async function EditCategory({
       </header>
 
       <main className="px-4 pb-16">
-        <Card className="mx-auto w-full max-w-3xl">
+        <Card className="mx-auto w-full max-w-lg">
           <EditCategoryForm category={category} />
         </Card>
       </main>

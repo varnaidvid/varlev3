@@ -26,7 +26,7 @@ import { createTechnologySchema } from "@/lib/zod/technology";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Folder } from "lucide-react";
+import { Folder, Check, X, Loader } from "lucide-react";
 import { ExtraIcon } from "@/components/ui/extra-icon";
 
 export function CreateTechnologyForm() {
@@ -35,7 +35,6 @@ export function CreateTechnologyForm() {
     resolver: zodResolver(createTechnologySchema),
     defaultValues: {
       name: "",
-      description: "",
     },
   });
 
@@ -58,8 +57,11 @@ export function CreateTechnologyForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-        <CardHeader className="border-b">
+      <form
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="mx-auto max-w-md space-y-4"
+      >
+        <CardHeader>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <ExtraIcon
               Icon={Folder}
@@ -91,24 +93,30 @@ export function CreateTechnologyForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Technológia leírása *</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="Technológia leírása" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </CardContent>
-        <CardFooter className="flex-col gap-2 border-t pt-6">
-          <Button className="w-full" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Létrehozás..." : "Technológia Létrehozása"}
-          </Button>
+        <CardFooter className="flex-col gap-2 pt-6">
+          <div className="flex w-full gap-2">
+            <Button className="w-full" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader className="mr-2 animate-spin" /> Létrehozás...
+                </>
+              ) : (
+                <>
+                  <Check className="mr-2" /> Technológia Létrehozása
+                </>
+              )}
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              type="button"
+              onClick={() => router.back()}
+              disabled={isSubmitting}
+            >
+              <X className="mr-2" /> Mégse
+            </Button>
+          </div>
         </CardFooter>
       </form>
     </Form>
