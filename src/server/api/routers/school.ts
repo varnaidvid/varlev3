@@ -1,4 +1,8 @@
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  withOwner,
+} from "@/server/api/trpc";
 import { z } from "zod";
 import { inferRouterOutputs } from "@trpc/server";
 
@@ -21,6 +25,47 @@ export const schoolRouter = createTRPCRouter({
               competitionId: input.competitionId,
             },
           },
+        },
+      });
+    }),
+
+  getSchoolByAccountId: publicProcedure
+    .input(
+      z.object({
+        accountId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await withOwner({
+        ctx,
+        accountId: input.accountId,
+      });
+
+      return ctx.db.school.findFirst({
+        where: {
+          account: {
+            id: input.accountId,
+          },
+        },
+        select: {
+          account: {
+            include: {
+              emails: true,
+            },
+          },
+          teams: {
+            include: {
+              Competition: true,
+            },
+          },
+          coaches: {
+            include: {
+              Team: true,
+            },
+          },
+          address: true,
+          name: true,
+          contactName: true,
         },
       });
     }),
