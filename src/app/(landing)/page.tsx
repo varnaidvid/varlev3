@@ -1,6 +1,6 @@
 import { auth } from "@/server/auth";
 import { CategoryShowcaseCarousel } from "@/components/CategoryShowcaseCarousel";
-import { Hero } from "@/components/Hero";
+import Hero from "@/components/Hero";
 import { Countdown } from "@/components/countdown";
 import { ClientOnly } from "@/components/client-only";
 
