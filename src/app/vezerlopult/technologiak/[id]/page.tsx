@@ -8,7 +8,7 @@ import { Cpu, Folder } from "lucide-react";
 export default async function EditTechnology({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const technologyId = (await params).id;
 

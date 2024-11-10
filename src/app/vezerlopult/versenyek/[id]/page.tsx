@@ -7,7 +7,7 @@ import { Card } from "@/components/ui/card";
 export default async function CompetitionPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const competitionId = (await params).id;
   const competition = await api.competition.getById({

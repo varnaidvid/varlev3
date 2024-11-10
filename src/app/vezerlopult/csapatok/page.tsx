@@ -4,13 +4,12 @@ import { Users } from "lucide-react";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
 import withRole from "@/utils/withRole";
 
 export default async function TeamsPage({
   searchParams,
 }: {
-  searchParams: { name?: string };
+  searchParams: Promise<{ name?: string }>;
 }) {
   const session = await auth();
 

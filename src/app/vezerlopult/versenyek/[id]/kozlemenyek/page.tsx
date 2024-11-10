@@ -7,7 +7,7 @@ import { Megaphone } from "lucide-react";
 export default async function CompetitionAnnouncements({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const competitionId = (await params).id;
 

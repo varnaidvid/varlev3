@@ -16,8 +16,8 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     RESEND_KEY: z.string(),
-    NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT: z.string().url(),
-    NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY: z.string(),
+    IMAGEKIT_URL_ENDPOINT: z.string().url(),
+    IMAGEKIT_PUBLIC_KEY: z.string(),
     IMAGEKIT_PRIVATE_KEY: z.string(),
   },
 
@@ -41,6 +41,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     RESEND_KEY: process.env.RESEND_KEY,
+    IMAGEKIT_PUBLIC_KEY: process.env.IMAGEKIT_PUBLIC_KEY,
+    IMAGEKIT_URL_ENDPOINT: process.env.IMAGEKIT_URL_ENDPOINT,
     NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
     NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT:
