@@ -207,6 +207,15 @@ export default async function Page({
           </div>
         </div>
       )}
+      {competitionStatus === "PENDING" && (
+        <div className="rounded-lg border bg-card p-6">
+          <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
+          <div
+            className="prose prose-sm dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: competition.description }}
+          />
+        </div>
+      )}
     </div>
   );
 }
