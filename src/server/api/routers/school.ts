@@ -6,9 +6,10 @@ import {
   withRole,
 } from "@/server/api/trpc";
 import { z } from "zod";
-import { schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { schoolRegisterType, schoolUpdateSchema } from "@/lib/zod/school-crud";
 import { inferRouterOutputs } from "@trpc/server";
 import { School } from "@prisma/client";
+import { saltAndHashPassword } from "@/utils/password";
 
 export const schoolRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
