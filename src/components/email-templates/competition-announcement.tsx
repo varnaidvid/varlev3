@@ -27,7 +27,7 @@ export const CompetitionAnnouncementEmail = ({
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>
-          A <b>{competitionName}</b> verseny szervezője fontos bejelentést tett!
+          A <b>{competitionName}</b> verseny szervezője bejelentést tett!
         </Heading>
         <Text style={text}>{message}</Text>
       </Container>

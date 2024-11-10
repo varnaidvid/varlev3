@@ -36,6 +36,7 @@ async function createNotification({
   senderAccountId,
   receiverAccountId,
   redirectTo,
+  competitionId,
   db,
 }: {
   topic: NotificationTopic;
@@ -46,6 +47,7 @@ async function createNotification({
   senderAccountId: string;
   receiverAccountId: string;
   redirectTo?: string;
+  competitionId?: string;
   db: PrismaClient;
 }) {
   const receiver = await db.account.findUnique({
@@ -54,7 +56,7 @@ async function createNotification({
   });
   if (!receiver) throw new Error("A fogadó felhasználó nem található");
 
-  await db.notification.create({
+  const not = await db.notification.create({
     data: {
       topic,
       type,
@@ -73,6 +75,19 @@ async function createNotification({
       },
     },
   });
+
+  if (competitionId) {
+    await db.competition.update({
+      where: { id: competitionId },
+      data: {
+        notifications: {
+          connect: {
+            id: not.id,
+          },
+        },
+      },
+    });
+  }
 
   if (receiver.emails.length > 0) {
     await resend.emails.send({
@@ -502,7 +517,7 @@ export const notificationRouter = createTRPCRouter({
         organizerAccountId: z.string(),
         competitionId: z.string(),
         message: z.string(),
-        redirectTo: z.string(),
+        subject: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -515,9 +530,12 @@ export const notificationRouter = createTRPCRouter({
       // send notification to all teams that organizer made an announcement
       const teams = await ctx.db.team.findMany({
         where: { competitionId: input.competitionId },
-        select: { id: true, account: true },
+        select: { id: true, account: true, name: true },
       });
+
       for (const team of teams) {
+        console.log("CREATING NOTIFICATION FOR TEAM", team.name);
+
         await createNotification({
           topic: NotificationTopic.COMPETITION_ANNOUNCEMENT,
           type: NotificationType.INFO,
@@ -528,10 +546,10 @@ export const notificationRouter = createTRPCRouter({
               message={input.message}
             />
           ),
-          subject: "Verseny bejelentés!",
+          subject: input.subject,
           senderAccountId: input.organizerAccountId,
           receiverAccountId: team.account.id,
-          redirectTo: input.redirectTo,
+          competitionId: input.competitionId,
           db: ctx.db,
         });
       }
