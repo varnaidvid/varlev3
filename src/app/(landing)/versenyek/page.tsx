@@ -1,6 +1,6 @@
 import React from "react";
 import { api } from "@/trpc/server";
-import CompetitionCard from "@/components/vezerlopult/versenyek/competition-card";
+import CompetitionCard from "./competition-card-lp";
 import Link from "next/link";
 
 export default async function Page() {
@@ -15,7 +15,7 @@ export default async function Page() {
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold">Versenyek</h1>
             <p className="mb-8">{competitions.length} verseny található</p>
-            <ul className="mb-12 flex items-center space-x-2 lg:space-x-2.5">
+            {/* <ul className="mb-12 flex items-center space-x-2 lg:space-x-2.5">
               {categories.map((category) => (
                 <li
                   key={category.name}
@@ -24,7 +24,7 @@ export default async function Page() {
                   <Link href={`/category/${category.id}`}>{category.name}</Link>
                 </li>
               ))}
-            </ul>
+            </ul> */}
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">

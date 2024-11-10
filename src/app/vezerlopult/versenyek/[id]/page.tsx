@@ -3,12 +3,14 @@ import { api } from "@/trpc/server";
 import { Trophy } from "lucide-react";
 import { EditCompetitionForm } from "@/components/vezerlopult/versenyek/edit-competition-form";
 import { Card } from "@/components/ui/card";
+import withRole from "@/utils/withRole";
 
 export default async function CompetitionPage({
   params,
 }: {
   params: { id: string };
 }) {
+  await withRole(["ORGANIZER"]);
   const competitionId = (await params).id;
   const competition = await api.competition.getById({
     id: competitionId,

@@ -5,8 +5,10 @@ import { Folder, Plus } from "lucide-react";
 import Link from "next/link";
 import CategoriesTable from "./categories-table";
 import { CategoryWithDetails } from "@/server/api/routers/category";
+import withRole from "@/utils/withRole";
 
 export default async function CategoriesPage() {
+  await withRole(["ORGANIZER"]);
   const categories = await api.category.getAllWithDetails();
 
   return (

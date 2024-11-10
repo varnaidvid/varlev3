@@ -4,8 +4,10 @@ import { PageTitle } from "@/components/ui/page-title";
 import { CreateCompetitionForm } from "@/components/vezerlopult/versenyek/create-competition-form";
 import { api } from "@/trpc/server";
 import { Save, Trophy } from "lucide-react";
+import withRole from "@/utils/withRole";
 
 export default async function NewCompetition() {
+  await withRole(["ORGANIZER"]);
   const categories = await api.category.getAll();
   const technologies = await api.technology.getAll();
   const subCategories = await api.subCategory.getAll();

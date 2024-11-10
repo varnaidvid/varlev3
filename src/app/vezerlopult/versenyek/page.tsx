@@ -2,10 +2,13 @@ import { Button } from "@/components/ui/button";
 import { PageTitle } from "@/components/ui/page-title";
 import CompetitionCard from "@/components/vezerlopult/versenyek/competition-card";
 import { api } from "@/trpc/server";
+import withRole from "@/utils/withRole";
 import { Plus, Trophy } from "lucide-react";
 import Link from "next/link";
 
 export default async function CompetitionsPage() {
+  await withRole(["ORGANIZER"]);
+
   const competitions = await api.competition.getAllWithDetails();
 
   return (

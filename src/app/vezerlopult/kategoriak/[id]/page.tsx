@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
 import { EditCategoryForm } from "@/components/vezerlopult/kategoriak/edit-category-form";
 import { api } from "@/trpc/server";
+import withRole from "@/utils/withRole";
 import { Folder } from "lucide-react";
 
 export default async function EditCategory({
@@ -10,6 +11,7 @@ export default async function EditCategory({
 }: {
   params: { id: string };
 }) {
+  await withRole(["ORGANIZER"]);
   const categoryId = (await params).id;
 
   const category = await api.category.getById({ id: categoryId });

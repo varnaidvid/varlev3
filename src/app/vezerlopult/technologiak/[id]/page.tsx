@@ -4,12 +4,14 @@ import { PageTitle } from "@/components/ui/page-title";
 import { EditTechnologyForm } from "@/components/vezerlopult/technologiak/edit-technology-form";
 import { api } from "@/trpc/server";
 import { Cpu, Folder } from "lucide-react";
+import withRole from "@/utils/withRole";
 
 export default async function EditTechnology({
   params,
 }: {
   params: { id: string };
 }) {
+  await withRole(["ORGANIZER"]);
   const technologyId = (await params).id;
 
   const technology = await api.technology.getById({ id: technologyId });

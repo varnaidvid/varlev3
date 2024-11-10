@@ -3,8 +3,11 @@ import { Card } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
 import { CreateTechnologyForm } from "@/components/vezerlopult/technologiak/create-technology-form";
 import { Cpu } from "lucide-react";
+import withRole from "@/utils/withRole";
 
-export default function NewTechnology() {
+export default async function NewTechnology() {
+  await withRole(["ORGANIZER"]);
+
   return (
     <>
       <PageTitle

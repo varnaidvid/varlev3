@@ -6,8 +6,10 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import TeamSettings from "./team-settings";
 import SchoolSettings from "./school-settings";
+import withRole from "@/utils/withRole";
 
 export default async function Page() {
+  await withRole(["TEAM", "SCHOOL"]);
   const session = await auth();
 
   return (

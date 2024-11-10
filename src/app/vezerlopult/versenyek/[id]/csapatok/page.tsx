@@ -5,6 +5,7 @@ import { DataTable } from "./data-table";
 import { columns } from "./columns";
 import ExportCSV from "@/components/vezerlopult/versenyek/csapatok/export-csv";
 import { auth } from "@/server/auth";
+import withRole from "@/utils/withRole";
 
 export default async function TeamsPage({
   params,
@@ -13,6 +14,7 @@ export default async function TeamsPage({
   params: { id: string };
   searchParams: { name?: string };
 }) {
+  await withRole(["ORGANIZER"]);
   const session = await auth();
   const competitionId = (await params).id;
   const { name } = await searchParams;
