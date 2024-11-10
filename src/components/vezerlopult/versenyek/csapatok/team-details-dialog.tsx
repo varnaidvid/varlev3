@@ -56,6 +56,8 @@ export function TeamDetailDialog({
     error,
   } = api.team.getTeamById.useQuery({ teamId }, { enabled: isDialogOpen });
 
+  const isRegistered = team?.status === "REGISTERED";
+
   console.log(team);
 
   const handleReject = () => {
@@ -68,9 +70,16 @@ export function TeamDetailDialog({
     if (team) {
       setIsApproveLoading(true);
       toast.loading("Jóváhagyás folyamatban...");
-      await onApprove(team.id);
-      setIsApproveLoading(false);
-      toast.dismiss();
+      try {
+        await onApprove(team.id);
+        toast.success("Jóváhagyás sikeres!");
+      } catch (error) {
+        toast.error("Jóváhagyás sikertelen!");
+      } finally {
+        setIsApproveLoading(false);
+        setIsDialogOpen(false);
+        toast.dismiss();
+      }
     }
   };
 
@@ -276,7 +285,7 @@ export function TeamDetailDialog({
               onClick={handleApprove}
               variant="outline"
               className="flex-1"
-              disabled={isApproveLoading}
+              disabled={isApproveLoading || isRegistered || isLoading}
             >
               {isApproveLoading ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />
@@ -291,7 +300,11 @@ export function TeamDetailDialog({
               onOpenChange={setIsRejectDialogOpen}
             >
               <DialogTrigger asChild>
-                <Button variant="destructive" className="flex-1">
+                <Button
+                  variant="destructive"
+                  className="flex-1"
+                  disabled={isRegistered || isLoading || isApproveLoading}
+                >
                   <XCircle className="mr-2 h-4 w-4" /> Elutasítás
                 </Button>
               </DialogTrigger>

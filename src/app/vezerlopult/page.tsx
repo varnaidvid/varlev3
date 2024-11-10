@@ -6,15 +6,6 @@ import TeamDashboard from "./team-dashboard";
 import { api } from "@/trpc/server";
 import { Team } from "@prisma/client";
 
-// const chartData = [
-//   { key: "January", value: 186 },
-//   { key: "February", value: 305 },
-//   { key: "March", value: 237 },
-//   { key: "April", value: 73 },
-//   { key: "May", value: 209 },
-//   { key: "June", value: 214 },
-// ];
-
 export default async function Page() {
   const session = await auth();
 

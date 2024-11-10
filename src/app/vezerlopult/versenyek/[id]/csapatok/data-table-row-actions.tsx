@@ -17,25 +17,34 @@ export function DataTableRowActions<TData>({
   const teamApprovedByOrganizerMutation =
     api.notification.teamApprovedByOrganizer.useMutation();
   const updateTeamStatusMutation = api.team.updateTeamStatus.useMutation();
+  const teamRejectedByOrganizerMutation =
+    api.notification.teamRejectedByOrganizer.useMutation();
 
-  const handleApprove = (id: string) => {
-    (async () => {
-      await updateTeamStatusMutation.mutateAsync({
-        teamId: id,
-        status: "REGISTERED",
-      });
-      await teamApprovedByOrganizerMutation.mutateAsync({
-        competitionId: competitionId,
-        teamId: id,
-        organizerId: accountId,
-        redirectTo: `/vezerlopult/versenyek/${competitionId}/csapatok`,
-      });
-    })();
+  const handleApprove = async (id: string) => {
+    await updateTeamStatusMutation.mutateAsync({
+      teamId: id,
+      status: "REGISTERED",
+    });
+    await teamApprovedByOrganizerMutation.mutateAsync({
+      competitionId: competitionId,
+      teamId: id,
+      accountId: accountId,
+      redirectTo: `/vezerlopult/versenyek/${competitionId}/csapatok`,
+    });
   };
 
-  const handleReject = (reason: string) => {
-    // Implement rejection logic here
-    console.log("Application rejected with reason:", reason);
+  const handleReject = async (reason: string) => {
+    await updateTeamStatusMutation.mutateAsync({
+      teamId: (row.original as { id: string }).id,
+      status: "REJECTED_BY_ORGANIZER",
+    });
+    await teamRejectedByOrganizerMutation.mutateAsync({
+      teamId: (row.original as { id: string }).id,
+      organizerId: accountId,
+      competitionId: competitionId,
+      redirectTo: `/vezerlopult/versenyek/${competitionId}/csapatok`,
+      message: reason,
+    });
   };
 
   return (

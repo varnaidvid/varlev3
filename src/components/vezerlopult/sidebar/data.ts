@@ -1,4 +1,13 @@
-import { Users, Gauge, Trophy, Cpu, Blocks, School, Cog } from "lucide-react";
+import {
+  Users,
+  Gauge,
+  Trophy,
+  Cpu,
+  Blocks,
+  School,
+  Cog,
+  Folder,
+} from "lucide-react";
 
 const teamNav = [
   {
@@ -28,6 +37,11 @@ const organizerNav = [
   {
     name: "Kategóriák",
     url: "/vezerlopult/kategoriak",
+    icon: Folder,
+  },
+  {
+    name: "Alkategóriák",
+    url: "/vezerlopult/alkategoriak",
     icon: Blocks,
   },
   {

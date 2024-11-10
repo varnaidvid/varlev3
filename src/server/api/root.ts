@@ -8,6 +8,7 @@ import { teamsRouter } from "./routers/team";
 import { technologyRouter } from "./routers/technology";
 import { notificationRouter } from "./routers/notification";
 import { categoryRouter } from "./routers/category";
+import { subCategoryRouter } from "./routers/sub-category";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   technology: technologyRouter,
   notification: notificationRouter,
   category: categoryRouter,
+  subCategory: subCategoryRouter,
 });
 
 // export type definition of API

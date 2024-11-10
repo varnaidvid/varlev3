@@ -86,7 +86,12 @@ export const competitionRouter = createTRPCRouter({
 
   getAllWithDetails: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.competition.findMany({
-      include: { teams: true, technologies: true, categories: true },
+      include: {
+        teams: true,
+        technologies: true,
+        categories: true,
+        subCategories: true,
+      },
     });
   }),
 

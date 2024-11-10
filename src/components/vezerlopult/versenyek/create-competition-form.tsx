@@ -34,7 +34,7 @@ import { z } from "zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompetitionSchema } from "@/lib/zod/competition";
-import { Technology, Category } from "@prisma/client";
+import { Technology, Category, SubCategory } from "@prisma/client";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { DatePickerField } from "@/components/ui/date-picker-field";
@@ -52,9 +52,11 @@ import { useRouter } from "next/navigation";
 export function CreateCompetitionForm({
   technologies,
   categories,
+  subCategories,
 }: {
   technologies: Technology[];
   categories: Category[];
+  subCategories: SubCategory[];
 }) {
   const router = useRouter();
 
@@ -70,6 +72,7 @@ export function CreateCompetitionForm({
       deadline: undefined,
       technologies: [],
       categories: [],
+      subCategories: [],
     },
   });
 
@@ -243,6 +246,29 @@ export function CreateCompetitionForm({
                 </FormControl>
                 <FormDescription>
                   Válassza ki melyik kategóriákba tartozzon a verseny.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subCategories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alkategóriák *</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    form={form}
+                    name="subCategories"
+                    items={subCategories}
+                    placeholder="Válasszon alkategóriákat..."
+                    noItemsText="Nincs találat."
+                  />
+                </FormControl>
+                <FormDescription>
+                  Válassza ki milyen alkategóriái legyenek a versenynek.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

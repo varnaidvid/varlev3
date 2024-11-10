@@ -97,6 +97,7 @@ export const teamsRouter = createTRPCRouter({
           members: true,
           coaches: true,
           technologies: true,
+          SubCategory: true,
         },
       });
     }),

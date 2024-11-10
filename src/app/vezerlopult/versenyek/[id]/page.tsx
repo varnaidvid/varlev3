@@ -16,6 +16,7 @@ export default async function CompetitionPage({
 
   const technologies = await api.technology.getAll();
   const categories = await api.category.getAll();
+  const subCategories = await api.subCategory.getAll();
 
   return (
     <>
@@ -40,6 +41,7 @@ export default async function CompetitionPage({
           competition={competition}
           technologies={technologies}
           categories={categories}
+          subCategories={subCategories}
         />
       </main>
     </>

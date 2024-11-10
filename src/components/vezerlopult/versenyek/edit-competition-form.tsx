@@ -25,7 +25,7 @@ import { z } from "zod";
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createCompetitionSchema } from "@/lib/zod/competition";
-import { Technology, Category } from "@prisma/client";
+import { Technology, Category, SubCategory } from "@prisma/client";
 import NumericInput from "@/components/ui/numeric-input";
 import { ImageUpload } from "./image-upload";
 import MultiSelect from "./multi-select";
@@ -40,10 +40,12 @@ export function EditCompetitionForm({
   competition,
   technologies,
   categories,
+  subCategories,
 }: {
   competition: CompetitionWithDetails;
   technologies: Technology[];
   categories: Category[];
+  subCategories: SubCategory[];
 }) {
   const router = useRouter();
 
@@ -57,6 +59,7 @@ export function EditCompetitionForm({
       deadline: new Date(competition.deadline),
       technologies: competition.technologies.map((tech) => tech.id),
       categories: competition.categories.map((cat) => cat.id),
+      subCategories: competition.subCategories.map((subCat) => subCat.id),
     },
   });
 
@@ -215,6 +218,29 @@ export function EditCompetitionForm({
                 </FormControl>
                 <FormDescription>
                   Válassza ki melyik kategóriákba tartozzon a verseny.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="subCategories"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Alkategóriák *</FormLabel>
+                <FormControl>
+                  <MultiSelect
+                    form={form}
+                    name="subCategories"
+                    items={subCategories}
+                    placeholder="Válasszon alkategóriákat..."
+                    noItemsText="Nincs találat."
+                  />
+                </FormControl>
+                <FormDescription>
+                  Válassza ki milyen alkategóriái legyenek a versenynek.
                 </FormDescription>
                 <FormMessage />
               </FormItem>
