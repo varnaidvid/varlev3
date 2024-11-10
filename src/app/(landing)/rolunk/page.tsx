@@ -49,7 +49,7 @@ export default function Page() {
                 Várnai Dávid
               </h3>
               <p className="text-muted-foreground">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam nostrum inventore modi cumque! Accusantium non a ipsum inventore, assumenda tempore odio omnis minima. Sit voluptates temporibus laudantium minima eaque iusto!
+                Webes applikációk fejlesztésében mélyültem el az elmúlt 2 évben mely során kipróbáltam számos könyvtárat, illetve keretrendszert. Jelenleg NextJS-t és Supabase-t használom "szerver nélküli" applikációk fejlesztésére.
               </p>
             </div>
             <div className="flex flex-col">
@@ -60,7 +60,7 @@ export default function Page() {
                 Várszegi Barnabás
               </h3>
               <p className="text-muted-foreground">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat illum cum nisi architecto minus debitis placeat, minima quia maiores deserunt vitae culpa voluptatum fugit molestiae omnis incidunt sapiente sint! Quis.
+                3 éve az egyik Arduinós projektemhez kellett egy program, akkor kezdtem programozói pályafutásomat. Azóta több térbe is belekóstoltam, de végig a webfejlesztés maradt fókuszban.
               </p>
             </div>
             <div className="flex flex-col">
@@ -71,7 +71,7 @@ export default function Page() {
                 Lénárt Dániel
               </h3>
               <p className="text-muted-foreground">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae facilis numquam voluptatibus impedit consequatur iure? Labore deserunt voluptatibus facere porro impedit, voluptate velit dolorum perferendis. A deleniti aliquam iste neque.
+                Édesapám nyomán én is az informatika után kezdtem érdeklődni már gyerek koromban is. Pár éve komolyabban is foglalkozom az informatikával, főleg webfejlesztés keretein belül.
               </p>
             </div>
           </div>
@@ -99,40 +99,26 @@ export default function Page() {
         <Accordion type="single" collapsible>
           <AccordionItem value="item-1">
             <AccordionTrigger className="text-xl font-normal">
-              Hol tudsz minket elérni?
+              Mire szakosodtunk?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, doloremque dolorem exercitationem consectetur veritatis laudantium soluta ea dicta dolores in iure incidunt corrupti accusamus, omnis asperiores ducimus totam facere ipsum.
+              Mindannyian főleg a webfejlesztés irányában orientálodtunk.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="text-xl font-normal">
-              Mire szakosodtunk?
+              Mit csinálunk szabadidőnkben?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis accusantium expedita, dolorum possimus odit eum libero ducimus at incidunt voluptatem necessitatibus quos? Maxime aliquid beatae perferendis in incidunt dolorem suscipit.
+              Egy iskolába járunk, szabadidőnkben is gyakran a programozással, fejlesztéssel foglalkozunk, néha együtt is.
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="text-xl font-normal">
-              Mit csinálunk szabadidőnkben?
-            </AccordionTrigger>
-            <AccordionContent className="text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
-              quo praesentium laborum non totam. Nemo animi officiis doloribus
-              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
-              nisi, modi error.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="text-xl font-normal">
               Milyen tapasztalatokkal rendelkezünk?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
-              quo praesentium laborum non totam. Nemo animi officiis doloribus
-              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
-              nisi, modi error.
+              Ez a harmadik versenyünk, de voltunk már együtt duális képzésen egy cégnél is dolgozni, mint Fullstack fejlesztők.
             </AccordionContent>
           </AccordionItem>
         </Accordion>
