@@ -49,19 +49,33 @@ export function TeamDetailDialog({
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
   const [isApproveLoading, setIsApproveLoading] = useState(false);
+  const [isRejectLoading, setIsRejectLoading] = useState(false);
 
   const {
     data: team,
     isLoading,
     error,
+    refetch,
   } = api.team.getTeamById.useQuery({ teamId }, { enabled: isDialogOpen });
 
   const isRegistered = team?.status === "REGISTERED";
+  const isRejected = team?.status === "REJECTED_BY_ORGANIZER";
 
-  const handleReject = () => {
-    onReject(rejectionReason);
-    setIsRejectDialogOpen(false);
-    setRejectionReason("");
+  const handleReject = async () => {
+    setIsRejectLoading(true);
+    toast.loading("Hiánypótlás kérése folyamatban...");
+    try {
+      await onReject(rejectionReason);
+      toast.success("Hiánypótlás kérése sikeres!");
+      await refetch();
+    } catch (error) {
+      toast.error("Hiánypótlás kérése sikertelen!");
+    } finally {
+      setIsRejectLoading(false);
+      setIsRejectDialogOpen(false);
+      setRejectionReason("");
+      toast.dismiss();
+    }
   };
 
   const handleApprove = async () => {
@@ -71,6 +85,7 @@ export function TeamDetailDialog({
       try {
         await onApprove(team.id);
         toast.success("Jóváhagyás sikeres!");
+        await refetch();
       } catch (error) {
         toast.error("Jóváhagyás sikertelen!");
       } finally {
@@ -301,15 +316,17 @@ export function TeamDetailDialog({
                 <Button
                   variant="destructive"
                   className="flex-1"
-                  disabled={isRegistered || isLoading || isApproveLoading}
+                  disabled={
+                    isRegistered || isLoading || isApproveLoading || isRejected
+                  }
                 >
-                  <XCircle className="mr-2 h-4 w-4" /> Elutasítás
+                  <XCircle className="mr-2 h-4 w-4" /> Hiánypótlás kérése
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle className="text-lg font-semibold">
-                    Jelentkezés elutasítása
+                    Hiánypótlás kérése
                   </DialogTitle>
                 </DialogHeader>
                 <Textarea
@@ -324,8 +341,16 @@ export function TeamDetailDialog({
                   >
                     Mégse
                   </Button>
-                  <Button variant="destructive" onClick={handleReject}>
-                    Elutasítás megerősítése
+                  <Button
+                    variant="destructive"
+                    onClick={handleReject}
+                    disabled={isRejectLoading}
+                  >
+                    {isRejectLoading ? (
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                      "Küldés"
+                    )}
                   </Button>
                 </DialogFooter>
               </DialogContent>

@@ -29,7 +29,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  initialData: TData[];
   schools: string[];
   competitionId: string;
   accountId: string;
@@ -38,12 +38,13 @@ interface DataTableProps<TData, TValue> {
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  initialData,
   schools,
   competitionId,
   accountId,
   teamName,
 }: DataTableProps<TData, TValue>) {
+  const [data, setData] = React.useState(initialData);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -117,6 +118,7 @@ export function DataTable<TData, TValue>({
                       row={row}
                       competitionId={competitionId}
                       accountId={accountId}
+                      setData={setData}
                     />
                   </TableCell>
                 </TableRow>

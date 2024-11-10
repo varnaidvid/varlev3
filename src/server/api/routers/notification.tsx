@@ -357,7 +357,7 @@ export const notificationRouter = createTRPCRouter({
     .input(
       z.object({
         teamId: z.string(),
-        organizerId: z.string(),
+        accountId: z.string(),
         competitionId: z.string(),
         redirectTo: z.string(),
         message: z.string(),
@@ -371,7 +371,7 @@ export const notificationRouter = createTRPCRouter({
       if (!team) throw new Error("A csapat nem található");
 
       const organizer = await ctx.db.organizer.findUnique({
-        where: { id: input.organizerId },
+        where: { accountId: input.accountId },
         select: { name: true, account: true },
       });
       if (!organizer) throw new Error("A szervező nem található");
@@ -394,7 +394,7 @@ export const notificationRouter = createTRPCRouter({
             message={input.message}
           />
         ),
-        subject: "Csapatod elutasítva a szervező által",
+        subject: "Pótold a hiányosságokat csapatod jelentkezésében",
         senderAccountId: organizer.account.id,
         receiverAccountId: team.account.id,
         redirectTo: input.redirectTo,

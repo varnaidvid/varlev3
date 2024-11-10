@@ -49,7 +49,7 @@ export function ApplicationStatusBadge({
       {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
       {status === "WAITING_FOR_ORGANIZER_APPROVAL" &&
         "Szervezői jóváhagyásra vár"}
-      {status === "REJECTED_BY_ORGANIZER" && "Szervező által elutasított"}
+      {status === "REJECTED_BY_ORGANIZER" && "Hiánypótlásra vár"}
       {status === "WAITING_FOR_SCHOOL_APPROVAL" && "Iskolai jóváhagyásra vár"}
     </Badge>
   );
@@ -113,8 +113,8 @@ const statusConfig: StatusConfigType = {
     dotColor: "fill-green-400/30",
   },
   REJECTED_BY_ORGANIZER: {
-    title: "Elutasítva, hiánypótlás szükséges",
-    description: "A szervezők elutasították a jelentkezéseteket",
+    title: "Hiánypótlás szükséges",
+    description: "A szervezők hiányosságokat találtak a jelentkezésben",
     icon: AlertCircle,
     color: "text-red-600",
     bgColor: "bg-red-50",
