@@ -1,6 +1,7 @@
 import { CircleArrowRight, Files, Settings } from 'lucide-react';
+import TechStackLogos from '@/components/TechStackLogos';
 
-export default function HomePage() {
+export default function Page() {
   return (
     <section className="py-32">
       <div className="m-auto mt-20 flex flex-col gap-28">
@@ -67,17 +68,17 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <div className="grid gap-10 md:grid-cols-2">
+        <div className="flex flex-col">
           <div>
             <p className="mb-10 text-sm font-medium text-muted-foreground">
               TECH STACK
             </p>
-            <h2 className="mb-2.5 text-3xl font-semibold md:text-5xl">
+            <h2 className="text-3xl font-semibold md:text-5xl">
               Mivel dolgozunk?
             </h2>
           </div>
           <div>
-            
+            <TechStackLogos/>
           </div>
         </div>
       </div>
