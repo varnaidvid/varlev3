@@ -88,9 +88,13 @@ export default function NotificationCenter() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={handleOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="relative w-fit px-4">
+        <Button
+          variant="outline"
+          size="icon"
+          className="relative w-fit px-[10px]"
+        >
           <Bell className="h-[1.2rem] w-[1.2rem]" />
-          Értesítések
+          <span className="hidden sm:block">Értesítések</span>
           {unreadCount > 0 && (
             <span className="absolute -left-2 -top-2 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-xs font-extrabold text-white">
               {unreadCount}

@@ -19,16 +19,12 @@ export default async function Page() {
 
   return (
     <>
-      <header className="flex items-center justify-between gap-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Gauge}
-          fromColor="from-sky-400/50"
-          toColor="to-blue-500/50"
-          title={team ? team.name : "Vezérlőpult"}
-        />
-
-        <NotificationCenter />
-      </header>
+      <PageTitle
+        Icon={Gauge}
+        fromColor="from-sky-400/50"
+        toColor="to-blue-500/50"
+        title={team ? team.name : "Vezérlőpult"}
+      />
 
       {session?.user.type === "TEAM" && <TeamDashboard />}
       {session?.user.type === "SCHOOL" && <SchoolDashboard />}
