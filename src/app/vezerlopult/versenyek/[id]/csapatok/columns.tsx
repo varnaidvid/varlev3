@@ -49,6 +49,15 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
         .join(", ");
       return <div>{coaches}</div>;
     },
+    filterFn: (row, id, filterValue) => {
+      const coaches = (row.original as TeamWithDetails).coaches.map(
+        (coach) => coach.name,
+      );
+      return (
+        filterValue.length === 0 ||
+        filterValue.some((val: string) => coaches.includes(val))
+      );
+    },
   },
   {
     accessorKey: "status",
@@ -58,6 +67,9 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as ApplicationStatus;
       return <ApplicationStatusBadge status={status} />;
+    },
+    filterFn: (row, id, filterValue) => {
+      return filterValue.length === 0 || filterValue.includes(row.getValue(id));
     },
   },
 ];
