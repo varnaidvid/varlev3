@@ -3,6 +3,8 @@ import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
+  withOwner,
+  withRole,
 } from "@/server/api/trpc";
 import { api } from "@/trpc/server";
 import { ApplicationStatus, Team } from "@prisma/client";
@@ -114,7 +116,45 @@ export const teamsRouter = createTRPCRouter({
       });
     }),
 
-  getTeamsByCompetition: publicProcedure
+  getTeamByIdForSchool: withRole(["SCHOOL"])
+    .input(
+      z.object({
+        teamId: z.string().cuid(),
+        accountId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await withOwner({
+        ctx,
+        accountId: input.accountId,
+      });
+
+      return await ctx.db.team.findFirst({
+        where: {
+          id: input.teamId,
+          accountId: input.accountId,
+        },
+        include: {
+          members: true,
+          coaches: true,
+          school: true,
+          technologies: true,
+          account: {
+            include: {
+              emails: true,
+            },
+          },
+          Competition: {
+            include: {
+              categories: true,
+              subCategories: true,
+            },
+          },
+        },
+      });
+    }),
+
+  getTeamsByCompetition: withRole(["ORGANIZER"])
     .input(
       z.object({
         competitionId: z.string().cuid(),
@@ -130,6 +170,34 @@ export const teamsRouter = createTRPCRouter({
           coaches: true,
           technologies: true,
           SubCategory: true,
+        },
+      });
+    }),
+
+  getTeamsBySchoolAccount: withRole(["SCHOOL", "ORGANIZER"])
+    .input(
+      z.object({
+        accountId: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      await withOwner({
+        ctx,
+        accountId: input.accountId,
+      });
+
+      return await ctx.db.team.findMany({
+        where: {
+          school: {
+            accountId: input.accountId,
+          },
+        },
+        include: {
+          members: true,
+          coaches: true,
+          technologies: true,
+          SubCategory: true,
+          school: true,
         },
       });
     }),
@@ -271,6 +339,24 @@ export const teamsRouter = createTRPCRouter({
         },
         data: {
           status: input.status,
+        },
+      });
+    }),
+
+  updateTeamApplicationForm: protectedProcedure
+    .input(
+      z.object({
+        teamId: z.string().cuid(),
+        applicationForm: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.team.update({
+        where: {
+          id: input.teamId,
+        },
+        data: {
+          applicationForm: input.applicationForm,
         },
       });
     }),
