@@ -1,15 +1,21 @@
 import { auth } from "@/server/auth";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Eye } from "lucide-react";
+import { Eye, School, Trophy, Users2 } from "lucide-react";
+import { api } from "@/trpc/server";
+import { CompetitionsTable } from "../../components/ui/competitions-organizer-table";
 
 export default async function OrganizerDashboard() {
   const session = await auth();
 
+  const competitionCount = await api.organizer.getCompetitionCount();
+  const teamCount = await api.organizer.getRegisteredTeamsCount();
+  const schoolCount = await api.organizer.getSchoolCount();
+
   return (
     <div className="space-y-12">
-      <div className="flex w-full flex-wrap gap-4">
-        <Card className="flex-1 flex-grow shadow-lg">
+      <div className="flex flex-col gap-4 md:flex-row">
+        <Card className="w-full shadow-lg">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>
@@ -18,18 +24,18 @@ export default async function OrganizerDashboard() {
                 </CardTitle>
               </div>
 
-              <Eye className="text-purple-400" size={26} />
+              <Trophy className="text-yellow-400" size={26} />
             </div>
           </CardHeader>
           <CardContent className="p-3">
             <div className="flex items-center gap-2">
               <span className="text-slate-400">{">"}</span>
-              <span className="text-xl text-slate-800">100</span>
+              <span className="text-xl text-slate-800">{competitionCount}</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="flex-1 flex-grow shadow-lg">
+        <Card className="w-full shadow-lg">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>
@@ -38,18 +44,18 @@ export default async function OrganizerDashboard() {
                 </CardTitle>
               </div>
 
-              <Eye className="text-purple-400" size={26} />
+              <Users2 className="text-blue-400" size={26} />
             </div>
           </CardHeader>
           <CardContent className="p-3">
             <div className="flex items-center gap-2">
               <span className="text-slate-400">{">"}</span>
-              <span className="text-xl text-slate-800">100</span>
+              <span className="text-xl text-slate-800">{teamCount}</span>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="flex-1 flex-grow shadow-lg">
+        <Card className="w-full shadow-lg">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>
@@ -58,17 +64,19 @@ export default async function OrganizerDashboard() {
                 </CardTitle>
               </div>
 
-              <Eye className="text-purple-400" size={26} />
+              <School className="text-orange-400" size={26} />
             </div>
           </CardHeader>
           <CardContent className="p-3">
             <div className="flex items-center gap-2">
               <span className="text-slate-400">{">"}</span>
-              <span className="text-xl text-slate-800">100</span>
+              <span className="text-xl text-slate-800">{schoolCount}</span>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      <CompetitionsTable />
     </div>
   );
 }

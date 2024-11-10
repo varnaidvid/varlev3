@@ -33,8 +33,8 @@ export default async function CompetitionPage({
         ]}
       />
 
-      <main className="px-4">
-        <Card className="mx-auto w-full max-w-3xl">
+      <main>
+        <Card className="mx-auto w-full">
           <EditCompetitionForm
             //@ts-ignore
             competition={competition}

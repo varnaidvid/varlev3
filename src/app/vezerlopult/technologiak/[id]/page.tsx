@@ -36,7 +36,7 @@ export default async function EditTechnology({
         ]}
       />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         <Card className="mx-auto w-full max-w-lg">
           <EditTechnologyForm technology={technology} />
         </Card>

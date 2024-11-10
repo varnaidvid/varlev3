@@ -78,7 +78,7 @@ export function EditCategoryForm({
             Kategória Szerkesztése
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
-            Kérjük, módosítsa a kategória adatait.
+            Alábbi űrlap segítségével szerkesztheti a kategória adatait.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">

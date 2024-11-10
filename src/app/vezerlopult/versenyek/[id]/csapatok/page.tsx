@@ -68,7 +68,7 @@ export default async function TeamsPage({
         <ExportCSV data={csvData} filename={csvFilename} />
       </div>
 
-      <main className="px-4">
+      <main>
         <DataTable
           columns={columns}
           initialData={teams}

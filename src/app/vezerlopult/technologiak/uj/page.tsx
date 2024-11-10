@@ -24,7 +24,7 @@ export default function NewTechnology() {
         ]}
       />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         <Card className="mx-auto w-full max-w-lg">
           <CreateTechnologyForm />
         </Card>
