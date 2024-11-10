@@ -29,19 +29,6 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
     },
   },
   {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Státusz" />
-    ),
-    cell: ({ row }) => {
-      const status = row.getValue("status") as ApplicationStatus;
-      return <ApplicationStatusBadge status={status} />;
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
-    },
-  },
-  {
     accessorKey: "createdAt",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Jelentkezett" />
@@ -49,6 +36,28 @@ export const columns: ColumnDef<TeamWithDetails>[] = [
     cell: ({ row }) => {
       const createdAt = row.getValue("createdAt") as string;
       return format(new Date(createdAt), "yyyy. MMMM d.", { locale: hu });
+    },
+  },
+  {
+    accessorKey: "coaches",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Felkészítő tanárok" />
+    ),
+    cell: ({ row }) => {
+      const coaches = (row.original as TeamWithDetails).coaches
+        .map((coach) => coach.name)
+        .join(", ");
+      return <div>{coaches}</div>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Státusz" />
+    ),
+    cell: ({ row }) => {
+      const status = row.getValue("status") as ApplicationStatus;
+      return <ApplicationStatusBadge status={status} />;
     },
   },
 ];

@@ -40,11 +40,6 @@ const organizerNav = [
     icon: Folder,
   },
   {
-    name: "Alkategóriák",
-    url: "/vezerlopult/alkategoriak",
-    icon: Blocks,
-  },
-  {
     name: "Technológiák",
     url: "/vezerlopult/technologiak",
     icon: Cpu,

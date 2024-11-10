@@ -58,8 +58,6 @@ export function TeamDetailDialog({
 
   const isRegistered = team?.status === "REGISTERED";
 
-  console.log(team);
-
   const handleReject = () => {
     onReject(rejectionReason);
     setIsRejectDialogOpen(false);
