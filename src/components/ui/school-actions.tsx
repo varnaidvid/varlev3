@@ -104,7 +104,9 @@ export default function SchoolActions({
                         variant="outline"
                         className={config.color}
                       >
-                        <Link href={`/csapatok/${team.id}`}>
+                        <Link
+                          href={`/vezerlopult/versenyek/${team.competitionId}/csapatok?teamName=${team.name}`}
+                        >
                           Részletek
                           <ExternalLink className="ml-2 size-4" />
                         </Link>

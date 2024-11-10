@@ -29,6 +29,7 @@ export default async function TechnologiesPage() {
               },
             ]}
           />
+
           <Button asChild>
             <Link href="/vezerlopult/technologiak/uj">
               <Plus /> Új technológia létrehozása

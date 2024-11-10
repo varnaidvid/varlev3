@@ -70,36 +70,6 @@ export function PageTitle({
             </h2>
           </div>
         </div>
-
-        <div className="mt-3 flex items-center justify-center gap-2">
-          <ClientOnly>
-            <TooltipProvider delayDuration={300}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <NotificationCenter />
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="end">
-                  <p>Értesítési központ megnyitása</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <div className="block md:hidden">
-              <TooltipProvider delayDuration={300}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button asChild variant={"outline"} size={"icon"}>
-                      <SidebarTrigger />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" align="end">
-                    <p>Menü kinyitása</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </ClientOnly>
-        </div>
       </header>
     </>
   );
