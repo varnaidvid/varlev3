@@ -8,16 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "./breadcrumb";
 import Link from "next/link";
-import NotificationCenter from "../vezerlopult/notification-center/notification-center";
-import { Button } from "./button";
-import { SidebarTrigger } from "./sidebar";
-import { ClientOnly } from "../client-only";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./tooltip";
+import { Separator } from "./separator";
 
 interface ILink {
   href: string;
@@ -55,7 +46,11 @@ export function PageTitle({
                     <BreadcrumbSeparator />
                     <BreadcrumbItem className="uppercase">
                       <BreadcrumbLink asChild>
-                        <Link href={link.href}>{link.label}</Link>
+                        <Link href={link.href}>
+                          {link.label.length > 20
+                            ? `${link.label.substring(0, 20)}...`
+                            : link.label}
+                        </Link>
                       </BreadcrumbLink>
                     </BreadcrumbItem>
                   </div>
@@ -69,36 +64,6 @@ export function PageTitle({
               {title}
             </h2>
           </div>
-        </div>
-
-        <div className="mt-3 flex items-center justify-center gap-2">
-          <ClientOnly>
-            <TooltipProvider delayDuration={300}>
-              <Tooltip>
-                <TooltipTrigger>
-                  <NotificationCenter />
-                </TooltipTrigger>
-                <TooltipContent side="bottom" align="end">
-                  <p>Értesítési központ megnyitása</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
-            <div className="block md:hidden">
-              <TooltipProvider delayDuration={300}>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Button asChild variant={"outline"} size={"icon"}>
-                      <SidebarTrigger />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" align="end">
-                    <p>Menü kinyitása</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </ClientOnly>
         </div>
       </header>
     </>

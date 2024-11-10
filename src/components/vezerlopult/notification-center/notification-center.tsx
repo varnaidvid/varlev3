@@ -14,7 +14,7 @@ import { NotificationItem } from "./notification-item";
 import { Skeleton } from "@/components/ui/skeleton";
 import NotificationItemSkeleton from "./notification-skeleton";
 
-export default function NotificationCenter() {
+export default function NotificationCenter({ ...props }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const lastFetchedPageRef = useRef<string | null>(null);
   const [markedNotifications, setMarkedNotifications] = useState<Set<string>>(
@@ -86,23 +86,24 @@ export default function NotificationCenter() {
   };
 
   return (
-    <DropdownMenu open={isOpen} onOpenChange={handleOpen}>
+    <DropdownMenu open={isOpen} onOpenChange={handleOpen} {...props}>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           size="icon"
-          className="relative w-fit px-[10px]"
+          className="relative w-max rounded-full px-4 py-2 text-muted-foreground hover:text-black"
+          aria-label="Értesítések"
         >
-          <Bell className="h-[1.2rem] w-[1.2rem]" />
-          <span className="hidden sm:block">Értesítések</span>
+          <Bell className="size-4" />
+          <span className="hidden md:block">Értesítések</span>
           {unreadCount > 0 && (
-            <span className="absolute -left-2 -top-2 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-500 text-xs font-extrabold text-white">
+            <span className="absolute left-1 top-1 flex size-4 animate-pulse items-center justify-center rounded-full bg-red-500 text-xs font-extrabold text-white">
               {unreadCount}
             </span>
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-96" align="end">
+      <DropdownMenuContent className="w-96" align="center" side="top">
         <div className="flex items-center justify-between border-b px-3 py-1">
           <h2 className="flex items-center gap-2 font-semibold">
             <div className="size-2 animate-pulse rounded-full bg-red-400" />

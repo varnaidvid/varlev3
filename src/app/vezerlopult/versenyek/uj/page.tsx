@@ -12,26 +12,24 @@ export default async function NewCompetition() {
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Trophy}
-          fromColor="from-indigo-300"
-          toColor="to-indigo-400"
-          title="Verseny Létrehozása"
-          links={[
-            {
-              href: "/vezerlopult/versenyek",
-              label: "Versenyek",
-            },
-            {
-              href: "/vezerlopult/versenyek/uj",
-              label: "Új verseny",
-            },
-          ]}
-        />
-      </header>
+      <PageTitle
+        Icon={Trophy}
+        fromColor="from-indigo-300"
+        toColor="to-indigo-400"
+        title="Verseny Létrehozása"
+        links={[
+          {
+            href: "/vezerlopult/versenyek",
+            label: "Versenyek",
+          },
+          {
+            href: "/vezerlopult/versenyek/uj",
+            label: "Új verseny",
+          },
+        ]}
+      />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         {/* <DataTable columns={columns} data={teams} /> */}
         {/* <div>
         {competitions.map((competition) => (

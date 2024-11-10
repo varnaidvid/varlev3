@@ -3,14 +3,47 @@ import {
   protectedProcedure,
   publicProcedure,
   withOwner,
+  withRole,
 } from "@/server/api/trpc";
 import { z } from "zod";
-import { schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { schoolRegisterType, schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { inferRouterOutputs } from "@trpc/server";
+import { School } from "@prisma/client";
+import { saltAndHashPassword } from "@/utils/password";
 
 export const schoolRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     return await ctx.db.school.findMany();
   }),
+
+  registerSchool: withRole(["ORGANIZER"])
+    .input(schoolRegisterType)
+    .mutation(async ({ ctx, input }) => {
+      const {
+        stepOne: { username, password },
+        stepTwo: { address, contactEmail, contactName, name },
+      } = input;
+
+      return await ctx.db.school.create({
+        data: {
+          name,
+          address,
+          contactName,
+          account: {
+            create: {
+              username,
+              ...saltAndHashPassword(password),
+              type: "SCHOOL",
+              emails: {
+                create: {
+                  email: contactEmail,
+                },
+              },
+            },
+          },
+        },
+      });
+    }),
 
   getTotalRegisteredTeamCount: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.team.count({
@@ -291,6 +324,31 @@ export const schoolRouter = createTRPCRouter({
         },
       });
     }),
+
+  getSchoolsWithDetails: withRole(["ORGANIZER"]).query(async ({ ctx }) => {
+    return ctx.db.school.findMany({
+      include: {
+        account: {
+          include: {
+            emails: true,
+          },
+        },
+        teams: {
+          include: {
+            Competition: true,
+          },
+        },
+        coaches: {
+          include: {
+            teams: true,
+          },
+        },
+      },
+    });
+  }),
 });
 
-// type SchoolRouter = inferRouterOutputs<typeof schoolRouter>;
+type SchoolRouter = inferRouterOutputs<typeof schoolRouter>;
+
+export type SchoolsWithDetails = School &
+  SchoolRouter["getSchoolsWithDetails"][0];

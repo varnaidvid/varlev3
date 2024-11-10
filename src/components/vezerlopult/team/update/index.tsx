@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card } from "@/components/ui/card";
@@ -81,6 +81,47 @@ export default function EditForm({
     api.auth.checkIfAnyOfTheEmailArrayIsNotAvailable.useQuery({
       emails: formThree.watch("emails") ?? [],
     });
+
+  useEffect(() => {
+    if (
+      isTeamnameAvailable !== undefined &&
+      isTeamnameAvailable !== null &&
+      !isTeamnameAvailable
+    ) {
+      formTwo.setError("name", {
+        type: "manual",
+        message: "A csapatnév foglalt. Kérjük válassz másikat.",
+      });
+    }
+
+    if (isTeamnameAvailable && formTwo.formState.errors.name)
+      formTwo.clearErrors("name");
+  }, [isTeamnameAvailable]);
+  useEffect(() => {
+    if (
+      unavailableEmails !== undefined &&
+      unavailableEmails !== null &&
+      unavailableEmails.length > 0
+    ) {
+      for (const email of unavailableEmails) {
+        const index = formThree.getValues("emails")?.indexOf(email);
+
+        if (index !== undefined && index !== -1) {
+          formThree.setError(`emails.${index}`, {
+            type: "manual",
+            message: "Ez az e-mail cím már használatban van.",
+          });
+        }
+      }
+    }
+
+    if (
+      unavailableEmails &&
+      unavailableEmails.length === 0 &&
+      formThree.formState.errors.emails
+    )
+      formThree.clearErrors("emails");
+  });
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = async () => {

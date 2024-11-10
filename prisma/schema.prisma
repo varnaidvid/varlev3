@@ -114,6 +114,7 @@ model Team {
     members      Member[]
     coaches      Coach[]
     technologies Technology[]
+    results      Result[]
 
     schoolName String
     school     School @relation(fields: [schoolName], references: [name])
@@ -190,10 +191,12 @@ model Competition {
     id String @id @default(cuid())
 
     name        String
-    description String   @db.Text
-    image       String   @db.LongText
+    description String @db.Text
+    image       String @db.LongText
     maxTeamSize Int
-    deadline    DateTime
+
+    deadline DateTime
+    ended    Boolean  @default(false)
 
     organizers Organizer[]
 
@@ -202,6 +205,7 @@ model Competition {
     teams         Team[]
     subCategories SubCategory[]
     notifications Notification[]
+    results       Result[]
 }
 
 model Email {
@@ -233,4 +237,17 @@ model Notification {
 
     competitionId String?
     Competition   Competition? @relation(fields: [competitionId], references: [id])
+}
+
+model Result {
+    id String @id @default(cuid())
+
+    score Int
+    place Int
+
+    teamId String
+    Team   Team   @relation(fields: [teamId], references: [id])
+
+    competitionId String
+    Competition   Competition @relation(fields: [competitionId], references: [id])
 }

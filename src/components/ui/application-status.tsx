@@ -27,6 +27,8 @@ const statusColors = {
   WAITING_FOR_ORGANIZER_APPROVAL: "bg-yellow-100 text-yellow-800",
   REJECTED_BY_ORGANIZER: "bg-red-100 text-red-800",
   REGISTERED: "bg-green-100 text-green-800",
+
+  COMPETITION_RUNNING: "bg-blue-100 text-blue-800",
 };
 
 const statusIcons = {
@@ -35,12 +37,14 @@ const statusIcons = {
   REJECTED_BY_ORGANIZER: <XCircle className="mr-1 h-4 w-4" />,
   WAITING_FOR_SCHOOL_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
   WAITING_FOR_ORGANIZER_APPROVAL: <Clock className="mr-1 h-4 w-4" />,
+
+  COMPETITION_RUNNING: <Clock className="mr-1 h-4 w-4" />,
 };
 
 export function ApplicationStatusBadge({
   status,
 }: {
-  status: ApplicationStatus;
+  status: ApplicationStatus & "COMPETITION_RUNNING";
 }) {
   return (
     <Badge className={`${statusColors[status]}`}>
@@ -49,14 +53,15 @@ export function ApplicationStatusBadge({
       {status === "APPROVED_BY_SCHOOL" && "Iskola által jóváhagyott"}
       {status === "WAITING_FOR_ORGANIZER_APPROVAL" &&
         "Szervezői jóváhagyásra vár"}
-      {status === "REJECTED_BY_ORGANIZER" && "Szervező által elutasított"}
+      {status === "REJECTED_BY_ORGANIZER" && "Hiánypótlásra vár"}
       {status === "WAITING_FOR_SCHOOL_APPROVAL" && "Iskolai jóváhagyásra vár"}
+      {status === "COMPETITION_RUNNING" && "Verseny éppen zajlik"}
     </Badge>
   );
 }
 
 type StatusConfigType = {
-  [key in ApplicationStatus]: {
+  [key: string]: {
     title: string;
     description: string;
     icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -113,14 +118,25 @@ const statusConfig: StatusConfigType = {
     dotColor: "fill-green-400/30",
   },
   REJECTED_BY_ORGANIZER: {
-    title: "Elutasítva, hiánypótlás szükséges",
-    description: "A szervezők elutasították a jelentkezéseteket",
+    title: "Hiánypótlás szükséges",
+    description: "A szervezők hiányosságokat találtak a jelentkezésben",
     icon: AlertCircle,
     color: "text-red-600",
     bgColor: "bg-red-50",
     borderColor: "border-red-200",
     timerColor: "text-neutral-600",
     dotColor: "fill-red-400/30",
+  },
+
+  COMPETITION_RUNNING: {
+    title: "Verseny éppen zajlik",
+    description: "A verseny éppen zajlik. Sok sikert kívánunk!",
+    icon: Clock,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+    borderColor: "border-blue-200",
+    timerColor: "text-neutral-600",
+    dotColor: "fill-blue-400/30",
   },
 };
 
@@ -133,7 +149,11 @@ export default function ApplicationStatusCard({
   team: Team;
   message?: string;
 }) {
-  const config = statusConfig[team.status];
+  const isRunning = competition.deadline > new Date() && !competition.ended;
+
+  const config = statusConfig[isRunning ? "COMPETITION_RUNNING" : team.status];
+  if (!config) return;
+
   const StatusIcon = config.icon;
 
   const { data: notification } =
@@ -215,38 +235,40 @@ export default function ApplicationStatusCard({
                 </p>
               </div>
             ) : (
-              <div className="mt-6 flex items-center justify-between">
-                <p className="mb-2 text-xs font-medium uppercase text-neutral-400">
-                  További műveletek:
-                </p>
+              <div className="mt-6 flex flex-col justify-between gap-10 sm:flex-row">
+                <div>
+                  <p className="mb-2 text-xs font-medium uppercase text-neutral-400">
+                    További műveletek:
+                  </p>
 
-                <div className="flex items-center gap-2">
-                  {team.status === "REJECTED_BY_ORGANIZER" && (
+                  <div className="flex items-center gap-2">
+                    {team.status === "REJECTED_BY_ORGANIZER" && (
+                      <Button
+                        asChild
+                        variant="outline"
+                        className={`${config.color}`}
+                      >
+                        <Link href={`/vezerlopult/beallitasok`}>
+                          Hiánypótlás
+                          <MousePointerClickIcon className="size-2" />
+                        </Link>
+                      </Button>
+                    )}
+
                     <Button
                       asChild
                       variant="outline"
                       className={`${config.color}`}
                     >
-                      <Link href={`/vezerlopult/beallitasok`}>
-                        Hiánypótlás
-                        <MousePointerClickIcon className="size-2" />
+                      <Link href={`/versenyek/${competition.id}`}>
+                        Verseny részletei
+                        <ExternalLink className="size-2" />
                       </Link>
                     </Button>
-                  )}
-
-                  <Button
-                    asChild
-                    variant="outline"
-                    className={`${config.color}`}
-                  >
-                    <Link href={`/versenyek/${competition.id}`}>
-                      Verseny részletei
-                      <ExternalLink className="size-2" />
-                    </Link>
-                  </Button>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="-mb-4 flex items-center justify-end gap-2">
                   <span className="text-sm text-gray-600">
                     Verseny kezdetéig
                   </span>
@@ -260,7 +282,9 @@ export default function ApplicationStatusCard({
         {!message && (
           <div className="mt-8">
             <div className="relative z-10 flex justify-end">
-              <div className={`text-2xl font-medium ${config.color}`}>
+              <div
+                className={`text-lg font-medium sm:text-xl md:text-2xl ${config.color}`}
+              >
                 <Countdown targetDate={competition.deadline.toISOString()} />
               </div>
             </div>

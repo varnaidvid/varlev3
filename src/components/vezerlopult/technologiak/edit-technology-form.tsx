@@ -75,7 +75,7 @@ export function EditTechnologyForm({ technology }: { technology: Technology }) {
             Technológia Szerkesztése
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
-            Kérjük, módosítsa a technológia adatait.
+            Alábbi űrlap segítségével szerkesztheti a technológia adatait.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">

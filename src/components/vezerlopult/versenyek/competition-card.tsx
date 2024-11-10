@@ -116,7 +116,7 @@ export default function CompetitionCard({
         <Button variant="default" className="flex-grow" asChild>
           <Link href={`versenyek/${competition.id}/csapatok`}>
             <Users className="mr-2 h-4 w-4" />
-            Csapatok ({competition.teams.length})
+            Jelentkezők ({competition.teams.length})
           </Link>
         </Button>
         <TooltipProvider>

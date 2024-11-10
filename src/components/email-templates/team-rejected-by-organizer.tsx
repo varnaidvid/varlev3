@@ -27,12 +27,12 @@ export const TeamRejectedByOrganizerEmail = ({
 }) => (
   <Html>
     <Head />
-    <Preview>Csapatod elutasítva a szervező által</Preview>
+    <Preview>Pótold a hiányosságokat csapatod jelentkezésében</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>
-          <b>{teamName}</b> csapatodat elutasította a <b>{competitionName}</b>{" "}
-          verseny szervezője!
+          <b>{teamName}</b> jelentkezésének kiegészítésére kért a(z){" "}
+          <b>{competitionName}</b> szervezője!
         </Heading>
         <Text style={text}>
           A versenyre való felkészüléshez kérjük, hogy a csapatod adatait

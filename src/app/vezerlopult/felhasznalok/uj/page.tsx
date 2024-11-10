@@ -8,24 +8,22 @@ import { cn } from "@/lib/utils";
 export default async function Page() {
   return (
     <>
-      <header className="mx-auto mt-8 flex w-full max-w-xl flex-col gap-2 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={UserPlus}
-          fromColor="from-indigo-400"
-          toColor="to-indigo-500"
-          title="Új felhasználó"
-          links={[
-            {
-              href: "/vezerlopult/felhasznalok",
-              label: "Felhasználók",
-            },
-            {
-              href: "/vezerlopult/felhasznalok/uj",
-              label: "Új felhasználó",
-            },
-          ]}
-        />
-      </header>
+      <PageTitle
+        Icon={UserPlus}
+        fromColor="from-indigo-400"
+        toColor="to-indigo-500"
+        title="Új felhasználó"
+        links={[
+          {
+            href: "/vezerlopult/felhasznalok",
+            label: "Felhasználók",
+          },
+          {
+            href: "/vezerlopult/felhasznalok/uj",
+            label: "Új felhasználó",
+          },
+        ]}
+      />
 
       <main className="relative flex h-full w-full flex-col items-center justify-center rounded-lg bg-background p-2 pb-8 md:shadow-xl">
         <div className="z-10 mx-auto flex w-full flex-col items-center justify-center">

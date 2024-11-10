@@ -8,8 +8,6 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -31,19 +29,22 @@ import { DataTableRowActions } from "./data-table-row-actions";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  initialData: TData[];
   schools: string[];
   competitionId: string;
   accountId: string;
+  teamName?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
-  data,
+  initialData,
   schools,
   competitionId,
   accountId,
+  teamName,
 }: DataTableProps<TData, TValue>) {
+  const [data, setData] = React.useState(initialData);
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -51,13 +52,20 @@ export function DataTable<TData, TValue>({
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
 
+  React.useEffect(() => {
+    const initialFilters: ColumnFiltersState = [];
+    if (teamName) {
+      initialFilters.push({ id: "name", value: teamName });
+    }
+    setColumnFilters(initialFilters);
+  }, [teamName]);
+
   const table = useReactTable({
     data,
     columns,
     state: {
       sorting,
       columnVisibility,
-
       columnFilters,
     },
     enableRowSelection: false,
@@ -68,13 +76,11 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} schools={schools} />
+      <DataTableToolbar table={table} schools={schools} teamName={teamName} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -112,6 +118,7 @@ export function DataTable<TData, TValue>({
                       row={row}
                       competitionId={competitionId}
                       accountId={accountId}
+                      setData={setData}
                     />
                   </TableCell>
                 </TableRow>

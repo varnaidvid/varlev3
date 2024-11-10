@@ -19,26 +19,24 @@ export default async function EditTechnology({
 
   return (
     <>
-      <header className="flex shrink-0 flex-col gap-2 p-4 transition-[width,height] ease-linear">
-        <PageTitle
-          Icon={Cpu}
-          fromColor="from-indigo-300"
-          toColor="to-indigo-400"
-          title="Technológia Szerkesztése"
-          links={[
-            {
-              href: "/vezerlopult/technologiak",
-              label: "Technológiák",
-            },
-            {
-              href: `/vezerlopult/technologiak/${technologyId}`,
-              label: "Technológia Szerkesztése",
-            },
-          ]}
-        />
-      </header>
+      <PageTitle
+        Icon={Cpu}
+        fromColor="from-indigo-300"
+        toColor="to-indigo-400"
+        title="Technológia Szerkesztése"
+        links={[
+          {
+            href: "/vezerlopult/technologiak",
+            label: "Technológiák",
+          },
+          {
+            href: `/vezerlopult/technologiak/${technologyId}`,
+            label: "Technológia Szerkesztése",
+          },
+        ]}
+      />
 
-      <main className="px-4 pb-16">
+      <main className="pb-16">
         <Card className="mx-auto w-full max-w-lg">
           <EditTechnologyForm technology={technology} />
         </Card>

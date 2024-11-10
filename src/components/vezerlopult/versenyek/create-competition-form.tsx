@@ -67,6 +67,7 @@ export function CreateCompetitionForm({
       name: "",
       image: "",
       description: `
+      <h1>Verseny neve</h1>
       Itt leírhatja a verseny célját, részleteit, szabályait, stb.
       `,
       maxTeamSize: 3,
@@ -162,6 +163,22 @@ export function CreateCompetitionForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Verseny leírása *</FormLabel>
+                <span className="mt-2 block text-sm text-muted-foreground">
+                  <span className="text-sm text-muted-foreground">
+                    Címsorokat következő módon hozhat létre
+                  </span>
+                  <ul className="mb-3 list-disc pl-5">
+                    <li>
+                      <b>#</b> = Nagy Címsor
+                    </li>
+                    <li>
+                      <b>##</b> = Közepes Címsor
+                    </li>
+                    <li>
+                      <b>###</b> = Kis Címsor
+                    </li>
+                  </ul>
+                </span>
                 <FormControl>
                   <ContentEditor
                     value={field.value}

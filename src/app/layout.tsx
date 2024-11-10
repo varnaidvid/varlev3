@@ -28,7 +28,7 @@ export default function RootLayout({
             <TRPCReactProvider>
               <HydrateClient>{children}</HydrateClient>
 
-              <Toaster richColors expand />
+              <Toaster position="bottom-center" richColors expand />
               <ToastCatcher />
             </TRPCReactProvider>
           </SessionProvider>

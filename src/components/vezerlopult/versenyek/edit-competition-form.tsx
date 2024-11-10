@@ -98,7 +98,7 @@ export function EditCompetitionForm({
             Verseny szerkesztése
           </CardTitle>
           <CardDescription className="!mt-4 text-justify">
-            Kérjük, módosítsa a verseny adatait.
+            Alábbi űrlap segítségével szerkesztheti a verseny adatait.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6">
@@ -136,6 +136,22 @@ export function EditCompetitionForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Verseny leírása *</FormLabel>
+                <span className="mt-2 block text-sm text-muted-foreground">
+                  <span className="text-sm text-muted-foreground">
+                    Címsorokat következő módon hozhat létre
+                  </span>
+                  <ul className="mb-3 list-disc pl-5">
+                    <li>
+                      <b>#</b> = Nagy Címsor
+                    </li>
+                    <li>
+                      <b>##</b> = Közepes Címsor
+                    </li>
+                    <li>
+                      <b>###</b> = Kis Címsor
+                    </li>
+                  </ul>
+                </span>
                 <FormControl>
                   <ContentEditor
                     value={field.value}

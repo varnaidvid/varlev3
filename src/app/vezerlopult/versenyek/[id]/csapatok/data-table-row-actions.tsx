@@ -6,12 +6,14 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
   competitionId: string;
   accountId: string;
+  setData: React.Dispatch<React.SetStateAction<TData[]>>;
 }
 
 export function DataTableRowActions<TData>({
   row,
   competitionId,
   accountId,
+  setData,
 }: DataTableRowActionsProps<TData>) {
   const teamApprovedByOrganizerMutation =
     api.notification.teamApprovedByOrganizer.useMutation();
@@ -30,20 +32,35 @@ export function DataTableRowActions<TData>({
       accountId: accountId,
       redirectTo: `/vezerlopult/versenyek/${competitionId}/csapatok`,
     });
+    setData((prevData) =>
+      prevData.map((team) =>
+        (team as { id: string }).id === id
+          ? { ...team, status: "REGISTERED" }
+          : team,
+      ),
+    );
   };
 
   const handleReject = async (reason: string) => {
+    const teamId = (row.original as { id: string }).id;
     await updateTeamStatusMutation.mutateAsync({
-      teamId: (row.original as { id: string }).id,
+      teamId: teamId,
       status: "REJECTED_BY_ORGANIZER",
     });
     await teamRejectedByOrganizerMutation.mutateAsync({
-      teamId: (row.original as { id: string }).id,
-      organizerId: accountId,
+      teamId: teamId,
+      accountId: accountId,
       competitionId: competitionId,
       redirectTo: `/vezerlopult/versenyek/${competitionId}/csapatok`,
       message: reason,
     });
+    setData((prevData) =>
+      prevData.map((team) =>
+        (team as { id: string }).id === teamId
+          ? { ...team, status: "REJECTED_BY_ORGANIZER" }
+          : team,
+      ),
+    );
   };
 
   return (
