@@ -3,11 +3,13 @@ import { PageTitle } from "@/components/ui/page-title";
 import { api } from "@/trpc/server";
 import { Folder, Plus, School } from "lucide-react";
 import Link from "next/link";
-import { SchoolsWithDetails } from "@/server/api/routers/school";
 import { columns } from "./columns";
 import { DataTable } from "./schools-table";
+import withRole from "@/utils/withRole";
 
 export default async function SchoolsPage() {
+  await withRole(["ORGANIZER"]);
+
   const schools = await api.school.getSchoolsWithDetails();
 
   return (
