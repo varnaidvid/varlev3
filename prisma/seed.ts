@@ -215,6 +215,40 @@ async function main() {
     },
   });
 
+  // create 4 coach accounts
+  const coach1 = await prisma.coach.create({
+    data: {
+      name: "Molnár Gábor",
+      School: {
+        connect: { id: school1.id },
+      },
+    },
+  });
+  const coach2 = await prisma.coach.create({
+    data: {
+      name: "Takács Zoltán",
+      School: {
+        connect: { id: school1.id },
+      },
+    },
+  });
+  const coach3 = await prisma.coach.create({
+    data: {
+      name: "Szabó János",
+      School: {
+        connect: { id: school1.id },
+      },
+    },
+  });
+  const coach4 = await prisma.coach.create({
+    data: {
+      name: "Lakatos Péter",
+      School: {
+        connect: { id: school1.id },
+      },
+    },
+  });
+
   // Create 3 team accounts
   const team1 = await prisma.team.create({
     data: {
@@ -251,17 +285,16 @@ async function main() {
           { name: "Németh Csaba", year: 10 },
         ],
       },
+      createdAt: new Date("2024-11-09"),
       coaches: {
-        create: [
-          { name: "Molnár Gábor", School: { connect: { id: school1.id } } },
-        ],
+        connect: [{ id: coach1.id }, { id: coach2.id }],
       },
       applicationForm:
         "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
     },
   });
 
-  await prisma.team.create({
+  const team2 = await prisma.team.create({
     data: {
       name: "BitMesterek",
       status: "WAITING_FOR_SCHOOL_APPROVAL",
@@ -297,15 +330,14 @@ async function main() {
       SubCategory: {
         connect: { id: subCategory1.id },
       },
+      createdAt: new Date("2024-11-05"),
       coaches: {
-        create: [
-          { name: "Takács Zoltán", School: { connect: { id: school2.id } } },
-        ],
+        connect: [{ id: coach2.id }, { id: coach3.id }],
       },
     },
   });
 
-  await prisma.team.create({
+  const team3 = await prisma.team.create({
     data: {
       name: "WebVirtuózok",
       status: "REGISTERED",
@@ -316,7 +348,7 @@ async function main() {
         connect: [{ id: tech1.id }, { id: tech5.id }],
       },
       school: {
-        connect: { id: school2.id },
+        connect: { id: school1.id },
       },
       account: {
         create: {
@@ -340,10 +372,9 @@ async function main() {
           { name: "Nagy István", year: 10 },
         ],
       },
+      createdAt: new Date("2024-11-08"),
       coaches: {
-        create: [
-          { name: "Szabó János", School: { connect: { id: school1.id } } },
-        ],
+        connect: [{ id: coach2.id }, { id: coach4.id }],
       },
     },
   });
@@ -353,10 +384,51 @@ async function main() {
     data: [
       {
         subject: "Új csapat regisztrált",
-        message: "A WebVirtuózok csapat regisztrált a versenyre.",
+        message: "A WebVirtuózok csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
         status: "UNREAD",
+        createdAt: new Date("2024-11-08"),
+        receiverAccountId: school1.accountId,
+        senderAccountId: team3.accountId,
+      },
+      {
+        subject: "Új csapat regisztrált",
+        message: "A BitMesterek csapat regisztrált egy versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        createdAt: new Date("2024-11-08"),
+        receiverAccountId: school1.accountId,
+        senderAccountId: team2.accountId,
+      },
+      {
+        subject: "Új csapat regisztrált",
+        message: "A Kódvadászok csapat regisztrált egy versenyre.",
+        topic: "TEAM_REGISTERED",
+        type: "INFO",
+        status: "UNREAD",
+        createdAt: new Date("2024-11-09"),
+        receiverAccountId: school2.accountId,
+        senderAccountId: team1.accountId,
+      },
+      {
+        subject: "Iskolai jóváhagyás megtörtént",
+        message: "Sikeresen jóváhagyta az iskolád a jelentkezésedet.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "SUCCESS",
+        status: "UNREAD",
+        createdAt: new Date("2024-11-09"),
+        receiverAccountId: team1.accountId,
+        senderAccountId: school2.accountId,
+      },
+      {
+        subject: "Iskolai jóváhagyás megtörtént",
+        message: "Kódvadászok csapat el lett fogadva az iskolája által.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "SUCCESS",
+        status: "UNREAD",
+        createdAt: new Date("2024-11-09"),
         receiverAccountId: organizer1.accountId,
         senderAccountId: school2.accountId,
       },
@@ -365,61 +437,10 @@ async function main() {
         message: "Kérjük módosítsák a felhasznált tecnológiákat.",
         topic: "TEAM_REJECTED_BY_ORGANIZER",
         type: "ERROR",
-
         status: "UNREAD",
+        createdAt: new Date("2024-11-10"),
         receiverAccountId: team1.accountId,
         senderAccountId: organizer1.accountId,
-      },
-      {
-        subject: "Csapat teljesítette a hiánypótlást",
-        message: "A Kódvadászok csapat jóváhagyásra került.",
-        topic: "TEAM_UPDATE",
-        type: "SUCCESS",
-
-        status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school2.accountId,
-      },
-      {
-        subject: "Új csapat regisztrált",
-        message: "A NemtOMKi csapat regisztrált a versenyre.",
-        topic: "TEAM_REGISTERED",
-        type: "INFO",
-
-        status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school1.accountId,
-      },
-      {
-        subject: "Csapat jóváhagyva",
-        message: "A NemtOMKi csapat jóváhagyásra került.",
-        topic: "TEAM_APPROVED_BY_SCHOOL",
-        type: "INFO",
-
-        status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school1.accountId,
-      },
-      {
-        subject: "Csapat elutasítva",
-        message:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec, auctor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-        topic: "TEAM_REGISTERED",
-        type: "INFO",
-
-        status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school1.accountId,
-      },
-      {
-        subject: "Csapat jóváhagyva",
-        message: "A NemtOMKi csapat jóváhagyásra került.",
-        topic: "TEAM_APPROVED_BY_SCHOOL",
-        type: "INFO",
-
-        status: "UNREAD",
-        receiverAccountId: organizer1.accountId,
-        senderAccountId: school1.accountId,
       },
     ],
   });

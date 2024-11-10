@@ -45,12 +45,10 @@ export const competitionRouter = createTRPCRouter({
           name,
           school: { connect: { name: school } },
           coaches: {
-            createMany: {
-              data: coaches.map((coach) => ({
-                name: coach,
-                schoolName: school,
-              })),
-            },
+            connectOrCreate: coaches.map((coach) => ({
+              where: { name: coach },
+              create: { name: coach, schoolName: school },
+            })),
           },
           Competition: { connect: { id: competitionId } },
           technologies: {

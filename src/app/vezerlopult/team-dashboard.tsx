@@ -2,6 +2,7 @@ import { auth } from "@/server/auth";
 import ApplicationStatusCard from "@/components/ui/application-status";
 import { api } from "@/trpc/server";
 import TeamDetailCard from "@/components/ui/team-detail-card";
+import { Separator } from "@/components/ui/separator";
 
 export default async function TeamDashboard() {
   const session = await auth();
@@ -24,7 +25,8 @@ export default async function TeamDashboard() {
         competition={competition}
       />
 
-      <h2 className="mb-2 mt-8 text-2xl font-semibold">Csapatod részletei</h2>
+      <Separator />
+
       <TeamDetailCard data={teamWithIncludes} />
     </div>
   );

@@ -94,10 +94,9 @@ model Member {
 model Coach {
     id String @id @default(cuid())
 
-    name String
+    name String @unique
 
-    teamId String
-    Team   Team   @relation(fields: [teamId], references: [id])
+    teams Team[]
 
     schoolName String
     School     School @relation(fields: [schoolName], references: [name])

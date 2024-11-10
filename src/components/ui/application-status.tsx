@@ -74,7 +74,7 @@ const statusConfig: StatusConfigType = {
     description:
       "Csapatod sikeresen beregisztrálva a versenyre. Sikeres felkészülést kívánunk!",
     icon: Loader2,
-    color: "text-blue-500",
+    color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
     timerColor: "text-neutral-600",
@@ -85,7 +85,7 @@ const statusConfig: StatusConfigType = {
     description:
       "Csapatod jelentkezését a szervezők még nem fogadták el. Kérlek várj türelemmel.",
     icon: Loader2,
-    color: "text-yellow-500",
+    color: "text-yellow-600",
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
     timerColor: "text-neutral-600",
@@ -96,7 +96,7 @@ const statusConfig: StatusConfigType = {
     description:
       "Csapatod jelentkezését az iskola még nem fogadta el. Kérlek várj türelemmel.",
     icon: Loader2,
-    color: "text-yellow-500",
+    color: "text-yellow-600",
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
     timerColor: "text-neutral-600",
@@ -106,7 +106,7 @@ const statusConfig: StatusConfigType = {
     title: "Elfogadva az iskolád által",
     description: "Az iskola elfogadta a jelentkezéseteket",
     icon: CheckCircle2,
-    color: "text-green-500",
+    color: "text-green-600",
     bgColor: "bg-green-50",
     borderColor: "border-green-200",
     timerColor: "text-neutral-600",
@@ -116,7 +116,7 @@ const statusConfig: StatusConfigType = {
     title: "Elutasítva, hiánypótlás szükséges",
     description: "A szervezők elutasították a jelentkezéseteket",
     icon: AlertCircle,
-    color: "text-red-500",
+    color: "text-red-600",
     bgColor: "bg-red-50",
     borderColor: "border-red-200",
     timerColor: "text-neutral-600",
@@ -178,7 +178,7 @@ export default function ApplicationStatusCard({
               </p>
             )}
             {message && (
-              <Alert className="mt-2">
+              <Alert className="mt-2 bg-white/50">
                 <AlertTitle>
                   {message.split("\n\n").map((line, index) => (
                     <React.Fragment key={index}>
@@ -216,6 +216,10 @@ export default function ApplicationStatusCard({
               </div>
             ) : (
               <div className="mt-6 flex items-center justify-between">
+                <p className="mb-2 text-xs font-medium uppercase text-neutral-400">
+                  További műveletek:
+                </p>
+
                 <div className="flex items-center gap-2">
                   {team.status === "REJECTED_BY_ORGANIZER" && (
                     <Button

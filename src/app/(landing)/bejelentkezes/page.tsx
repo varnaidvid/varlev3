@@ -19,7 +19,7 @@ export default async function LoginPage() {
         {/* <div className="mt-3 max-w-[390px] text-center text-sm text-slate-500">
           <Link
             href="/elfelejtett-jelszo"
-            className="mt-3 block text-sm text-blue-500 underline"
+            className="mt-3 block text-sm text-blue-600 underline"
           >
             Elfelejtett jelszó?
           </Link>

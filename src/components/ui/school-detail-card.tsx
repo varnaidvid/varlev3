@@ -27,7 +27,7 @@ export default function SchoolDetailCard({
           <h2 className="text-lg font-semibold text-gray-800">{data?.name}</h2>
           <Badge
             variant="outline"
-            className="border-blue-200 bg-blue-50 text-blue-500"
+            className="border-blue-200 bg-blue-50 text-blue-600"
           >
             <School className="mr-2 size-[14px]" />
             Iskola
@@ -94,12 +94,12 @@ export default function SchoolDetailCard({
               {data.coaches.map((coach) => (
                 <li key={coach.id} className="text-sm">
                   <span className="font-medium">{coach.name}</span>
-                  {coach.Team.name && (
-                    <span className="text-gray-500">
+                  {coach.teams.map((team) => (
+                    <span key={team.id} className="text-gray-500">
                       {" "}
-                      - Csapat: {coach.Team.name}
+                      - {team.name}
                     </span>
-                  )}
+                  ))}
                 </li>
               ))}
             </ul>

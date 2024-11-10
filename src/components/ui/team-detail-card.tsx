@@ -65,7 +65,7 @@ export default function TeamDetailCard({
       default:
         return (
           <Badge
-            className="border-blue-200 bg-blue-50 text-blue-500"
+            className="border-blue-200 bg-blue-50 text-blue-600"
             variant="outline"
           >
             Jóváhagyásra vár
