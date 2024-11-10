@@ -18,6 +18,10 @@ const menuLinks = [
     label: "Versenyek",
     href: "/versenyek",
   },
+  {
+    label: "Rólunk",
+    href: "/rolunk",
+  },
 ];
 
 export default function Header({ session }: { session: Session | null }) {

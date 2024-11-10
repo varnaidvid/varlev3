@@ -1,7 +1,15 @@
 import { CircleArrowRight, Files, Settings } from 'lucide-react';
 import TechStackLogos from '@/components/TechStackLogos';
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+
 export default function Page() {
+
   return (
     <section className="py-32">
       <div className="m-auto mt-20 flex flex-col gap-28">
@@ -68,6 +76,7 @@ export default function Page() {
             </div>
           </div>
         </div>
+
         <div className="flex flex-col">
           <div>
             <p className="mb-10 text-sm font-medium text-muted-foreground">
@@ -77,10 +86,56 @@ export default function Page() {
               Mivel dolgozunk?
             </h2>
           </div>
-          <div>
+          <div className="mb-8">
             <TechStackLogos/>
           </div>
         </div>
+      </div>
+
+      <div className="m-auto mt-24 mb-4 px-4">
+        <h2 className="text-3xl font-semibold md:text-5xl text-center mb-12">
+          Gyakori Kérdések
+        </h2>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="item-1">
+            <AccordionTrigger className="text-xl font-normal">
+              Hol tudsz minket elérni?
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nesciunt, doloremque dolorem exercitationem consectetur veritatis laudantium soluta ea dicta dolores in iure incidunt corrupti accusamus, omnis asperiores ducimus totam facere ipsum.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger className="text-xl font-normal">
+              Mire szakosodtunk?
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quis accusantium expedita, dolorum possimus odit eum libero ducimus at incidunt voluptatem necessitatibus quos? Maxime aliquid beatae perferendis in incidunt dolorem suscipit.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger className="text-xl font-normal">
+              Mit csinálunk szabadidőnkben?
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
+              quo praesentium laborum non totam. Nemo animi officiis doloribus
+              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
+              nisi, modi error.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className="text-xl font-normal">
+              Milyen tapasztalatokkal rendelkezünk?
+            </AccordionTrigger>
+            <AccordionContent className="text-base">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error
+              quo praesentium laborum non totam. Nemo animi officiis doloribus
+              ex, doloremque dicta aliquam repellat obcaecati maxime eaque iste
+              nisi, modi error.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </section>
   );
