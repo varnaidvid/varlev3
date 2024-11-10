@@ -3,6 +3,30 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import JelentkezesButton from "@/components/JelentkezesButton";
 import { TeamLeaderboard } from "./team-leaderboard";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Award, Medal, Trophy, Users } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default async function Page({
   params,
@@ -18,59 +42,28 @@ export default async function Page({
       ? "PENDING"
       : "RUNNING";
 
-  // Mock data for the TeamLeaderboard
-  const mockTeams = [
-    {
-      id: "1",
-      name: "ByteBrilliants",
-      score: 945,
-      members: ["Nagy Anna", "Kovács Péter", "Kiss János"],
-    },
-    {
-      id: "2",
-      name: "CodeCrusaders",
-      score: 892,
-      members: ["Szabó Eszter", "Tóth Márk", "Horváth Bence"],
-    },
-    {
-      id: "3",
-      name: "TechTitans",
-      score: 867,
-      members: ["Varga Lilla", "Molnár Dániel", "Németh Zsófia"],
-    },
-    {
-      id: "4",
-      name: "DataDynamos",
-      score: 843,
-      members: ["Fekete Ádám", "Balogh Emma", "Simon Gergő"],
-    },
-    {
-      id: "5",
-      name: "QuantumQuesters",
-      score: 825,
-      members: ["Papp Viktória", "Takács Balázs", "Farkas Réka"],
-    },
-    {
-      id: "6",
-      name: "AlgoAces",
-      score: 798,
-      members: ["Mészáros Dávid", "Szűcs Katalin", "Oláh Máté"],
-    },
-    {
-      id: "7",
-      name: "WebWizards",
-      score: 776,
-      members: ["Lukács Nóra", "Pintér Attila", "Végh Zsolt"],
-    },
-    {
-      id: "8",
-      name: "DevDreamers",
-      score: 754,
-      members: ["Bíró Laura", "Kelemen Tamás", "Somogyi Petra"],
-    },
-  ];
-
   if (!competition) return null;
+
+  const results = await api.competition.getResults({
+    id: competitionId,
+  });
+
+  const getMedalIcon = (index: number) => {
+    switch (index) {
+      case 0:
+        return <Trophy className="h-5 w-5 text-yellow-500" />;
+      case 1:
+        return <Medal className="h-5 w-5 text-gray-400" />;
+      case 2:
+        return <Award className="h-5 w-5 text-amber-600" />;
+      default:
+        return null;
+    }
+  };
+
+  const sortedTeams = [...results].sort((a, b) => b.score - a.score);
+  const totalTeams = results.length;
+
   return (
     <div className="mx-auto mt-28 w-[calc(100%-16px)] max-w-7xl space-y-8 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
       <div className="rounded-lg border bg-card p-8 shadow-xl">
@@ -129,10 +122,81 @@ export default async function Page({
           </div>
         </div>
       </div>
-      {(competitionStatus === "RUNNING" || competitionStatus === "CLOSED") && (
+      {competitionStatus === "CLOSED" && (
         <div className="grid gap-8 lg:grid-cols-2">
           <div className="rounded-lg border bg-card p-6">
-            <TeamLeaderboard teams={mockTeams} />
+            <Card className="h-full w-full">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 border-b pb-4">
+                <div>
+                  <CardTitle className="text-xl">Csapat ranglista</CardTitle>
+                  <CardDescription>
+                    A versenyben résztvevő csapatok eredményei
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardContent className="px-2 pb-0 pt-4 sm:px-4">
+                <ScrollArea className="h-[250px] w-full">
+                  {sortedTeams.length === 0 && (
+                    <div className="flex h-full w-full items-center justify-center">
+                      Nincs megjeleníthető adat
+                    </div>
+                  )}
+
+                  {sortedTeams.length > 0 && (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-12 text-center">#</TableHead>
+                          <TableHead>Csapat neve</TableHead>
+                          <TableHead className="text-right">Pontszám</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {sortedTeams.map((team, index) => (
+                          <TooltipProvider key={team.id}>
+                            <Tooltip>
+                              <TooltipTrigger asChild className="cursor-help">
+                                <TableRow>
+                                  <TableCell className="text-center">
+                                    {getMedalIcon(index) || index + 1}
+                                  </TableCell>
+                                  <TableCell className="font-medium">
+                                    {team.Team.name}
+                                  </TableCell>
+                                  <TableCell className="cursor-help text-right">
+                                    {team.score}
+                                  </TableCell>
+                                </TableRow>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p className="mb-1 font-semibold">
+                                  {team.Team.name} tagjai:
+                                </p>
+                                <ul className="list-disc pl-4">
+                                  {team.Team.members.map(
+                                    (member: any, idx: any) => (
+                                      <li key={idx}>{member}</li>
+                                    ),
+                                  )}
+                                </ul>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
+                </ScrollArea>
+              </CardContent>
+              <CardFooter className="flex justify-between border-t px-6 py-4">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    Összes csapat: {totalTeams}
+                  </span>
+                </div>
+              </CardFooter>
+            </Card>
           </div>
           <div className="rounded-lg border bg-card p-6">
             <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
