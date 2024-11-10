@@ -51,19 +51,13 @@ export default function CompetitionCard({
             </h2>
           </Link>
         </div>
-        <div className="flex items-center justify-start gap-2 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-start gap-2 text-sm text-muted-foreground">
           <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Badge variant="secondary" className="text-xs">
-                  <Users className="mr-1 h-3 w-3" />
-                  Max {competition.maxTeamSize}
-                </Badge>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Max csapat létszám</p>
-              </TooltipContent>
-            </Tooltip>
+            {competition.categories.map((category) => (
+              <Badge key={category.id} variant="outline">
+                {category.name}
+              </Badge>
+            ))}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="secondary" className="text-xs">
@@ -75,6 +69,17 @@ export default function CompetitionCard({
                 <p>Jelentkezési határidő</p>
               </TooltipContent>
             </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary" className="text-xs">
+                  <Users className="mr-1 h-3 w-3" />
+                  Max {competition.maxTeamSize}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Max csapat létszám</p>
+              </TooltipContent>
+            </Tooltip>
           </TooltipProvider>
         </div>
         <p className="line-clamp-3 text-sm text-muted-foreground">
@@ -84,19 +89,28 @@ export default function CompetitionCard({
           )}
         </p>
         <div className="flex flex-wrap gap-2">
-          {competition.categories.map((category) => (
-            <Badge key={category.id} variant="outline">
-              {category.name}
-            </Badge>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-2">
           {competition.technologies.map((tech) => (
             <Badge key={tech.id} variant="secondary" className="text-xs">
               {tech.name}
             </Badge>
           ))}
         </div>
+        {competition.subCategories.length > 1 && (
+          <div className="flex flex-wrap gap-2">
+            <TooltipProvider>
+              {competition.subCategories.map((subCategory) => (
+                <Tooltip key={subCategory.id}>
+                  <TooltipTrigger asChild>
+                    <Badge variant="outline">{subCategory.name}</Badge>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Alkategóriák</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
+          </div>
+        )}
       </CardContent>
       <CardFooter className="flex gap-2 p-6">
         <Button variant="default" className="flex-grow" asChild>
