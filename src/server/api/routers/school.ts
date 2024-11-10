@@ -3,9 +3,12 @@ import {
   protectedProcedure,
   publicProcedure,
   withOwner,
+  withRole,
 } from "@/server/api/trpc";
 import { z } from "zod";
 import { schoolUpdateSchema } from "@/lib/zod/school-crud";
+import { inferRouterOutputs } from "@trpc/server";
+import { School } from "@prisma/client";
 
 export const schoolRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -291,6 +294,31 @@ export const schoolRouter = createTRPCRouter({
         },
       });
     }),
+
+  getSchoolsWithDetails: withRole(["ORGANIZER"]).query(async ({ ctx }) => {
+    return ctx.db.school.findMany({
+      include: {
+        account: {
+          include: {
+            emails: true,
+          },
+        },
+        teams: {
+          include: {
+            Competition: true,
+          },
+        },
+        coaches: {
+          include: {
+            teams: true,
+          },
+        },
+      },
+    });
+  }),
 });
 
-// type SchoolRouter = inferRouterOutputs<typeof schoolRouter>;
+type SchoolRouter = inferRouterOutputs<typeof schoolRouter>;
+
+export type SchoolsWithDetails = School &
+  SchoolRouter["getSchoolsWithDetails"][0];

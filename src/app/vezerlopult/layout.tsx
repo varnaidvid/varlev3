@@ -12,8 +12,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  // TODO: uncomment this line when auth is implemented
-  //   if (!session) redirect("/bejelentkezes");
+  if (!session) redirect("/bejelentkezes");
 
   return (
     <SidebarProvider>
