@@ -5,6 +5,7 @@ import { api } from "@/trpc/server";
 import { Cpu, Plus } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 export default async function TechnologiesPage() {
   const technologies = await api.technology.getAllWithDetails();

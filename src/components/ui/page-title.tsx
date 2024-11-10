@@ -8,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "./breadcrumb";
 import Link from "next/link";
+import { Separator } from "./separator";
 
 interface ILink {
   href: string;

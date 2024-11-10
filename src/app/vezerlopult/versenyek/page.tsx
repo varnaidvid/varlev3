@@ -30,7 +30,7 @@ export default async function CompetitionsPage() {
         </Button>
       </div>
 
-      <main className="px-4">
+      <main>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-2">
           {competitions.map((competition) => (
             <CompetitionCard key={competition.id} competition={competition} />

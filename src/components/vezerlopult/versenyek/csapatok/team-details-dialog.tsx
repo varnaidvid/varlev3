@@ -32,6 +32,7 @@ import { ApplicationStatusBadge } from "@/components/ui/application-status";
 import { ImagePreviewOverlay } from "./image-preview-overlay";
 import { downloadFile } from "@/utils/file-helpers";
 import { toast } from "sonner";
+import { ClientOnly } from "../../../client-only";
 
 interface ApplicationDetailDialogProps {
   teamId: string;
@@ -254,20 +255,22 @@ export function TeamDetailDialog({
                           </CardContent>
                         </Card>
                       </button>
-                      <Button
-                        variant="outline"
-                        className="mt-2 flex w-[200px] items-center gap-2"
-                        onClick={() =>
-                          team?.applicationForm &&
-                          downloadFile(
-                            team.applicationForm,
-                            team.name + "_jelentkezesi_lap",
-                          )
-                        }
-                      >
-                        <Download className="h-4 w-4" />
-                        <span>Letöltés</span>
-                      </Button>
+                      <ClientOnly>
+                        <Button
+                          variant="outline"
+                          className="mt-2 flex w-[200px] items-center gap-2"
+                          onClick={() =>
+                            team?.applicationForm &&
+                            downloadFile(
+                              team.applicationForm,
+                              team.name + "_jelentkezesi_lap",
+                            )
+                          }
+                        >
+                          <Download className="h-4 w-4" />
+                          <span>Letöltés</span>
+                        </Button>
+                      </ClientOnly>
                     </div>
                   ) : (
                     <p className="text-sm text-gray-600">

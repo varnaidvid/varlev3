@@ -6,6 +6,7 @@ import TeamDashboard from "./team-dashboard";
 import { api } from "@/trpc/server";
 import { Team } from "@prisma/client";
 import SchoolDashboard from "./school-dashboard";
+import OrganizerDashboard from "./organizer-dashboard";
 
 export default async function Page() {
   const session = await auth();
@@ -28,6 +29,7 @@ export default async function Page() {
 
       {session?.user.type === "TEAM" && <TeamDashboard />}
       {session?.user.type === "SCHOOL" && <SchoolDashboard />}
+      {session?.user.type === "ORGANIZER" && <OrganizerDashboard />}
     </>
   );
 }
