@@ -40,6 +40,7 @@ export default async function HomePage() {
 
   return (
     <>
+    
       <Hero />
 
       <h1 className="p-4 text-3xl font-bold">Aktuális versenyek</h1>
