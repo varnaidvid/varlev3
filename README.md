@@ -21,19 +21,19 @@ Egy webalkalmazás, **versenyek szervezésére**. Szervezők, iskolák, csapatok
 ### Néhány kiemelt funkció:
 
 Verseny részleteinek oldala
-[![Verseny részletei](/illustrations/competition_details_page.png)]
+[Verseny részletei](/illustrations/competition_details_page.png)
 
 Egy szervező vezérlőpultja
-[![Szervezői vezérlőpult](/illustrations/organizer_dashboard.png.png)]
+[Szervezői vezérlőpult](/illustrations/organizer_dashboard.png)
 
 Regisztrált csapatok listája szervezők számára
-[![Regisztrált csapatok](/illustrations/registered_teams_datatable.png.png)]
+[Regisztrált csapatok](/illustrations/registered_teams_datatable.png)
 
 Egy iskola vezérlőpultja
-[![Iskolai vezérlőpult](/illustrations/school_dashboard.png)]
+[Iskolai vezérlőpult](/illustrations/school_dashboard.png)
 
 Egy csapat vezérlőpultja
-[![Csapat vezérlőpultja](/illustrations/team_dashboard.png)]
+[Csapat vezérlőpultja](/illustrations/team_dashboard.png)
 
 Értesítés központ (emailben is értesít, előre készített sablonokkal)
-[![Értesítés központ](/illustrations/notification_center.png.png)]
+[Értesítés központ](/illustrations/notification_center.png)
