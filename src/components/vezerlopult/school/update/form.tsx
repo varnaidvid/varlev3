@@ -66,7 +66,10 @@ export default function SchoolUpdateForm({
       });
     }
 
-    if (isSchoolnameAvailable && form.formState.errors.name)
+    if (
+      (isSchoolnameAvailable && form.formState.errors.name) ||
+      form.getValues("name") === initialData.name
+    )
       form.clearErrors("name");
   });
   useEffect(() => {
@@ -81,7 +84,10 @@ export default function SchoolUpdateForm({
       });
     }
 
-    if (isEmailAvailable && form.formState.errors.contactEmail)
+    if (
+      (isEmailAvailable && form.formState.errors.contactEmail) ||
+      form.getValues("contactEmail") === initialData.account.emails[0]?.email
+    )
       form.clearErrors("contactEmail");
   });
 

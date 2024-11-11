@@ -62,7 +62,7 @@ export function RegisteredTeamsBarChart() {
   const [intervalState, setIntervalState] = React.useState("7");
 
   const { data: rawData, isFetching } =
-    api.school.getRegisteredTeamCountByInterval.useQuery({
+    api.school.getRegisteredTeamCountByIntervalDummyData.useQuery({
       days: parseInt(intervalState),
     });
 

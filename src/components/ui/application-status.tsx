@@ -149,7 +149,7 @@ export default function ApplicationStatusCard({
   team: Team;
   message?: string;
 }) {
-  const isRunning = competition.deadline > new Date() && !competition.ended;
+  const isRunning = competition.deadline < new Date() && !competition.ended;
 
   const config = statusConfig[isRunning ? "COMPETITION_RUNNING" : team.status];
   if (!config) return;

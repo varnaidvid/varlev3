@@ -32,6 +32,7 @@ declare module "next-auth" {
  */
 
 export const authConfig = {
+  trustHost: true,
   adapter: PrismaAdapter(db),
   pages: {
     signIn: "/bejelentkezes",

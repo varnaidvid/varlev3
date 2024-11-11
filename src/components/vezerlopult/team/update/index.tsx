@@ -94,7 +94,10 @@ export default function EditForm({
       });
     }
 
-    if (isTeamnameAvailable && formTwo.formState.errors.name)
+    if (
+      (isTeamnameAvailable && formTwo.formState.errors.name) ||
+      formTwo.getValues("name") === initialData.name
+    )
       formTwo.clearErrors("name");
   }, [isTeamnameAvailable]);
   useEffect(() => {
@@ -116,9 +119,11 @@ export default function EditForm({
     }
 
     if (
-      unavailableEmails &&
-      unavailableEmails.length === 0 &&
-      formThree.formState.errors.emails
+      (unavailableEmails &&
+        unavailableEmails.length === 0 &&
+        formThree.formState.errors.emails) ||
+      formThree.getValues("emails") ===
+        initialData.account.emails.map((email) => email.email)
     )
       formThree.clearErrors("emails");
   });
