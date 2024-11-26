@@ -10,8 +10,8 @@ export default async function LoginPage() {
   if (session) redirect("/vezerlopult");
 
   return (
-    <div className="relative -mb-[170px] flex h-screen w-screen flex-col items-center justify-center overflow-hidden bg-background p-2">
-      <div className="z-10 mx-auto flex w-full flex-col items-center justify-center">
+    <div className="relative -mb-[170px] overflow-hidden p-2">
+      <div className="z-10 mx-auto flex min-h-screen w-full flex-col items-center justify-center">
         <ClientOnly>
           <LoginForm />
         </ClientOnly>

@@ -9,7 +9,7 @@ export function Footer() {
     <footer
       className={cn(
         "w-full max-w-7xl rounded-xl border py-14",
-        "container mx-auto mt-20 flex items-center justify-center backdrop-blur-md",
+        "container mx-auto mt-20 flex items-center justify-center bg-background backdrop-blur-md",
       )}
     >
       <div className="w-full !max-w-screen-lg px-4 sm:px-6 lg:px-8">

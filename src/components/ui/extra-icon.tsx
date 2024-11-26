@@ -46,7 +46,7 @@ export function ExtraIcon({
 
   return (
     <div
-      className={`relative z-0 w-max items-center justify-center overflow-hidden rounded-lg border-2 bg-background ${padding} md:shadow-xl`}
+      className={`relative z-0 w-max items-center justify-center overflow-hidden rounded-lg border-2 bg-background ${padding} md:shadow-md`}
     >
       <p className="z-10">
         <Icon

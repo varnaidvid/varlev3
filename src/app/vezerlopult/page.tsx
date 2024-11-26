@@ -7,6 +7,7 @@ import { api } from "@/trpc/server";
 import { Team } from "@prisma/client";
 import SchoolDashboard from "./school-dashboard";
 import OrganizerDashboard from "./organizer-dashboard";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default async function Page() {
   const session = await auth();
@@ -20,13 +21,17 @@ export default async function Page() {
 
   return (
     <>
+      {/* <Card className="mb-[60px]">
+        <CardContent>
+          <pre>{JSON.stringify(session, null, 2)}</pre>
+        </CardContent>
+      </Card> */}
       <PageTitle
         Icon={Gauge}
         fromColor="from-sky-400/50"
         toColor="to-blue-500/50"
         title={team ? team.name : "Vezérlőpult"}
       />
-
       {session?.user.type === "TEAM" && <TeamDashboard />}
       {session?.user.type === "SCHOOL" && <SchoolDashboard />}
       {session?.user.type === "ORGANIZER" && <OrganizerDashboard />}

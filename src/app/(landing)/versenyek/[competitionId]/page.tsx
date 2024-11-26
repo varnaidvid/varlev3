@@ -65,10 +65,10 @@ export default async function Page({
 
   return (
     <div className="mx-auto mt-28 w-[calc(100%-16px)] max-w-7xl space-y-8 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
-      <div className="rounded-lg border bg-card p-8 shadow-xl">
+      <div className="rounded-lg border bg-card p-8 shadow-md">
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <img
-            className="aspect-video w-full rounded-lg object-cover shadow-xl lg:w-1/3"
+            className="aspect-video w-full rounded-lg object-cover shadow-md lg:w-1/3"
             src={competition.image}
             alt={competition.name}
           />

@@ -24,11 +24,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useTransition } from "react";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 // import { Turnstile } from '@marsidev/react-turnstile'
-import { Separator } from "@/components/ui/separator";
-import { api } from "@/trpc/react";
 import { signInSchema } from "@/lib/zod/auth";
 import Logo from "@/components/logo";
 
@@ -52,7 +49,7 @@ export default function LoginForm() {
 
   return (
     <>
-      <Card className="mx-auto w-full max-w-lg">
+      <Card className="z-20 mx-auto w-full max-w-lg">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <CardHeader className="border-b">

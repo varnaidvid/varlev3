@@ -92,8 +92,7 @@ model Member {
 }
 
 model Coach {
-    id String @id @default(cuid())
-
+    id   String @id @default(cuid())
     name String @unique
 
     teams Team[]

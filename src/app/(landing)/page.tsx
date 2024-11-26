@@ -15,63 +15,61 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Separator } from "@/components/ui/separator";
+import FlickeringGrid from "@/components/ui/flickering-grid";
 
 export default async function HomePage() {
   const session = await auth();
 
   const competitions = await api.competition.getAllWithDetails();
 
-  const popularCompetitions = competitions.sort(
-    (a, b) => b.teams.length - a.teams.length
-  ).slice(0, 5);  
+  const popularCompetitions = competitions
+    .sort((a, b) => b.teams.length - a.teams.length)
+    .slice(0, 5);
 
   return (
-    <>
+    <div className="mx-auto">
+      <FlickeringGrid
+        className="absolute inset-0 top-6 z-0 size-full overflow-hidden"
+        squareSize={4}
+        gridGap={6}
+        color="#6B7280"
+        maxOpacity={0.1}
+        flickerChance={0.2}
+        height={550}
+      />
 
       <Hero />
 
-      <div className="mt-96"></div>
+      <div className="mt-32"></div>
 
-      <h1 className="px-4 pt-14 text-3xl font-bold z-50">Fő funkciók</h1>
+      <h1 className="z-50 px-4 pt-14 text-center text-3xl font-bold">
+        🎯 Fő funkciók
+      </h1>
+      <Separator className="mx-auto mt-1 w-20" />
 
       <FeaturesBlock />
 
-      <h1 className="px-4 py-14 text-3xl font-bold">Legpopulárisabb versenyek</h1>
+      <h1 className="z-50 px-4 pt-14 text-center text-3xl font-bold">
+        🏆 Versenyeink
+      </h1>
+      <Separator className="mx-auto mt-1 w-20" />
 
-      <CategoryShowcaseCarousel
-        competitions={popularCompetitions}
-      />
-
-      <h1 className="mt-16 p-4 text-3xl font-bold">Rólunk</h1>
-      <p className="mt-8 px-4 text-justify text-lg font-medium">
-        Elkötelezettek és szakmailag felkészültek vagyunk alkalmazásunk
-        fejlesztésében. A csapat most intenzíven dolgozik a verseny
-        idején, és minden erőfeszítésünket arra összpontosítjuk, hogy az
-        alkalmazásunk a lehető legjobb teljesítményt nyújtsa a versenyen.
-        A csapatunk tagjai szorosan együttműködnek, és kitartóan
-        törekszünk a kiválóságra, hogy bizonyítsuk elhivatottságunkat és
-        tehetségünket a versenyen.
-      </p>
-
-      <div className="flex justify-end px-4">
-        <Link href="/rolunk">
-          <Button className="w-full sm:w-auto">
-            <ArrowRight className="mr-2 size-4" />
-            Rólunk
-          </Button>
-        </Link>
-      </div>
+      <CategoryShowcaseCarousel competitions={popularCompetitions} />
 
       <div className="my-12 px-4 text-center text-5xl font-medium">
         <div className="text-left">
+          <span className="text-xl">a következő versenyig...</span>
           <ClientOnly>
             <Countdown targetDate="2025-01-01T23:59:59" />
           </ClientOnly>
-          <span className="text-xl">a következő versenyig...</span>
         </div>
       </div>
 
-      <h1 className="mt-16 p-4 text-3xl font-bold">Kérdések és Válaszok</h1>
+      <h1 className="z-50 px-4 pt-14 text-center text-3xl font-bold">
+        🙋 Gyakori Kérdések
+      </h1>
+      <Separator className="mx-auto mt-1 w-20" />
 
       <div className="m-auto my-4 px-4">
         <Accordion type="single" collapsible>
@@ -80,8 +78,7 @@ export default async function HomePage() {
               Mikor lesz a következő verseny?
             </AccordionTrigger>
             <AccordionContent className="text-base">
-              {/*to-do: fetch data from database*/}A következő verseny
-              időpontja: 2025.01.01
+              A következő verseny időpontja: 2025.01.01
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
@@ -110,6 +107,6 @@ export default async function HomePage() {
           </AccordionItem>
         </Accordion>
       </div>
-    </>
+    </div>
   );
 }

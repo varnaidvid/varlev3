@@ -10,8 +10,8 @@ export default async function Page() {
 
   return (
     <>
-      <div className="mx-auto mt-28 w-[calc(100%-16px)] max-w-7xl sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
-        <div className="rounded-lg border p-12 shadow-xl">
+      <div className="mx-auto mt-28">
+        <div className="rounded-lg border p-12 shadow-md">
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold">Versenyek</h1>
             <p className="mb-8">{competitions.length} verseny található</p>

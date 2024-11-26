@@ -26,7 +26,7 @@ export default async function Error({
   reset: () => void;
 }) {
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded-lg border bg-background p-20 md:shadow-xl">
+    <div className="relative flex h-screen w-screen items-center justify-center overflow-hidden rounded-lg border bg-background p-20 md:shadow-md">
       <div className="z-10 flex h-full w-full items-center justify-center text-center">
         <Card className="max-w-[600px]">
           <CardHeader>

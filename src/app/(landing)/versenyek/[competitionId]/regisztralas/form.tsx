@@ -251,7 +251,7 @@ export default function RegisterForm({
   return (
     <>
       {step === 1 && (
-        <Card className="mx-auto w-full max-w-lg">
+        <Card className="z-20 mx-auto w-full max-w-lg">
           <AccountForm
             pending={pending || fetch1}
             form={formOne}
@@ -261,7 +261,7 @@ export default function RegisterForm({
       )}
 
       {step === 2 && (
-        <Card className="mx-auto w-full max-w-lg">
+        <Card className="z-20 mx-auto w-full max-w-lg">
           <TeamDetailsForm
             pending={pending || fetch2}
             subCategories={subCategories}
@@ -275,7 +275,7 @@ export default function RegisterForm({
       )}
 
       {step === 3 && (
-        <Card className="mx-auto w-full max-w-lg">
+        <Card className="z-20 mx-auto w-full max-w-lg">
           <TeamMembersForm
             form={formThree}
             pending={pending || fetch3}

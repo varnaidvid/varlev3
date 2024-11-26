@@ -12,13 +12,13 @@ interface DotPatternProps {
   [key: string]: any;
 }
 export function DotPattern({
-  width = 40,
-  height = 40,
+  width = 16,
+  height = 16,
   x = 0,
   y = 0,
-  cx = 12,
-  cy = 12,
-  cr = 12,
+  cx = 1,
+  cy = 1,
+  cr = 1,
   className,
   ...props
 }: DotPatternProps) {
@@ -26,7 +26,6 @@ export function DotPattern({
 
   return (
     <svg
-      style={{ zIndex: -1 }}
       aria-hidden="true"
       className={cn(
         "pointer-events-none absolute inset-0 h-full w-full fill-neutral-400/80",
