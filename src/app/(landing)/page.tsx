@@ -57,15 +57,6 @@ export default async function HomePage() {
 
       <CategoryShowcaseCarousel competitions={popularCompetitions} />
 
-      <div className="my-12 px-4 text-center text-5xl font-medium">
-        <div className="text-left">
-          <span className="text-xl">a következő versenyig...</span>
-          <ClientOnly>
-            <Countdown targetDate="2025-01-01T23:59:59" />
-          </ClientOnly>
-        </div>
-      </div>
-
       <h1 className="z-50 px-4 pt-14 text-center text-3xl font-bold">
         🙋 Gyakori Kérdések
       </h1>

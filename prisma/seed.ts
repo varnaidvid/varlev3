@@ -492,7 +492,7 @@ async function main() {
   const team6 = await prisma.team.create({
     data: {
       name: "PHP Mesterek",
-      status: "WAITING_FOR_SCHOOL_APPROVAL",
+      status: "WAITING_FOR_ORGANIZER_APPROVAL",
       Competition: {
         connect: { id: competition.id },
       },
@@ -563,6 +563,26 @@ async function main() {
         createdAt: new Date("2024-10-04"),
         receiverAccountId: school2.accountId,
         senderAccountId: team6.accountId,
+      },
+      {
+        subject: "Iskolai jóváhagyás megtörtént",
+        message: "Sikeresen jóváhagyta az iskolád a jelentkezésedet.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "SUCCESS",
+        status: "UNREAD",
+        createdAt: new Date("2024-10-09"),
+        receiverAccountId: team6.accountId,
+        senderAccountId: school2.accountId,
+      },
+      {
+        subject: "Iskolai jóváhagyás megtörtént",
+        message: "Kódvadászok csapat el lett fogadva az iskolája által.",
+        topic: "TEAM_APPROVED_BY_SCHOOL",
+        type: "SUCCESS",
+        status: "UNREAD",
+        createdAt: new Date("2024-10-09"),
+        receiverAccountId: organizer1.accountId,
+        senderAccountId: school2.accountId,
       },
     ],
   });
