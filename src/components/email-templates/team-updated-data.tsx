@@ -29,9 +29,6 @@ export const TeamUpdatedDataEmail = ({
         <Heading style={h1}>
           <b>{teamName}</b> csapat elvégezte a kérvényezett hiánypótlást!
         </Heading>
-        <Text style={text}>
-          A csapat adatait újra ellenőrizheted a következő hivatkozással:
-        </Text>
       </Container>
     </Body>
   </Html>

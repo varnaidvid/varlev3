@@ -822,7 +822,7 @@ async function main() {
         connect: [{ id: tech1.id }, { id: tech2.id }],
       },
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       account: {
         create: {
@@ -860,7 +860,7 @@ async function main() {
       name: "BitMesterek",
       status: "WAITING_FOR_SCHOOL_APPROVAL",
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       technologies: {
         connect: [{ id: tech3.id }, { id: tech4.id }],
@@ -903,7 +903,7 @@ async function main() {
       name: "WebVirtuózok",
       status: "REGISTERED",
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       technologies: {
         connect: [{ id: tech1.id }, { id: tech5.id }],
@@ -946,7 +946,7 @@ async function main() {
       name: "Vanilla JS Mesterek",
       status: "WAITING_FOR_SCHOOL_APPROVAL",
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       technologies: {
         connect: [{ id: tech5.id }],
@@ -987,7 +987,7 @@ async function main() {
       name: "Angular Mesterek",
       status: "WAITING_FOR_ORGANIZER_APPROVAL",
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       technologies: {
         connect: [{ id: tech3.id }],
@@ -1030,7 +1030,7 @@ async function main() {
       name: "PHP Mesterek",
       status: "WAITING_FOR_ORGANIZER_APPROVAL",
       Competition: {
-        connect: { id: competition2.id },
+        connect: { id: competition1.id },
       },
       technologies: {
         connect: [{ id: tech2.id }],

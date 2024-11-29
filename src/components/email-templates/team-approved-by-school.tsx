@@ -57,9 +57,6 @@ export const TeamApprovedBySchoolForOrganizerEmail = ({
           Jóváhagyták a <b>{teamName}</b> csapat jelentkezését a{" "}
           <b>{competitionName}</b> versenyre!
         </Heading>
-        <Text style={text}>
-          További megerősítéshez látogass el a következő linkre:
-        </Text>
       </Container>
     </Body>
   </Html>

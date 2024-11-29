@@ -246,7 +246,7 @@ export function TeamDetailDialog({
                   {team?.applicationForm ? (
                     <div className="mt-2">
                       <button onClick={handleImagePreviewOpen}>
-                        <Card className="w-[200px] cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg">
+                        <Card className="w-[200px] cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-md">
                           <CardContent className="p-0">
                             <div className="relative h-[300px] w-full">
                               <Image
@@ -261,9 +261,12 @@ export function TeamDetailDialog({
                                   variant="secondary"
                                   size="sm"
                                   className="flex items-center gap-2"
+                                  asChild
                                 >
-                                  <Eye className="h-4 w-4" />
-                                  <span>Megtekintés</span>
+                                  <div>
+                                    <Eye className="h-4 w-4" />
+                                    <span>Megtekintés</span>
+                                  </div>
                                 </Button>
                               </div>
                             </div>

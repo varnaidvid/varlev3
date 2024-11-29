@@ -8,7 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2, Megaphone, Send } from "lucide-react";
+import { Loader2, Megaphone, Router, Send } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/form";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 
 const createNotificationSchema = z.object({
   subject: z
@@ -46,6 +48,7 @@ export default function CreateNewAnnouncement({
   competitionId: string;
 }) {
   const session = useSession();
+  const router = useRouter();
 
   const form = useForm<CreateNotificationInput>({
     resolver: zodResolver(createNotificationSchema),
@@ -69,17 +72,18 @@ export default function CreateNewAnnouncement({
     form.reset();
 
     toast.success("Közlemény sikeresen létrehozva");
+    router.refresh();
   }
 
   return (
-    <Card className="mx-auto w-full max-w-3xl">
+    <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle>Új közlemény létrehozása</CardTitle>
         <CardDescription>
           Hozzon létre új közleményt a versenyhez kapcsolódóan
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="border-t pt-4">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -121,7 +125,6 @@ export default function CreateNewAnnouncement({
                 </FormItem>
               )}
             />
-
             <Button
               type="submit"
               className="group w-full"

@@ -30,7 +30,7 @@ export default async function HomePage() {
   return (
     <div className="mx-auto">
       <FlickeringGrid
-        className="absolute inset-0 top-6 z-0 size-full overflow-hidden"
+        className="absolute inset-0 top-6 z-0 h-[600px] w-full overflow-hidden"
         squareSize={4}
         gridGap={6}
         color="#6B7280"
@@ -62,42 +62,34 @@ export default async function HomePage() {
       </h1>
       <Separator className="mx-auto mt-1 w-20" />
 
-      <div className="m-auto my-4 px-4">
-        <Accordion type="single" collapsible>
-          <AccordionItem value="item-1">
-            <AccordionTrigger className="text-xl font-normal">
-              Mikor lesz a következő verseny?
-            </AccordionTrigger>
-            <AccordionContent className="text-base">
-              A következő verseny időpontja: 2025.01.01
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger className="text-xl font-normal">
-              Mi kell a jelentkezéshez?
-            </AccordionTrigger>
-            <AccordionContent className="text-base">
-              A jelentkezés nagyon egyszerű folyamat...
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-3">
-            <AccordionTrigger className="text-xl font-normal">
-              Hogyan zajlik a folyamat?
-            </AccordionTrigger>
-            <AccordionContent className="text-base">
-              A jelentkezés nagyon egyszerű folyamat...
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-4">
-            <AccordionTrigger className="text-xl font-normal">
-              Mi a fődíj?
-            </AccordionTrigger>
-            <AccordionContent className="text-base">
-              A fődíj egy országos elismerő oklevél, és tárgyi díj...
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </div>
+      <Accordion type="single" collapsible>
+        <AccordionItem value="item-1">
+          <AccordionTrigger className="text-xl font-normal">
+            Mire szakosodtunk?
+          </AccordionTrigger>
+          <AccordionContent className="text-base">
+            Mindannyian a webfejlesztés irányába orientálodtunk.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger className="text-xl font-normal">
+            Mit csinálunk szabadidőnkben?
+          </AccordionTrigger>
+          <AccordionContent className="text-base">
+            Egy iskolába járunk, szabadidőnkben is gyakran a programozással,
+            fejlesztéssel foglalkozunk, néha együtt is.
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-3">
+          <AccordionTrigger className="text-xl font-normal">
+            Milyen tapasztalatokkal rendelkezünk?
+          </AccordionTrigger>
+          <AccordionContent className="text-base">
+            Ez a harmadik versenyünk, de voltunk már együtt duális képzésen egy
+            cégnél is dolgozni, mint Fullstack fejlesztők.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }

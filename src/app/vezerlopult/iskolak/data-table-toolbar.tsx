@@ -5,8 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "@/components/ui/data-table-view-options";
-import { DataTableFacetedFilter } from "@/components/ui/data-table-faceted-filter";
 
 export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -81,7 +79,6 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
     </div>
   );
 }

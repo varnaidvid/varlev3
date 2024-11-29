@@ -12,14 +12,16 @@ import {
   Text,
 } from "@react-email/components";
 import * as React from "react";
-import { btn, container, h1, main, text } from "./styles";
+import { btn, container, h1, main, text, h3 } from "./styles";
 
 export const CompetitionAnnouncementEmail = ({
   message,
   competitionName,
+  subject,
 }: {
   message: string;
   competitionName: string;
+  subject: string;
 }) => (
   <Html>
     <Head />
@@ -29,6 +31,7 @@ export const CompetitionAnnouncementEmail = ({
         <Heading style={h1}>
           A <b>{competitionName}</b> verseny szervezője bejelentést tett!
         </Heading>
+        <Text style={h3}>{subject}</Text>
         <Text style={text}>{message}</Text>
       </Container>
     </Body>

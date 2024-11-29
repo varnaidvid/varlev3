@@ -17,7 +17,7 @@ export default function Notifications({
   data: RouterOutputs["organizer"]["getCompetitionAnnouncements"];
 }) {
   return (
-    <Card className="mx-auto w-full max-w-3xl">
+    <Card className="mx-auto w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Megaphone className="h-6 w-6" />
@@ -27,7 +27,7 @@ export default function Notifications({
           Az összes versenyhez kapcsolódó közlemény időrendi sorrendben
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="border-t">
         {data.length === 0 ? (
           <div className="py-8 text-center">
             <p className="text-gray-500">

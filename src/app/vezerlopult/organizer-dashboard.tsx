@@ -15,7 +15,7 @@ export default async function OrganizerDashboard() {
   return (
     <div className="space-y-12">
       <div className="flex flex-col gap-4 md:flex-row">
-        <Card className="w-full shadow-lg">
+        <Card className="w-full shadow-md">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>
@@ -35,7 +35,7 @@ export default async function OrganizerDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="w-full shadow-lg">
+        <Card className="w-full shadow-md">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>
@@ -55,7 +55,7 @@ export default async function OrganizerDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="w-full shadow-lg">
+        <Card className="w-full shadow-md">
           <CardHeader className="border-b p-3">
             <div className="flex w-full items-center justify-between gap-4">
               <div>

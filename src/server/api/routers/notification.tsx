@@ -544,6 +544,7 @@ export const notificationRouter = createTRPCRouter({
             <CompetitionAnnouncementEmail
               competitionName={competition.name}
               message={input.message}
+              subject={input.subject}
             />
           ),
           subject: input.subject,

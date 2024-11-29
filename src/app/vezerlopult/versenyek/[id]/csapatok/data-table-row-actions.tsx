@@ -1,6 +1,9 @@
+"use client";
+
 import { Row } from "@tanstack/react-table";
 import { TeamDetailDialog } from "@/components/vezerlopult/versenyek/csapatok/team-details-dialog";
 import { api } from "@/trpc/react";
+import { ClientOnly } from "@/components/client-only";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -64,10 +67,12 @@ export function DataTableRowActions<TData>({
   };
 
   return (
-    <TeamDetailDialog
-      teamId={(row.original as { id: string }).id}
-      onApprove={handleApprove}
-      onReject={handleReject}
-    />
+    <ClientOnly>
+      <TeamDetailDialog
+        teamId={(row.original as { id: string }).id}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
+    </ClientOnly>
   );
 }

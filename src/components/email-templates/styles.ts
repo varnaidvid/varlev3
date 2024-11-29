@@ -21,6 +21,16 @@ const h1 = {
   textAlign: "center" as const,
 };
 
+const h3 = {
+  color: "#e5e5e5",
+  fontSize: "16px",
+  fontWeight: "bold",
+  marginTop: "20px",
+  marginBottom: "10px",
+  padding: "0",
+  textAlign: "center" as const,
+};
+
 const text = {
   color: "#333",
   fontSize: "16px",
@@ -38,4 +48,4 @@ const btn = {
   display: "block",
   width: "auto",
 };
-export { main, container, h1, text, btn };
+export { main, container, h1, h3, text, btn };
