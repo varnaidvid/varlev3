@@ -166,12 +166,12 @@ async function main() {
         <li>Alapszintű programozási ismeretek</li>
     </ul>
     
-    <p>A verseny során a csapatok egy komplex webalkalmazást fejlesztenek, ahol nem csak a technikai tudás, hanem a kreativitás és a csapatmunka is értékelésre kerül.</p>
+    <p>A verseny során a csapatok egy komplex webalkalmazást/mobilalkalmazást fejlesztenek, ahol nem csak a technikai tudás, hanem a kreativitás és a csapatmunka is értékelésre kerül.</p>
 `,
       maxTeamSize: 3,
       image:
         "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png?updatedAt=1731169073642",
-      deadline: new Date("2024-11-30"),
+      deadline: new Date("2024-12-04"),
       technologies: {
         connect: [
           { id: tech1.id },
@@ -527,7 +527,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A Vanilla JS Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -537,7 +537,7 @@ async function main() {
         senderAccountId: team4.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "Az Angular Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -547,7 +547,7 @@ async function main() {
         senderAccountId: team5.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A PHP Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -583,7 +583,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A WebVirtuózok csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -593,7 +593,7 @@ async function main() {
         senderAccountId: team3.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A BitMesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -603,7 +603,7 @@ async function main() {
         senderAccountId: team2.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A Kódvadászok csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",

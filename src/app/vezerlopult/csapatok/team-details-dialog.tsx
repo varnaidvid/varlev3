@@ -45,7 +45,7 @@ import { ClientOnly } from "@/components/client-only";
 
 interface ApplicationDetailDialogProps {
   teamId: string;
-  onApprove: (id: string) => void;
+  onApprove: (id: string) => Promise<void>;
   accountId: string;
 }
 
@@ -299,9 +299,12 @@ export function TeamDetailDialog({
                                   variant="secondary"
                                   size="sm"
                                   className="flex items-center gap-2"
+                                  asChild
                                 >
-                                  <Eye className="h-4 w-4" />
-                                  <span>Megtekintés</span>
+                                  <div>
+                                    <Eye className="h-4 w-4" />
+                                    <span>Megtekintés</span>
+                                  </div>
                                 </Button>
                               </div>
                             </div>
