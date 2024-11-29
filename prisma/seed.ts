@@ -1,7 +1,6 @@
 import { db } from "../src/server/db";
 import { AccountType, PrismaClient } from "@prisma/client";
 import { saltAndHashPassword } from "@/utils/password";
-import { Account } from "next-auth";
 
 const prisma = new PrismaClient();
 async function main() {
@@ -690,52 +689,6 @@ async function main() {
   // Várszegi Barnabás - 13.
   // Lénárt Dániel - 13.
   // Szilasi István is the coach
-  const varleV3Team = await prisma.team.create({
-    data: {
-      name: "VarleV3",
-      status: "REGISTERED",
-      school: {
-        connect: { id: bolyaiSchool.id },
-      },
-      technologies: {
-        connect: [{ id: tech1.id }, { id: tech2.id }],
-      },
-      Competition: {
-        connect: { id: competition2.id },
-      },
-      account: {
-        create: {
-          username: "varlev3",
-          type: "TEAM" as AccountType,
-          ...saltAndHashPassword("varlev3"),
-          emails: {
-            create: {
-              email: "varlev3@varlev3.hu",
-            },
-          },
-        },
-      },
-      SubCategory: {
-        connect: { id: subCategory1.id },
-      },
-      members: {
-        create: [
-          { name: "Várnai Dávid", year: 13 },
-          { name: "Várszegi Barnabás", year: 13 },
-          { name: "Lénárt Dániel", year: 13 },
-        ],
-      },
-      createdAt: new Date("2024-11-09"),
-      coaches: {
-        create: [
-          {
-            name: "Szilasi István",
-            schoolName: "BMSZC Bolyai János Műszaki Technikum és Kollégium",
-          },
-        ],
-      },
-    },
-  });
 
   // school Miskolci SZC Kandó Kálmán Informatikai Technikum
   const miskolcSchool = await prisma.school.create({

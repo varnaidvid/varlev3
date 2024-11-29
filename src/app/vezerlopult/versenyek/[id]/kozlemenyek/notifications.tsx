@@ -21,10 +21,10 @@ export default function Notifications({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Megaphone className="h-6 w-6" />
-          Verseny közlemények
+          Előzmények
         </CardTitle>
         <CardDescription>
-          Az összes versenyhez kapcsolódó közlemény időrendi sorrendben
+          A versenyhez kapcsolódó összes közlemény időrendi sorrendben
         </CardDescription>
       </CardHeader>
       <CardContent className="border-t">
