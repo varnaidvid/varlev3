@@ -17,6 +17,8 @@ import {
   ChevronRight,
   Loader2,
   ExternalLink,
+  Clock,
+  BadgeCheck,
 } from "lucide-react";
 import { useInView } from "react-intersection-observer";
 import { api } from "@/trpc/react";
@@ -24,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { Separator } from "./separator";
 import { Countdown } from "../countdown";
 import Link from "next/link";
+import { Badge } from "./badge";
 
 export function CompetitionsTable() {
   const router = useRouter();
@@ -66,44 +69,67 @@ export function CompetitionsTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {competitions.map((competition, index) => (
-            <TableRow key={competition.id}>
-              <TableCell className="font-bold">{index + 1}</TableCell>
-              <TableCell className="font-medium">
-                <Link
-                  href={`/vezerlopult/versenyek/${competition.id}`}
-                  className="flex items-start gap-1 text-sm hover:underline"
-                >
-                  {competition.name}
-                  <ExternalLink className="size-3" />
-                </Link>
-              </TableCell>
-              <TableCell className="w-max">
-                <Countdown
-                  inTable
-                  targetDate={competition.deadline.toISOString()}
-                />
-              </TableCell>
-              <TableCell>
-                <div className="flex flex-col items-end gap-2">
-                  {competition.categories.map((category) => (
-                    <span
-                      key={category.id}
-                      className="mr-1 w-min rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
-                    >
-                      {category.name}
-                    </span>
-                  ))}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end gap-1">
-                  <span>{competition.teams.length}</span>
-                  <Users size={18} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+          {competitions.map((competition, index) => {
+            const competitionStatus = competition.ended
+              ? "CLOSED"
+              : competition.deadline > new Date()
+                ? "PENDING"
+                : "RUNNING";
+            return (
+              <TableRow key={competition.id}>
+                <TableCell className="font-bold">{index + 1}</TableCell>
+                <TableCell className="font-medium">
+                  <Link
+                    href={`/vezerlopult/versenyek/${competition.id}`}
+                    className="flex items-start gap-1 text-sm hover:underline"
+                  >
+                    {competition.name}
+                    <ExternalLink className="size-3" />
+                  </Link>
+                </TableCell>
+                <TableCell className="w-max">
+                  {competitionStatus === "PENDING" && (
+                    <Countdown
+                      inTable
+                      targetDate={competition.deadline.toISOString()}
+                    />
+                  )}
+
+                  {competitionStatus === "RUNNING" && (
+                    <Badge variant="outline" className="text-xs">
+                      <Clock className="mr-1 h-3 w-3" />
+                      Aktív
+                    </Badge>
+                  )}
+
+                  {competitionStatus === "CLOSED" && (
+                    <Badge variant="outline" className="text-xs">
+                      <BadgeCheck className="mr-1 h-3 w-3" />
+                      Lezárult
+                    </Badge>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col items-end gap-2">
+                    {competition.categories.map((category) => (
+                      <span
+                        key={category.id}
+                        className="mr-1 w-min rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800"
+                      >
+                        {category.name}
+                      </span>
+                    ))}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-end gap-1">
+                    <span>{competition.teams.length}</span>
+                    <Users size={18} />
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       {isFetchingNextPage ? (
