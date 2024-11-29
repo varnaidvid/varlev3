@@ -109,7 +109,7 @@ export default function TeamDetailCard({
         <div>
           <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <Blocks className="size-6 rounded-full border p-[3px]" />
-            Verseny kategória(ák)
+            Verseny főkategóriái
           </h2>
 
           <ul className="list-disc pl-5 text-gray-600">
@@ -144,7 +144,7 @@ export default function TeamDetailCard({
           <ul className="list-disc pl-5 text-gray-600">
             {data?.coaches.map((coach) => (
               <li key={coach.id} className="text-sm">
-                <b>{coach.name}</b> (Iskola: {data?.school.name})
+                <b>{coach.name}</b>
               </li>
             ))}
           </ul>
@@ -153,7 +153,7 @@ export default function TeamDetailCard({
         <div className="mb-4 flex flex-wrap gap-2">
           <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
             <Cpu className="size-6 rounded-full border p-[3px]" />
-            Technológiák
+            Kiválasztott technológiák
           </h2>
           <div className="flex flex-wrap gap-2">
             {data?.technologies.map((tech) => (
@@ -161,6 +161,16 @@ export default function TeamDetailCard({
                 {tech.name}
               </Badge>
             ))}
+          </div>
+        </div>
+
+        <div className="mb-4 flex flex-wrap gap-2">
+          <h2 className="flex items-center gap-2 font-mono text-sm font-semibold uppercase text-gray-700">
+            <Cpu className="size-6 rounded-full border p-[3px]" />
+            Kiválasztott alkategória
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="secondary">{data?.SubCategory.name}</Badge>
           </div>
         </div>
 

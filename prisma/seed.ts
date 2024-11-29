@@ -207,14 +207,6 @@ async function main() {
       },
     },
   });
-  const subCategory3 = await prisma.subCategory.create({
-    data: {
-      name: "Nagypapa Parodoxon",
-      Competition: {
-        connect: { id: competition.id },
-      },
-    },
-  });
 
   // create 4 coach accounts for school1
   const coach1 = await prisma.coach.create({

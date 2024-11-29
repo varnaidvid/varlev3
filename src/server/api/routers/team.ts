@@ -101,6 +101,7 @@ export const teamsRouter = createTRPCRouter({
           coaches: true,
           school: true,
           technologies: true,
+          SubCategory: true,
           account: {
             include: {
               emails: true,

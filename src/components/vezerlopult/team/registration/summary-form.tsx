@@ -123,7 +123,7 @@ export function SummaryStep({
               </li>
             ))}
             {reserveMember?.name && (
-              <li>
+              <li className="text-sm">
                 <b>{reserveMember.name}</b> -- Évfolyam:{" "}
                 <b>{reserveMember.year}</b> (Póttag)
               </li>

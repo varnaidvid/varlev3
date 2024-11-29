@@ -10,7 +10,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="mx-auto mt-28">
+      <div className="mx-auto mt-28 bg-background">
         <div className="rounded-lg border p-12 shadow-md">
           <div className="flex flex-col">
             <h1 className="text-3xl font-bold">Versenyek</h1>

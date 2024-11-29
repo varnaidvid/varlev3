@@ -61,7 +61,7 @@ export const competitionRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const {
         account: { username, password },
-        members: { members, reserveMember },
+        members: { members, reserveMember, emails },
         team: { name, school, coaches, technologies, subCategory },
         competitionId,
       } = input;
@@ -109,6 +109,15 @@ export const competitionRouter = createTRPCRouter({
         await ctx.db.member.create({
           data: { ..._temp, teamId: team.id },
         });
+
+      if (emails && emails?.length > 0) {
+        await ctx.db.email.createMany({
+          data: emails.map((email) => ({
+            email: email,
+            accountId: team.accountId,
+          })),
+        });
+      }
 
       return team;
     }),
