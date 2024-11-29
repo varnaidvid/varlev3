@@ -246,7 +246,10 @@ h3.tiptap-heading + h2.tiptap-heading {
     @apply list-inside list-decimal;
   }
   li {
-    @apply text-base;
+    @apply flex gap-2 text-base before:font-bold before:text-primary before:content-['•'];
+  }
+  li p {
+    @apply m-0;
   }
   blockquote {
     @apply border-l-4 border-primary pl-4;

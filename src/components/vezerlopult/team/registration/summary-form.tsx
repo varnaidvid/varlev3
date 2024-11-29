@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 
 const SuccessCard = () => {
   return (
-    <Card className="mx-auto mt-4 w-full max-w-lg">
+    <Card className="z-20 mx-auto mt-4 w-full max-w-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -85,7 +85,7 @@ export function SummaryStep({
   if (showSuccess) return <SuccessCard />;
 
   return (
-    <Card className="mx-auto w-full max-w-lg">
+    <Card className="z-20 mx-auto w-full max-w-lg">
       <CardHeader className="border-b">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <ExtraIcon
@@ -123,7 +123,7 @@ export function SummaryStep({
               </li>
             ))}
             {reserveMember?.name && (
-              <li>
+              <li className="text-sm">
                 <b>{reserveMember.name}</b> -- Évfolyam:{" "}
                 <b>{reserveMember.year}</b> (Póttag)
               </li>

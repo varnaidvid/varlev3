@@ -116,7 +116,7 @@ export function NotificationItem({
             </h3>
           </div>
           <p className="mt-1 text-sm text-gray-700">{notification.message}</p>
-          {notification.redirectTo && (
+          {/* {notification.redirectTo && (
             <Button
               variant="link"
               className="mt-4 flex justify-start gap-1 p-0 text-sm"
@@ -126,7 +126,7 @@ export function NotificationItem({
                 További részletek <ArrowRight className="size-4" />
               </Link>
             </Button>
-          )}
+          )} */}
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="text-xs text-neutral-600">

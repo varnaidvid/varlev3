@@ -599,7 +599,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A Vanilla JS Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -609,7 +609,7 @@ async function main() {
         senderAccountId: team4.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "Az Angular Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -619,7 +619,7 @@ async function main() {
         senderAccountId: team5.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A PHP Mesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -655,7 +655,7 @@ async function main() {
   await prisma.notification.createMany({
     data: [
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A WebVirtuózok csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -665,7 +665,7 @@ async function main() {
         senderAccountId: team3.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A BitMesterek csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",
@@ -675,7 +675,7 @@ async function main() {
         senderAccountId: team2.accountId,
       },
       {
-        subject: "Új csapat regisztrált",
+        subject: "Csapat regisztráció",
         message: "A Kódvadászok csapat regisztrált egy versenyre.",
         topic: "TEAM_REGISTERED",
         type: "INFO",

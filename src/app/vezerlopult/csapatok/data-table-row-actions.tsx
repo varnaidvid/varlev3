@@ -33,7 +33,7 @@ export function DataTableRowActions<TData>({
     setData((prevData) =>
       prevData.map((team) =>
         (team as { id: string }).id === id
-          ? { ...team, status: "REGISTERED" }
+          ? { ...team, status: "WAITING_FOR_ORGANIZER_APPROVAL" }
           : team,
       ),
     );

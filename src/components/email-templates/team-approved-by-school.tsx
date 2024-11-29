@@ -60,9 +60,6 @@ export const TeamApprovedBySchoolForOrganizerEmail = ({
         <Text style={text}>
           További megerősítéshez látogass el a következő linkre:
         </Text>
-        <Button style={{ ...btn, padding: "12px 20px" }} href={redirectTo}>
-          Jóváhagyás
-        </Button>
       </Container>
     </Body>
   </Html>

@@ -122,11 +122,16 @@ export default function CompetitionCard({
         )}
         {competitonStatus === "PENDING" && (
           <div className="mt-auto pt-4">
-            <Link href={`/versenyek/${competition.id}/regisztralas`}>
-              <Button className="w-full">Jelentkezés</Button>
-            </Link>
+            <Button asChild className="w-full">
+              <Link href={`/versenyek/${competition.id}/regisztralas`}>
+                Jelentkezés
+              </Link>
+            </Button>
           </div>
         )}
+        <Button variant={"link"} asChild>
+          <Link href={`/versenyek/${competition.id}`}>Részletek</Link>
+        </Button>
       </CardContent>
     </Card>
   );

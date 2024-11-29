@@ -45,7 +45,7 @@ import { ClientOnly } from "@/components/client-only";
 
 interface ApplicationDetailDialogProps {
   teamId: string;
-  onApprove: (id: string) => void;
+  onApprove: (id: string) => Promise<void>;
   accountId: string;
 }
 
@@ -205,11 +205,7 @@ export function TeamDetailDialog({
                     Kiválasztott kategória
                   </h2>
                   <ul className="list-disc pl-5 text-gray-600">
-                    {team?.Competition.subCategories.map((subCategory) => (
-                      <li key={subCategory.id} className="text-sm">
-                        {subCategory.name}
-                      </li>
-                    ))}
+                    <li className="text-sm">{team?.SubCategory.name}</li>
                   </ul>
                 </div>
 
@@ -236,7 +232,7 @@ export function TeamDetailDialog({
                   <ul className="list-disc pl-5 text-gray-600">
                     {team?.coaches.map((coach) => (
                       <li key={coach.id} className="text-sm">
-                        <b>{coach.name}</b> (Iskola: {team?.school.name})
+                        <b>{coach.name}</b>
                       </li>
                     ))}
                   </ul>
@@ -303,9 +299,12 @@ export function TeamDetailDialog({
                                   variant="secondary"
                                   size="sm"
                                   className="flex items-center gap-2"
+                                  asChild
                                 >
-                                  <Eye className="h-4 w-4" />
-                                  <span>Megtekintés</span>
+                                  <div>
+                                    <Eye className="h-4 w-4" />
+                                    <span>Megtekintés</span>
+                                  </div>
                                 </Button>
                               </div>
                             </div>

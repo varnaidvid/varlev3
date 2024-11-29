@@ -56,14 +56,15 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   ).map((coach) => ({ label: coach, value: coach }));
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col items-start justify-between space-y-2">
+      <Input
+        placeholder="Iskola keresése..."
+        value={searchInput}
+        onChange={handleSearchChange}
+        className="h-8 w-[150px] lg:w-[250px]"
+      />
+
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder="Iskola keresése..."
-          value={searchInput}
-          onChange={handleSearchChange}
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
         {isFiltered && (
           <Button
             variant="ghost"
