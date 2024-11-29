@@ -64,7 +64,7 @@ export default async function Page({
   const totalTeams = results.length;
 
   return (
-    <div className="mx-auto mt-28 w-[calc(100%-16px)] max-w-7xl space-y-8 sm:w-[calc(100%-32px)] md:w-[calc(100%-64px)]">
+    <div className="mx-auto mt-28 w-full space-y-8">
       <div className="rounded-lg border bg-card p-8 shadow-md">
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           <img
@@ -198,7 +198,10 @@ export default async function Page({
             </Card>
           </div>
           <div className="rounded-lg border bg-card p-6">
-            <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
+            <h2 className="mb-4 text-2xl font-bold text-muted-foreground">
+              Verseny leírása
+            </h2>
+            <Separator className="mb-4" />
             <div
               className="prose prose-sm dark:prose-invert max-w-none"
               dangerouslySetInnerHTML={{ __html: competition.description }}
@@ -208,7 +211,10 @@ export default async function Page({
       )}
       {competitionStatus === "PENDING" && (
         <div className="rounded-lg border bg-card p-6">
-          <h2 className="mb-4 text-2xl font-bold">Leírás</h2>
+          <h2 className="mb-4 text-2xl font-bold text-muted-foreground">
+            Verseny leírása
+          </h2>
+          <Separator className="mb-4" />
           <div
             className="prose prose-sm dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: competition.description }}

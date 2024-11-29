@@ -11,6 +11,7 @@ import {
   Clock,
   ExternalLink,
   MousePointerClickIcon,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { ApplicationStatus, Competition, Team } from "@prisma/client";
@@ -78,7 +79,7 @@ const statusConfig: StatusConfigType = {
     title: "Regisztráció sikeres",
     description:
       "Csapatod sikeresen beregisztrálva a versenyre. Sikeres felkészülést kívánunk!",
-    icon: Loader2,
+    icon: CheckCircle,
     color: "text-blue-600",
     bgColor: "bg-blue-50",
     borderColor: "border-blue-200",
@@ -268,18 +269,20 @@ export default function ApplicationStatusCard({
                   </div>
                 </div>
 
-                <div className="-mb-4 flex items-center justify-end gap-2">
-                  <span className="text-sm text-gray-600">
-                    Verseny kezdetéig
-                  </span>
-                  <Clock className={`h-4 w-4 ${config.color}`} />
-                </div>
+                {!isRunning && (
+                  <div className="-mb-4 flex items-center justify-end gap-2">
+                    <span className="text-sm text-gray-600">
+                      Verseny kezdetéig
+                    </span>
+                    <Clock className={`h-4 w-4 ${config.color}`} />
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        {!message && (
+        {!message && !isRunning && (
           <div className="mt-8">
             <div className="relative z-10 flex justify-end">
               <div

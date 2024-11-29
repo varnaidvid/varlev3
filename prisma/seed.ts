@@ -209,7 +209,7 @@ async function main() {
       maxTeamSize: 3,
       image:
         "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
-      deadline: new Date("2024-11-01"),
+      deadline: new Date("2024-12-02"),
       technologies: {
         connect: [
           { id: tech1.id },
@@ -334,6 +334,478 @@ async function main() {
       name: "Kiss János",
       School: {
         connect: { id: school2.id },
+      },
+    },
+  });
+
+  // for dusza döntő
+  // every team already accepted
+
+  // team KandOS
+  // it's school (create it) "Kecskeméti SZC Kandó Kálmán Technikum"
+  // team mebmers
+  // Váradi Marcell - 13
+  // Vincze Roland - 12
+  // Vezsenyi Roland - 13
+  // felkészítő tanár - Kátay Magdolna
+  const kecskemetSchool = await prisma.school.create({
+    data: {
+      name: "Kecskeméti SZC Kandó Kálmán Technikum",
+      address: "Kecskemét",
+      contactName: "Gipsz Jakab",
+      account: {
+        create: {
+          username: "kecskemet",
+          ...saltAndHashPassword("kecskemet"),
+          type: "SCHOOL",
+          emails: {
+            create: {
+              email: "kecskemet@varlev3.hu",
+            },
+          },
+        },
+      },
+    },
+    include: {
+      coaches: true,
+    },
+  });
+  const kandOSTeam = await prisma.team.create({
+    data: {
+      name: "KandOS",
+      status: "REGISTERED",
+      school: {
+        connect: { id: kecskemetSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "kandos",
+          ...saltAndHashPassword("kandos"),
+          type: "TEAM" as AccountType,
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Marcell Váradi", year: 13 },
+          { name: "Roland Vincze", year: 12 },
+          { name: "Roland Vezsenyi", year: 13 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        create: [
+          {
+            name: "Kátay Magdolna",
+            schoolName: "Kecskeméti SZC Kandó Kálmán Technikum",
+          },
+        ],
+      },
+      applicationForm:
+        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
+    },
+  });
+
+  // team Hun-Cut
+  // school "BMSZC Bolyai János Műszaki Technikum és Kollégium"
+  // members
+  // Szabó Bernát - 12
+  // Czirják Ádám - 12
+  // Zemen Dániel - 12
+  // felkészítő tanár - Gombos Szabolcs && Mátyássy Balázs
+  const bolyaiSchool = await prisma.school.create({
+    data: {
+      name: "BMSZC Bolyai János Műszaki Technikum és Kollégium",
+      address: "Budapest",
+      contactName: "Szabó Bernát",
+      account: {
+        create: {
+          username: "bolyai",
+          ...saltAndHashPassword("bolyai"),
+          type: "SCHOOL",
+          emails: {
+            create: {
+              email: "bolyai@varlev3.hu",
+            },
+          },
+        },
+      },
+    },
+    include: {
+      coaches: true,
+    },
+  });
+  const hunCutTeam = await prisma.team.create({
+    data: {
+      name: "Hun-Cut",
+      status: "REGISTERED",
+      school: {
+        connect: { id: bolyaiSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "huncut",
+          ...saltAndHashPassword("huncut"),
+          type: "TEAM" as AccountType,
+          emails: {
+            create: {
+              email: "huncut@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Bernát Szabó", year: 12 },
+          { name: "Ádám Czirják", year: 12 },
+          { name: "Dániel Zemen", year: 12 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        create: [
+          {
+            name: "Gombos Szabolcs",
+            schoolName: "BMSZC Bolyai János Műszaki Technikum és Kollégium",
+          },
+          {
+            name: "Mátyássy Balázs",
+            schoolName: "BMSZC Bolyai János Műszaki Technikum és Kollégium",
+          },
+        ],
+      },
+      applicationForm:
+        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
+    },
+  });
+
+  // team ${csapatnev}
+  // school "Debreceni SZC Mechwart András Gépipari és Informatikai Technikum"
+  // members
+  // Buczkó Béla - 12.
+  // Horváth Dávid - 12.
+  // Vad Márton - 12.
+  // coach - Péter Miklós
+  const debrecenSchool = await prisma.school.create({
+    data: {
+      name: "Debreceni SZC Mechwart András Gépipari és Informatikai Technikum",
+      address: "Debrecen",
+      contactName: "Dr. Kovács István",
+      account: {
+        create: {
+          username: "debrecen",
+          ...saltAndHashPassword("debrecen"),
+          type: "SCHOOL",
+          emails: {
+            create: {
+              email: "debrecen@varlev3.hu",
+            },
+          },
+        },
+      },
+    },
+  });
+  // team ${csapatnev}
+  // school "Debreceni SZC Mechwart András Gépipari és Informatikai Technikum"
+  // members
+  // Buczkó Béla - 12.
+  // Horváth Dávid - 12.
+  // Vad Márton - 12.
+  // coach - Péter Miklós
+  const csapatNevTeam = await prisma.team.create({
+    data: {
+      name: "${csapatnev}",
+      status: "REGISTERED",
+      school: {
+        connect: { id: debrecenSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "csapatnev",
+          type: "TEAM" as AccountType,
+          ...saltAndHashPassword("csapatnev"),
+          emails: {
+            create: {
+              email: "csapatnev@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Buczkó Béla", year: 12 },
+          { name: "Horváth Dávid", year: 12 },
+          { name: "Vad Márton", year: 12 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        create: [
+          {
+            name: "Péter Miklós",
+            schoolName:
+              "Debreceni SZC Mechwart András Gépipari és Informatikai Technikum",
+          },
+        ],
+      },
+    },
+  });
+
+  // StillNincsenCsapatnév team
+  // school debreceni
+  //   Gál Attila Péter - 11.
+  // Pápa Attila - 11.
+  // Magi Zsolt - 11
+  // Nemes Tamás is the coach
+  const nemesTamasCoach = await prisma.coach.create({
+    data: {
+      name: "Nemes Tamás",
+      schoolName:
+        "Debreceni SZC Mechwart András Gépipari és Informatikai Technikum",
+    },
+  });
+  const stillNincsenCsapatnevTeam = await prisma.team.create({
+    data: {
+      name: "StillNincsenCsapatnév",
+      status: "REGISTERED",
+      school: {
+        connect: { id: debrecenSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "stillniccsapatnev",
+          type: "TEAM" as AccountType,
+          ...saltAndHashPassword("stillniccsapatnev"),
+          emails: {
+            create: {
+              email: "stillniccsapatnev@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Gál Attila Péter", year: 11 },
+          { name: "Pápa Attila", year: 11 },
+          { name: "Magi Zsolt", year: 11 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        connect: {
+          id: nemesTamasCoach.id,
+        },
+      },
+    },
+  });
+
+  // Bináris Betyárok team
+  // Debreceni SZC Mechwart András Gépipari és Informatikai Technikum school
+  // Wágner Ferenc - 11.
+  // Bődi Zoltán - 11.
+  // Szentjóbi Gergő - 11.
+  // Nemes Tamás is the coach
+  const binarisBetyarokTeam = await prisma.team.create({
+    data: {
+      name: "Bináris Betyárok",
+      status: "REGISTERED",
+      school: {
+        connect: { id: debrecenSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "binarbetyarok",
+          type: "TEAM" as AccountType,
+          ...saltAndHashPassword("binarbetyarok"),
+          emails: {
+            create: {
+              email: "binarbetyarok@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Wágner Ferenc", year: 11 },
+          { name: "Bődi Zoltán", year: 11 },
+          { name: "Szentjóbi Gergő", year: 11 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        connect: {
+          id: nemesTamasCoach.id,
+        },
+      },
+    },
+  });
+
+  // varlev3 team
+  // bmszc bolyai is the school
+  // Várnai Dávid - 13.
+  // Várszegi Barnabás - 13.
+  // Lénárt Dániel - 13.
+  // Szilasi István is the coach
+  const varleV3Team = await prisma.team.create({
+    data: {
+      name: "VarleV3",
+      status: "REGISTERED",
+      school: {
+        connect: { id: bolyaiSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "varlev3",
+          type: "TEAM" as AccountType,
+          ...saltAndHashPassword("varlev3"),
+          emails: {
+            create: {
+              email: "varlev3@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Várnai Dávid", year: 13 },
+          { name: "Várszegi Barnabás", year: 13 },
+          { name: "Lénárt Dániel", year: 13 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        create: [
+          {
+            name: "Szilasi István",
+            schoolName: "BMSZC Bolyai János Műszaki Technikum és Kollégium",
+          },
+        ],
+      },
+    },
+  });
+
+  // school Miskolci SZC Kandó Kálmán Informatikai Technikum
+  const miskolcSchool = await prisma.school.create({
+    data: {
+      name: "Miskolci SZC Kandó Kálmán Informatikai Technikum",
+      address: "Miskolc",
+      contactName: "Dr. Béla Balázs",
+      account: {
+        create: {
+          username: "miskolc",
+          ...saltAndHashPassword("miskolc"),
+          type: "SCHOOL",
+          emails: {
+            create: {
+              email: "miskolc@varlev3.hu",
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // Amatőrök team
+  //   Futó Zsombor - 9.
+  // Szabó Máté Krisztián - 9.
+  // Szűcs Noel Gergő - 9
+  // Kasza László Róbert is the coach
+  const amatorokTeam = await prisma.team.create({
+    data: {
+      name: "Amatőrök",
+      status: "REGISTERED",
+      school: {
+        connect: { id: miskolcSchool.id },
+      },
+      technologies: {
+        connect: [{ id: tech1.id }, { id: tech2.id }],
+      },
+      Competition: {
+        connect: { id: competition2.id },
+      },
+      account: {
+        create: {
+          username: "amatorok",
+          type: "TEAM" as AccountType,
+          ...saltAndHashPassword("amatorok"),
+          emails: {
+            create: {
+              email: "amatorok@varlev3.hu",
+            },
+          },
+        },
+      },
+      SubCategory: {
+        connect: { id: subCategory1.id },
+      },
+      members: {
+        create: [
+          { name: "Futó Zsombor", year: 9 },
+          { name: "Szabó Máté Krisztián", year: 9 },
+          { name: "Szűcs Noel Gergő", year: 9 },
+        ],
+      },
+      createdAt: new Date("2024-11-09"),
+      coaches: {
+        create: [
+          {
+            name: "Kasza László Róbert",
+            schoolName: "Miskolci SZC Kandó Kálmán Informatikai Technikum",
+          },
+        ],
       },
     },
   });
