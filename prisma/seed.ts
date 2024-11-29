@@ -113,45 +113,35 @@ async function main() {
     },
   });
 
+  const tech6 = await prisma.technology.create({
+    data: {
+      name: "Django",
+    },
+  });
+
   // create 3 categories
   const category1 = await prisma.category.create({
     data: {
       name: "Programozás",
-      description: "Building websites and web applications",
+      description: "Asztali, mobil és webes alkalmazásfejlesztő versenyek",
     },
   });
 
   const category2 = await prisma.category.create({
     data: {
-      name: "Filozófia",
-      description: "Building mobile apps for iOS and Android",
+      name: "Matematika",
+      description: "Matematikával kapcsolatos versenyek",
     },
   });
 
-  const category3 = await prisma.category.create({
+  const competition1 = await prisma.competition.create({
     data: {
-      name: "Metafizika",
-      description: "Building mobile apps for iOS and Android",
-    },
-  });
-
-  const category4 = await prisma.category.create({
-    data: {
-      name: "Kvantumelmélet Kvízek",
-      description: "Building mobile apps for iOS and Android",
-    },
-  });
-
-  const competition = await prisma.competition.create({
-    data: {
-      name: "Országos Középiskolai Web Programozó Verseny 2024",
+      name: "Dusza Árpád Országos Programozói Emlékverseny 2023",
       description: `
-    <h2>Országos Középiskolai Web Programozó Verseny 2024</h2>
-    
-    <h3>A versenyről</h3>
+    <h2>A versenyről</h2>
     <p>Az idei versenyen a középiskolás diákok modern webes technológiák használatával mérhetik össze tudásukat. A résztvevők valós, ipari környezetben használt eszközökkel dolgozhatnak, a Next.js-től a Laravel-ig.</p>
     
-    <h3>Amit kínálunk</h3>
+    <h2>Amit kínálunk</h2>
     <ul>
         <li>Szakmai zsűri értékelése</li>
         <li>Értékes nyeremények</li>
@@ -159,7 +149,7 @@ async function main() {
         <li>Mentor program a döntőbe jutott csapatoknak</li>
     </ul>
     
-    <h3>Követelmények</h3>
+    <h2>Követelmények</h2>
     <ul>
         <li>3 fős csapatok</li>
         <li>Középiskolai tanulói jogviszony</li>
@@ -170,8 +160,56 @@ async function main() {
 `,
       maxTeamSize: 3,
       image:
-        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png?updatedAt=1731169073642",
-      deadline: new Date("2024-11-30"),
+        "https://ik.imagekit.io/varlev3/competition-images/pexels-markusspiske-1089438.jpg",
+      deadline: new Date("2023-11-01"),
+      technologies: {
+        connect: [
+          { id: tech1.id },
+          { id: tech2.id },
+          { id: tech3.id },
+          { id: tech4.id },
+          { id: tech5.id },
+          { id: tech6.id },
+        ],
+      },
+      categories: {
+        connect: [{ id: category1.id }],
+      },
+      organizers: {
+        connect: [{ id: organizer1.id }],
+      },
+      ended: true,
+    },
+  });
+
+  const competition2 = await prisma.competition.create({
+    data: {
+      name: "Országos Középiskolai Web Programozó Verseny 2024",
+      description: `
+    <h2>A versenyről</h2>
+    <p>Az idei versenyen a középiskolás diákok modern webes technológiák használatával mérhetik össze tudásukat. A résztvevők valós, ipari környezetben használt eszközökkel dolgozhatnak, a Next.js-től a Laravel-ig.</p>
+    
+    <h2>Amit kínálunk</h2>
+    <ul>
+        <li>Szakmai zsűri értékelése</li>
+        <li>Értékes nyeremények</li>
+        <li>Kapcsolatépítési lehetőség IT cégekkel</li>
+        <li>Mentor program a döntőbe jutott csapatoknak</li>
+    </ul>
+    
+    <h2>Követelmények</h2>
+    <ul>
+        <li>3 fős csapatok</li>
+        <li>Középiskolai tanulói jogviszony</li>
+        <li>Alapszintű programozási ismeretek</li>
+    </ul>
+    
+    <p>A verseny során a csapatok egy komplex webalkalmazást fejlesztenek, ahol nem csak a technikai tudás, hanem a kreativitás és a csapatmunka is értékelésre kerül.</p>
+`,
+      maxTeamSize: 3,
+      image:
+        "https://ik.imagekit.io/varlev3/competition-images/ccjdeb3qm60w2i584aftxwxn_-fmbJH2Ay.png",
+      deadline: new Date("2024-11-01"),
       technologies: {
         connect: [
           { id: tech1.id },
@@ -182,7 +220,7 @@ async function main() {
         ],
       },
       categories: {
-        connect: [{ id: category1.id }, { id: category2.id }],
+        connect: [{ id: category1.id }],
       },
       organizers: {
         connect: [{ id: organizer1.id }],
@@ -191,27 +229,51 @@ async function main() {
   });
 
   // create 2 subCategories for competition1
+  await prisma.subCategory.create({
+    data: {
+      name: "Webfejlesztés",
+      Competition: {
+        connect: { id: competition1.id },
+      },
+    },
+  });
+  await prisma.subCategory.create({
+    data: {
+      name: "Mobilfejlesztés",
+      Competition: {
+        connect: { id: competition1.id },
+      },
+    },
+  });
+  await prisma.subCategory.create({
+    data: {
+      name: "Hagyományos",
+      Competition: {
+        connect: { id: competition1.id },
+      },
+    },
+  });
   const subCategory1 = await prisma.subCategory.create({
     data: {
       name: "Webfejlesztés",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
     },
   });
-  const subCategory2 = await prisma.subCategory.create({
+  await prisma.subCategory.create({
     data: {
       name: "Mobilfejlesztés",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
     },
   });
-  const subCategory3 = await prisma.subCategory.create({
+  await prisma.subCategory.create({
     data: {
-      name: "Nagypapa Parodoxon",
+      name: "Hagyományos",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
     },
   });
@@ -288,7 +350,7 @@ async function main() {
         connect: [{ id: tech1.id }, { id: tech2.id }],
       },
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       account: {
         create: {
@@ -326,7 +388,7 @@ async function main() {
       name: "BitMesterek",
       status: "WAITING_FOR_SCHOOL_APPROVAL",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       technologies: {
         connect: [{ id: tech3.id }, { id: tech4.id }],
@@ -369,7 +431,7 @@ async function main() {
       name: "WebVirtuózok",
       status: "REGISTERED",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       technologies: {
         connect: [{ id: tech1.id }, { id: tech5.id }],
@@ -412,7 +474,7 @@ async function main() {
       name: "Vanilla JS Mesterek",
       status: "WAITING_FOR_SCHOOL_APPROVAL",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       technologies: {
         connect: [{ id: tech5.id }],
@@ -451,9 +513,9 @@ async function main() {
   const team5 = await prisma.team.create({
     data: {
       name: "Angular Mesterek",
-      status: "WAITING_FOR_SCHOOL_APPROVAL",
+      status: "WAITING_FOR_ORGANIZER_APPROVAL",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       technologies: {
         connect: [{ id: tech3.id }],
@@ -487,6 +549,8 @@ async function main() {
           type: "TEAM" as AccountType,
         },
       },
+      applicationForm:
+        "https://ik.imagekit.io/varlev3/competition-images/h8l8i5xy8o7wdgydufw31hq1_ukF1x6N3o.jpg",
     },
   });
   const team6 = await prisma.team.create({
@@ -494,7 +558,7 @@ async function main() {
       name: "PHP Mesterek",
       status: "WAITING_FOR_ORGANIZER_APPROVAL",
       Competition: {
-        connect: { id: competition.id },
+        connect: { id: competition2.id },
       },
       technologies: {
         connect: [{ id: tech2.id }],

@@ -65,7 +65,7 @@ export function ContentEditor({ value, onChange }: ContentEditorProps) {
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm sm:prose lg:prose-lg prose-stone dark:prose-invert focus:outline-none max-w-none",
+          "prose prose-sm sm:prose lg:prose-lg prose-stone dark:prose-invert focus:outline-none max-w-none mdxeditor",
       },
     },
     onUpdate: ({ editor }) => {
