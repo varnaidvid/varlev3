@@ -52,11 +52,11 @@ async function main() {
         create: {
           emails: {
             create: {
-              email: "neumanngimi@varlev3.hu",
+              email: "neumann@varlev3.hu",
             },
           },
-          username: "neumanngimi",
-          ...saltAndHashPassword("schoolpassword"),
+          username: "neumann",
+          ...saltAndHashPassword("neumann"),
           type: "SCHOOL",
         },
       },
@@ -76,7 +76,7 @@ async function main() {
             },
           },
           username: "jedlik",
-          ...saltAndHashPassword("schoolpassword2"),
+          ...saltAndHashPassword("jedlik"),
           type: "SCHOOL",
         },
       },

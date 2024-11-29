@@ -71,7 +71,7 @@ export default function SchoolUpdateForm({
       form.getValues("name") === initialData.name
     )
       form.clearErrors("name");
-  });
+  }, [form, isSchoolnameAvailable]);
   useEffect(() => {
     if (
       isEmailAvailable !== undefined &&
@@ -89,7 +89,7 @@ export default function SchoolUpdateForm({
       form.getValues("contactEmail") === initialData.account.emails[0]?.email
     )
       form.clearErrors("contactEmail");
-  });
+  }, [form, isEmailAvailable]);
 
   const [pending, startTransition] = useTransition();
   async function updateSchool(values: z.infer<typeof schoolUpdateSchema>) {

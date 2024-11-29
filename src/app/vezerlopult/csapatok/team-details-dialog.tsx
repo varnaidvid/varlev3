@@ -396,7 +396,12 @@ export function TeamDetailDialog({
               onClick={handleApprove}
               variant="outline"
               className="flex-1"
-              disabled={isApproveLoading || isRegistered || isLoading}
+              disabled={
+                isApproveLoading ||
+                isRegistered ||
+                isLoading ||
+                team?.status === "REJECTED_BY_ORGANIZER"
+              }
             >
               {isApproveLoading ? (
                 <Loader className="mr-2 h-4 w-4 animate-spin" />

@@ -99,7 +99,7 @@ export default function EditForm({
       formTwo.getValues("name") === initialData.name
     )
       formTwo.clearErrors("name");
-  }, [isTeamnameAvailable]);
+  }, [formTwo, isTeamnameAvailable]);
   useEffect(() => {
     if (
       unavailableEmails !== undefined &&
@@ -126,7 +126,7 @@ export default function EditForm({
         initialData.account.emails.map((email) => email.email)
     )
       formThree.clearErrors("emails");
-  });
+  }, [formThree, unavailableEmails]);
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = async () => {

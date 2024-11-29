@@ -107,7 +107,7 @@ export default function RegisterForm({
 
     if (isUsernameAvailable && formOne.formState.errors.username)
       formOne.clearErrors("username");
-  }, [isUsernameAvailable]);
+  }, [formOne, isUsernameAvailable]);
   useEffect(() => {
     if (
       isTeamnameAvailable !== undefined &&
@@ -122,7 +122,7 @@ export default function RegisterForm({
 
     if (isTeamnameAvailable && formTwo.formState.errors.name)
       formTwo.clearErrors("name");
-  });
+  }, [formTwo, isTeamnameAvailable]);
 
   useEffect(() => {
     if (
@@ -147,7 +147,7 @@ export default function RegisterForm({
       formThree.formState.errors.emails
     )
       formThree.clearErrors("emails");
-  }, [unavailableEmails]);
+  }, [formThree, unavailableEmails]);
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = () => {

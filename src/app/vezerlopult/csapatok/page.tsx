@@ -40,7 +40,7 @@ export default async function TeamsPage({
         />
       </header>
 
-      <main className="px-4">
+      <main>
         <DataTable
           columns={columns}
           initialData={teams}

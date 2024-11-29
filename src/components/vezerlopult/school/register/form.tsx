@@ -74,7 +74,7 @@ export default function RegisterSchoolForm() {
 
     if (isUsernameAvailable && formOne.formState.errors.username)
       formOne.clearErrors("username");
-  }, [isUsernameAvailable]);
+  }, [formOne, isUsernameAvailable]);
   useEffect(() => {
     if (
       isSchoolnameAvailable !== undefined &&
@@ -89,7 +89,7 @@ export default function RegisterSchoolForm() {
 
     if (isSchoolnameAvailable && formTwo.formState.errors.name)
       formTwo.clearErrors("name");
-  });
+  }, [formTwo, isSchoolnameAvailable]);
   useEffect(() => {
     if (
       isEmailAvailable !== undefined &&
@@ -104,7 +104,7 @@ export default function RegisterSchoolForm() {
 
     if (isEmailAvailable && formTwo.formState.errors.contactEmail)
       formTwo.clearErrors("contactEmail");
-  });
+  }, [formTwo, isEmailAvailable]);
 
   const [pending, startTransition] = useTransition();
   const handleNextStep = async () => {
