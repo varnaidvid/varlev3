@@ -120,18 +120,32 @@ export default function CompetitionCard({
             </TooltipProvider>
           </div>
         )}
-        {competitonStatus === "PENDING" && (
-          <div className="mt-auto pt-4">
-            <Button asChild className="w-full">
+        <div className="flex h-full max-h-24 flex-col items-end justify-end space-y-2">
+          {competitonStatus === "PENDING" ? (
+            <Button asChild className="mx-auto w-full font-bold">
               <Link href={`/versenyek/${competition.id}/regisztralas`}>
                 Jelentkezés
               </Link>
             </Button>
-          </div>
-        )}
-        <Button variant={"link"} asChild>
-          <Link href={`/versenyek/${competition.id}`}>Részletek</Link>
-        </Button>
+          ) : competitonStatus === "RUNNING" ? (
+            <Button disabled className="mx-auto w-full bg-blue-400 font-bold">
+              Verseny aktív
+            </Button>
+          ) : (
+            competitonStatus === "CLOSED" && (
+              <Button
+                disabled
+                className="mx-auto w-full font-bold"
+                variant={"destructive"}
+              >
+                Verseny lezárva
+              </Button>
+            )
+          )}
+          <Button className="mx-auto w-full" variant={"link"} asChild>
+            <Link href={`/versenyek/${competition.id}`}>Részletek</Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

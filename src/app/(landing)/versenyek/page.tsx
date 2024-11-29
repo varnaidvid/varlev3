@@ -28,9 +28,18 @@ export default async function Page() {
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {competitions.map((competition) => (
-              <CompetitionCard key={competition.id} competition={competition} />
-            ))}
+            {competitions
+              .sort(
+                (a, b) =>
+                  new Date(b.deadline).getTime() -
+                  new Date(a.deadline).getTime(),
+              )
+              .map((competition) => (
+                <CompetitionCard
+                  key={competition.id}
+                  competition={competition}
+                />
+              ))}
           </div>
         </div>
       </div>
