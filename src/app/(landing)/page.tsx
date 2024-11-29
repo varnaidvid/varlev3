@@ -51,7 +51,7 @@ export default async function HomePage() {
       <FeaturesBlock />
 
       <h1 className="z-50 px-4 pt-14 text-center text-3xl font-bold">
-        🏆 Versenyeink
+        🏆 Fő versenyek
       </h1>
       <Separator className="mx-auto mt-1 w-20" />
 

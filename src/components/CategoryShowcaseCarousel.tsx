@@ -16,10 +16,10 @@ export function CategoryShowcaseCarousel({
   competitions: CompetitionWithDetails[];
 }) {
   return (
-    <div className="m-auto mx-20 my-2">
+    <div className="m-auto my-2">
       <Carousel className="w-full p-6">
         <CarouselContent>
-          {competitions.map((competition, index) => (
+          {competitions.slice(0, 3).map((competition, index) => (
             <CarouselItem className="md:basis-1/2 lg:basis-1/3" key={index}>
               <div className="p-1">
                 <CompetitionCard competition={competition} />
@@ -27,8 +27,6 @@ export function CategoryShowcaseCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
       </Carousel>
     </div>
   );

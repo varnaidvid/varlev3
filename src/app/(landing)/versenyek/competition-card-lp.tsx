@@ -127,13 +127,6 @@ export default function CompetitionCard({
             </Link>
           </div>
         )}
-        <div className="mt-auto pt-4">
-          <Link href={`versenyek/${competition.id}`}>
-            <Button variant="outline" className="w-full">
-              Részletek
-            </Button>
-          </Link>
-        </div>
       </CardContent>
     </Card>
   );
