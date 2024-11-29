@@ -56,7 +56,7 @@ export function DataTableToolbar<TData>({ table }: { table: Table<TData> }) {
   ).map((coach) => ({ label: coach, value: coach }));
 
   return (
-    <div className="flex flex-col items-center justify-between">
+    <div className="flex flex-col items-start justify-between space-y-2">
       <Input
         placeholder="Iskola keresése..."
         value={searchInput}

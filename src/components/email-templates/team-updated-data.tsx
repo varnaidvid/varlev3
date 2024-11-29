@@ -32,9 +32,6 @@ export const TeamUpdatedDataEmail = ({
         <Text style={text}>
           A csapat adatait újra ellenőrizheted a következő hivatkozással:
         </Text>
-        <Button style={{ ...btn, padding: "12px 20px" }} href={redirectUrl}>
-          Ellenőrzés
-        </Button>
       </Container>
     </Body>
   </Html>

@@ -56,9 +56,6 @@ export const SchoolRegistrationEmail = ({
             Ellenőrizd az iskolád adatait és szükség esetén módosítsd azokat.
           </li>
         </ul>
-        <Button style={{ ...btn, padding: "12px 20px" }} href={redirectUrl}>
-          Belépés a rendszerbe
-        </Button>
       </Container>
     </Body>
   </Html>

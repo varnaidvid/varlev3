@@ -35,9 +35,6 @@ export const TeamRegisteredEmail = ({
           A <b>{teamName}</b> csapat regisztrált a <b>{competitionName}</b>{" "}
           versenyre. A jóváhagyásod szükséges a jelentkezésük megerősítéséhez.
         </Text>
-        <Button style={{ ...btn, padding: "12px 20px" }} href={redirectUrl}>
-          Jóváhagyás
-        </Button>
       </Container>
     </Body>
   </Html>

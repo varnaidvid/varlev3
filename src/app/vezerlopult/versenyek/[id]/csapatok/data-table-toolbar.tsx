@@ -66,7 +66,7 @@ export function DataTableToolbar<TData>({
   ).map((coach) => ({ label: coach, value: coach }));
 
   return (
-    <div className="flex flex-col items-center justify-between">
+    <div className="flex flex-col items-start justify-between space-y-2">
       <Input
         placeholder="Csapat keresése..."
         value={searchInput}
@@ -115,7 +115,6 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
     </div>
   );
 }
