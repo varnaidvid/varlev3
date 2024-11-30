@@ -2,7 +2,6 @@ import DotPattern from "@/components/ui/dot-pattern";
 import { cn } from "@/lib/utils";
 import RegisterForm from "./form";
 import { api } from "@/trpc/server";
-import Logo from "@/components/logo";
 import { ClientOnly } from "@/components/client-only";
 
 export default async function RegisterTeam({

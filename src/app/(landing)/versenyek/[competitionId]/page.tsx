@@ -172,11 +172,9 @@ export default async function Page({
                                   {team.Team.name} tagjai:
                                 </p>
                                 <ul className="list-disc pl-4">
-                                  {team.Team.members.map(
-                                    (member: any, idx: any) => (
-                                      <li key={idx}>{member}</li>
-                                    ),
-                                  )}
+                                  {team.Team.members.map((member, idx: any) => (
+                                    <li key={idx}>{member.name}</li>
+                                  ))}
                                 </ul>
                               </TooltipContent>
                             </Tooltip>

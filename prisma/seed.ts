@@ -477,7 +477,7 @@ async function main() {
           { name: "Dániel Zemen", year: 12 },
         ],
       },
-      createdAt: new Date("2024-11-09"),
+      createdAt: new Date("2024-11-25"),
       coaches: {
         create: [
           {
@@ -563,7 +563,7 @@ async function main() {
           { name: "Vad Márton", year: 12 },
         ],
       },
-      createdAt: new Date("2024-11-09"),
+      createdAt: new Date("2024-11-24"),
       coaches: {
         create: [
           {
@@ -624,7 +624,7 @@ async function main() {
           { name: "Magi Zsolt", year: 11 },
         ],
       },
-      createdAt: new Date("2024-11-09"),
+      createdAt: new Date("2024-11-26"),
       coaches: {
         connect: {
           id: nemesTamasCoach.id,
@@ -674,7 +674,7 @@ async function main() {
           { name: "Szentjóbi Gergő", year: 11 },
         ],
       },
-      createdAt: new Date("2024-11-09"),
+      createdAt: new Date("2024-11-25"),
       coaches: {
         connect: {
           id: nemesTamasCoach.id,
@@ -751,7 +751,7 @@ async function main() {
           { name: "Szűcs Noel Gergő", year: 9 },
         ],
       },
-      createdAt: new Date("2024-11-09"),
+      createdAt: new Date("2024-11-26"),
       coaches: {
         create: [
           {
@@ -785,7 +785,7 @@ async function main() {
             },
           },
           username: "kodvadaszok",
-          ...saltAndHashPassword("teampassword"),
+          ...saltAndHashPassword("kodvadaszok"),
           type: "TEAM" as AccountType,
         },
       },
@@ -829,7 +829,7 @@ async function main() {
             },
           },
           username: "bitmesterek",
-          ...saltAndHashPassword("teampassword2"),
+          ...saltAndHashPassword("bitmesterek"),
           type: "TEAM",
         },
       },
@@ -872,7 +872,7 @@ async function main() {
             },
           },
           username: "webvirtuozok",
-          ...saltAndHashPassword("teampassword3"),
+          ...saltAndHashPassword("webvirtuozok"),
           type: "TEAM" as AccountType,
         },
       },
@@ -1061,16 +1061,6 @@ async function main() {
         status: "UNREAD",
         createdAt: new Date("2024-10-09"),
         receiverAccountId: team6.accountId,
-        senderAccountId: school2.accountId,
-      },
-      {
-        subject: "Iskolai jóváhagyás megtörtént",
-        message: "Kódvadászok csapat el lett fogadva az iskolája által.",
-        topic: "TEAM_APPROVED_BY_SCHOOL",
-        type: "SUCCESS",
-        status: "UNREAD",
-        createdAt: new Date("2024-10-09"),
-        receiverAccountId: organizer1.accountId,
         senderAccountId: school2.accountId,
       },
     ],

@@ -110,7 +110,9 @@ export default function CompetitionCard({
                   a jelentkezése.
                 </span>
               ) : (
-                <span>Az jelentkezett csapat sikeresen be regisztrált.</span>
+                <span className="mt-2 block italic">
+                  Az összes jelentkezett csapatok sikeresen be regisztrált.
+                </span>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>

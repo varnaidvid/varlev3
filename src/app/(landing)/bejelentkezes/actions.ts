@@ -18,6 +18,10 @@ export async function login(
     });
   } catch (error) {
     console.error(error);
+
+    redirect(
+      `/bejelentkezes?toast=true&type=error&message=${encodeURI("Sikertelen bejelentkezés!")}`,
+    );
   } finally {
     revalidatePath("/vezerlopult", "layout");
 
